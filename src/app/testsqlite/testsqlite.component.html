@@ -1,0 +1,85 @@
+<ion-list>
+  <ion-item>
+    <ion-button (click)="runTests()" expand="block">SQLite Test</ion-button>
+  </ion-item>
+</ion-list>
+<ion-card class="card-sqlite hidden">
+  <p class="web display">
+    SQLite Plugin not available for {{platform}} Platform
+  </p>
+  <p class="openDB display">
+    Open Database successful
+  </p>
+  <p class="execute1 display">
+    Execute Creation Tables successful
+  </p>
+  <p class="execute2 display">
+    Execute Insert Users successful
+  </p>
+  <p class="execute3 display">
+    Execute Insert Messages successful
+  </p>
+  <p class="query1 display">
+    Query Two Users successful
+  </p>
+  <p class="query2 display">
+    Query Two Messages successful
+  </p>
+    <p class="run1 display">
+    Create One User with sqlcmd and values successful
+  </p>
+  <p class="run2 display">
+    Create One User with sqlcmd successful
+  </p>
+  <p class="query3 display">
+    Query Four Users successful
+  </p>
+  <p class="query4 display">
+    Query Users age > 30 successful
+  </p>
+  <p class="close display">
+    Closing the database was successful
+  </p>
+  <p class="sql-success1 display">
+    The test database was successful
+  </p>
+  <p class="sql-failure1 display">
+    The test database failed
+  </p>
+  <p class="sql-success2 display">
+    The test to encrypt the database was successful
+  </p>
+  <p class="sql-failure2 display">
+    The test to encrypt the database failed
+  </p>
+  <p class="sql-success3 display">
+    The test encrypted database was successful
+  </p>
+  <p class="sql-failure3 display">
+    The test encrypted database failed
+  </p>
+  <p class="sql-success4 display">
+    The test wrong password was successful
+  </p>
+  <p class="sql-failure4 display">
+    The test wrong password failed
+  </p>
+  <p class="sql-success5 display">
+    The test new password was successful
+  </p>
+  <p class="sql-failure5 display">
+    The test new password failed
+  </p>
+  <p class="sql-success6 display">
+    The test new password database was successful
+  </p>
+  <p class="sql-failure6 display">
+    The test new password database failed
+  </p>
+  <p class="sql-allsuccess display">
+    The set of tests was successful
+  </p>
+  <p class="sql-allfailure display">
+    The set of tests failed
+  </p>
+</ion-card>

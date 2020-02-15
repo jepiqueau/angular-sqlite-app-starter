@@ -1,4 +1,4 @@
-package com.example.app.capacitor;
+package com.jeep.app.ionic.angular;
 
 import android.os.Bundle;
 
