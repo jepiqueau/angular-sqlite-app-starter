@@ -50,7 +50,7 @@ export class SQLiteService {
       const mode: string = _mode ? _mode : "no-encryption";
       return from( this.sqlite.open({database:dbName,encrypted:encrypted,mode:mode}));
     } else {
-      return from(Promise.resolve({result:false}));
+      return from(Promise.resolve({result:false,message:"Service not started"}));
     }
   }
   /**
@@ -61,7 +61,7 @@ export class SQLiteService {
     if(this.isService && statements.length > 0) {
       return from( this.sqlite.execute({statements:statements}));
     } else {
-      return from(Promise.resolve({changes:0}));
+      return from(Promise.resolve({changes:-1,message:"Service not started"}));
     }
   }
   /**
@@ -73,7 +73,7 @@ export class SQLiteService {
       const values: Array<any> = _values ? _values : [];
       return from( this.sqlite.run({statement:statement,values:values}));
     } else {
-      return from(Promise.resolve({changes:0}));
+      return from(Promise.resolve({changes:-1,message:"Service not started"}));
     }
   }
   /**
@@ -86,7 +86,7 @@ export class SQLiteService {
     if(this.isService && statement.length > 0) {
       return from( this.sqlite.query({statement:statement,values:values}));
     } else {
-      return from(Promise.resolve({values:[]}));
+      return from(Promise.resolve({values:[],message:"Service not started"}));
     }
 
   } 
@@ -98,7 +98,7 @@ export class SQLiteService {
     if(this.isService) {
       return from( this.sqlite.close({database:dbName}));
     } else {
-      return from(Promise.resolve({result:false}));
+      return from(Promise.resolve({result:false,message:"Service not started"}));
     }
   }
   /**
@@ -109,7 +109,7 @@ export class SQLiteService {
     if(this.isService) {
       return from( this.sqlite.deleteDatabase({database:dbName}));
     } else {
-      return from(Promise.resolve({result:false}));
+      return from(Promise.resolve({result:false,message:"Service not started"}));
     }
   }
 }
