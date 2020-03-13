@@ -7,7 +7,7 @@
     "electron:start": "electron ./"
   },
   "dependencies": {
-    "@capacitor/electron": "^1.5.0",
+    "@capacitor/electron": "^1.5.1",
     "electron-is-dev": "^1.1.0"
   },
   "devDependencies": {
