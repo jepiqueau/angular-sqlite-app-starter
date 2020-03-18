@@ -106,7 +106,7 @@ test-encryptedSQLite.db
 #### IOS
 
 In Xcode, before building your app, 
- - Go to the ```Pods/Development Pods/JeepqCapacitor/DatabaseSQLite``` folder, 
+ - Go to the ```Pods/Development Pods/CapacitorSqlite``` folder, 
  - Modify the ```secret``` and ```newsecret```strings in the GlobalSQLite.swift file.
 
 #### Android
@@ -257,7 +257,7 @@ npx cap init mySQLiteApp com.example.app
 Your App information [appName] [appId] can be whathever you would like. 
 Here we choose for the example [mySQLiteApp] [com.example.app]
 
-### Install #jeepq/capacitor plugin library
+### Install capacitor-sqlite plugin
 
 ```bash
 npm install --save capacitor-sqlite@latest
