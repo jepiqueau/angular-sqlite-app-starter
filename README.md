@@ -1,6 +1,6 @@
 # Ionic/Angular SQLite App Starter
 
-Ionic/Angular application demonstrating the use of the ```capacitor-sqlite``` plugin part of the @jeepq/capacitor plugin library and can be use as an Ionic/Angular application starter.
+Ionic/Angular application demonstrating the use of the ```capacitor-sqlite``` plugin and can be use as an Ionic/Angular application starter.
 
 
 The ```capacitor-sqlite``` test is accessible in the Tab2 of the Application by clicking on the SQLite test button.
@@ -112,7 +112,7 @@ In Xcode, before building your app,
 #### Android
 
 In Android Studio, before building your app,
- - Go to the ```jeepq-capacitor/java/com.jeep.plugins.capacitor/cdssUtils```folder,
+ - Go to the ```capacitor-sqlite/java/com.jeep.plugins.capacitor/cdssUtils```folder,
  - Modify the ```secret``` and ```newsecret```strings in the GlobalSQLite.java file.
 
 ### Angular Service
@@ -124,7 +124,7 @@ import { Injectable } from '@angular/core';
 import { Observable, from } from 'rxjs';
 
 import { Plugins } from '@capacitor/core';
-import * as PluginsLibrary from '@jeepq/capacitor';
+import * as PluginsLibrary from 'capacitor-sqlite';
 const { CapacitorSQLite, Device } = Plugins;
 
 @Injectable({
@@ -260,7 +260,7 @@ Here we choose for the example [mySQLiteApp] [com.example.app]
 ### Install #jeepq/capacitor plugin library
 
 ```bash
-npm install --save @jeepq/capacitor@latest
+npm install --save capacitor-sqlite@latest
 ```
 
 ### Add an Angular Service
@@ -365,7 +365,7 @@ Once Android launches,
  - Edit the MainActivity.java and add the following import:
 
 ```java
-import com.jeep.plugins.capacitor.CapacitorSQLite;
+import com.jeep.plugin.capacitor.CapacitorSQLite;
 ```
 
  - Add the CapacitorSQLite declaration in the this.init method
@@ -377,12 +377,12 @@ add(CapacitorSQLite.class);
  - you can then build your app through the standard Android Studio workflow.
 
 
-### When @jeepq/capacitor is updated
+### When capacitor-sqlite is updated
 
 Follow this process:
 
 ```bash
-npm install --save @jeepq/capacitor@latest
+npm install --save capacitor-sqlite@latest
 npx cap update
 npm run build
 npx cap copy

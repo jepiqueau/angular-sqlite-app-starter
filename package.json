@@ -29,7 +29,7 @@
     "@ionic-native/splash-screen": "latest",
     "@ionic-native/status-bar": "latest",
     "@ionic/angular": "^5.0.5",
-    "@jeepq/capacitor": "0.0.4-1",
+    "capacitor-sqlite": "^1.5.2-1",
     "core-js": "^3.6.4",
     "rxjs": "~6.5.4",
     "tslib": "^1.11.1",

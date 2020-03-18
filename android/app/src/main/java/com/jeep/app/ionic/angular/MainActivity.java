@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.Plugin;
-import com.jeep.plugins.capacitor.CapacitorSQLite;
+import com.jeep.plugin.capacitor.CapacitorSQLite;
 
 import java.util.ArrayList;
 

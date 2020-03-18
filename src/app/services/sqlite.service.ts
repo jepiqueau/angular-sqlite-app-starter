@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, from } from 'rxjs';
 
 import { Plugins } from '@capacitor/core';
-import * as PluginsLibrary from '@jeepq/capacitor';
+import * as PluginsLibrary from 'capacitor-sqlite';
 const { CapacitorSQLite, Device } = Plugins;
 
 @Injectable({
