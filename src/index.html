@@ -20,6 +20,17 @@
 
 <body>
   <app-root></app-root>
+  <script>
+    if (process && typeof (process.versions.electron) === 'string' && process.versions.hasOwnProperty('electron')) {
+      const sqlite3 = require('sqlite3');
+      const fs = require('fs');
+      const path = require('path');
+      window.sqlite3 = sqlite3;
+      window.fs = fs;
+      window.path = path;
+    }
+  </script>
+
 </body>
 
 </html>

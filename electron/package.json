@@ -4,14 +4,18 @@
   "description": "An Amazing Capacitor App",
   "main": "index.js",
   "scripts": {
-    "electron:start": "electron ./"
+    "electron:start": "electron ./",
+    "postinstall": "electron-rebuild -f -w sqlite3"
   },
   "dependencies": {
     "@capacitor/electron": "^1.5.2",
-    "electron-is-dev": "^1.1.0"
+    "electron-is-dev": "^1.1.0",
+    "sqlite3": "^4.1.1"
   },
   "devDependencies": {
-    "electron": "^7.0.0"
+    "@types/sqlite3": "^3.1.6",
+    "electron": "^8.0.0",
+    "electron-rebuild": "^1.10.1"
   },
   "keywords": [
     "capacitor",

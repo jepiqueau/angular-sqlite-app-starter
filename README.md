@@ -121,10 +121,9 @@ A Angular Service has been defined as a wrapper to the ```capacitor-sqlite``` pl
 
 ```tsx
 import { Injectable } from '@angular/core';
-import { Observable, from } from 'rxjs';
 
 import { Plugins } from '@capacitor/core';
-import * as PluginsLibrary from 'capacitor-sqlite';
+import * as CapacitorSQLPlugin from 'capacitor-sqlite';
 const { CapacitorSQLite, Device } = Plugins;
 
 @Injectable({
@@ -145,19 +144,22 @@ export class SQLiteService {
     if (this.platform === "ios" || this.platform === "android") {
       this.sqlite = CapacitorSQLite;
       this.isService = true;
+    } else if(this.platform === "electron") {
+      this.sqlite = CapacitorSQLPlugin.CapacitorSQLiteElectron;
+      this.isService = true;
     } else {
-      this.sqlite = PluginsLibrary.CapacitorSQLite;
+      this.sqlite = CapacitorSQLPlugin.CapacitorSQLite;
     }
   }
   /**
    * Get Echo 
    * @param value string 
    */
-  getEcho(value:string): Observable<any> {
+  async getEcho(value:string): Promise<any> {
     if (this.isService) {
-      return from( this.sqlite.echo({value:"Hello from JEEP"}));
+      return await this.sqlite.echo({value:"Hello from JEEP"});
     } else {
-      return from(Promise.resolve(""));
+      return Promise.resolve("");
     }
   }
   /**
@@ -166,36 +168,36 @@ export class SQLiteService {
    * @param _encrypted boolean optional 
    * @param _mode string optional
    */  
-  openDB(dbName:string,_encrypted?:boolean,_mode?:string): Observable<any> {
+  async openDB(dbName:string,_encrypted?:boolean,_mode?:string): Promise<any> {
     if(this.isService) {
       const encrypted:boolean = _encrypted ? _encrypted : false;
       const mode: string = _mode ? _mode : "no-encryption";
-      return from( this.sqlite.open({database:dbName,encrypted:encrypted,mode:mode}));
+      return await this.sqlite.open({database:dbName,encrypted:encrypted,mode:mode});
     } else {
-      return from(Promise.resolve({result:false}));
+      return Promise.resolve({result:false,message:"Service not started"});
     }
   }
   /**
    * Execute a set of Raw Statements
    * @param statements string 
    */
-  execute(statements:string): Observable<any> {
+  async execute(statements:string): Promise<any> {
     if(this.isService && statements.length > 0) {
-      return from( this.sqlite.execute({statements:statements}));
+      return await this.sqlite.execute({statements:statements});
     } else {
-      return from(Promise.resolve({changes:0}));
+      return Promise.resolve({changes:-1,message:"Service not started"});
     }
   }
   /**
    * Execute a Single Raw Statement
    * @param statement string
    */
-  run(statement:string,_values?:Array<any>): Observable<any> {
+  async run(statement:string,_values?:Array<any>): Promise<any> {
     if(this.isService && statement.length > 0) {
       const values: Array<any> = _values ? _values : [];
-      return from( this.sqlite.run({statement:statement,values:values}));
+      return  await this.sqlite.run({statement:statement,values:values});
     } else {
-      return from(Promise.resolve({changes:0}));
+      return Promise.resolve({changes:-1,message:"Service not started"});
     }
   }
   /**
@@ -203,12 +205,12 @@ export class SQLiteService {
    * @param statement string
    * @param values Array<string> optional
    */
-  query(statement:string,_values?:Array<string>): Observable<any> {
+  async query(statement:string,_values?:Array<string>): Promise<any> {
     const values: Array<any> = _values ? _values : [];
     if(this.isService && statement.length > 0) {
-      return from( this.sqlite.query({statement:statement,values:values}));
+      return await this.sqlite.query({statement:statement,values:values});
     } else {
-      return from(Promise.resolve({values:[]}));
+      return Promise.resolve({values:[],message:"Service not started"});
     }
 
   } 
@@ -216,25 +218,26 @@ export class SQLiteService {
    * Close the Database
    * @param dbName string
    */
-  close(dbName:string): Observable<any> {
+  async close(dbName:string): Promise<any> {
     if(this.isService) {
-      return from( this.sqlite.close({database:dbName}));
+      return await this.sqlite.close({database:dbName});
     } else {
-      return from(Promise.resolve({result:false}));
+      return Promise.resolve({result:false,message:"Service not started"});
     }
   }
   /**
    * Delete the Database file
    * @param dbName string
    */
-  deleteDB(dbName:string): Observable<any> {
+  async deleteDB(dbName:string): Promise<any> {
     if(this.isService) {
-      return from( this.sqlite.deleteDatabase({database:dbName}));
+      return await this.sqlite.deleteDatabase({database:dbName});
     } else {
-      return from(Promise.resolve({result:false}));
+      return Promise.resolve({result:false,message:"Service not started"});
     }
   }
 }
+
 ```
 
 ## Starting an App from Scratch
@@ -375,6 +378,68 @@ add(CapacitorSQLite.class);
 ```
 
  - you can then build your app through the standard Android Studio workflow.
+
+#### Electron
+
+In your application folder add the Electron platform
+
+```bash
+npx cap add electron
+```
+
+In the Electron folder of your application
+
+```bash
+npm install --save sqlite3
+npm install --save-dev @types/sqlite3
+npm install --save-dev electron-rebuild
+```
+
+Modify the Electron package.json file by adding a script "postinstall"
+
+```json
+  "scripts": {
+    "electron:start": "electron ./",
+    "postinstall": "electron-rebuild -f -w sqlite3"
+  },
+```
+
+Execute the postinstall script
+
+```bash
+npm run postinstall
+```
+Go back in the main folder of your application
+Add a script in the index.html file of your application in the body tag
+
+```html
+<body>
+  <app-root></app-root>
+  <script>
+    if (typeof (process.versions.electron) === 'string' && process.versions.hasOwnProperty('electron')) {
+      const sqlite3 = require('sqlite3');
+      const fs = require('fs');
+      const path = require('path');
+      window.sqlite3 = sqlite3;
+      window.fs = fs;
+      window.path = path;
+    }
+  </script>
+</body>
+```
+and then build the apllication
+
+```bash
+ npx cap update
+ npm run build
+ npx cap copy
+ npx cap open electron
+```
+
+The datastores created are under **YourApplication/Electron/DataSbases**
+
+
+
 
 
 ### When capacitor-sqlite is updated
