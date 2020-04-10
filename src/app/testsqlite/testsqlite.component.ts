@@ -140,19 +140,13 @@ export class TestsqliteComponent implements AfterViewInit {
       if(this._SQLiteService.platform === "ios" || this._SQLiteService.platform === "android" 
           || this._SQLiteService.platform === "electron") {
         let result: any = await this._SQLiteService.deleteDB("test-sqlite"); 
-        if(result) {
-          console.log("delete database test-sqlite ",result.result);
-          result = await this._SQLiteService.deleteDB("test-encrypted"); 
-          if(result) {
-            console.log("delete database test-encrypted ",result.result);
-            const echo = await this._SQLiteService.getEcho("Hello from JEEP");
-            console.log("*** echo ",echo);
-            resolve(true);
-          }; 
-        };
-      } else {
-        resolve(false);
+        if (this._SQLiteService.platform != "electron") {
+          result = await this._SQLiteService.deleteDB("test-encrypted");
+        }
       }
+      const echo = await this._SQLiteService.getEcho("Hello from JEEP");
+      console.log("*** echo ",echo);
+      resolve(true);
     });
   }
   /**
@@ -265,9 +259,9 @@ export class TestsqliteComponent implements AfterViewInit {
               retEx3 && retQuery2 && retClose) ret = true;
             resolve(ret);
           
-          } else {
-            resolve(false);
-          }
+        } else {
+          resolve(false);
+        }
       } else {
         console.log("*** Error: Database test-sqlite not opened");
         resolve(false);
