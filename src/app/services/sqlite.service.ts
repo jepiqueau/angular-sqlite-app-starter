@@ -114,4 +114,17 @@ export class SQLiteService {
       return Promise.resolve({result:false,message:"Service not started"});
     }
   }
+    /**
+   * Execute a set of Raw Statements
+   * @param statements string 
+   */
+  async importFromJson(jsonObject:any): Promise<any> {
+    if(this.isService ) {
+      console.log('jsonObject ', jsonObject)
+      return await this.sqlite.importFromJson({jsonstring:jsonObject});
+    } else {
+      return Promise.resolve({changes:-1,message:"Service not started"});
+    }
+  }
+
 }

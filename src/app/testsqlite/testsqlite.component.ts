@@ -9,6 +9,7 @@ import { SQLiteService } from '../services/sqlite.service';
 export class TestsqliteComponent implements AfterViewInit {
   platform: string;
   noEncryption: boolean = false;
+  import: boolean = false;
   encryption: boolean = false;
   encrypted: boolean = false; 
   wrongSecret: boolean = false;
@@ -43,14 +44,24 @@ export class TestsqliteComponent implements AfterViewInit {
       if (this.initTest) {
         // Create a Database with No-Encryption
         this.noEncryption = await this.testNoEncryption();
-        console.log('this.noEncryption ',this.noEncryption)
-        if(!this.noEncryption ) {     
+        console.log('this.noEncryption this.import ',this.noEncryption,this.import)
+        if(!this.noEncryption) {     
           document.querySelector('.sql-failure1').classList.remove('display');
         } else {
           console.log("***** End testDatabase *****")
           document.querySelector('.sql-success1').classList.remove('display');
         }
-        if(this.noEncryption && this._SQLiteService.platform !== "electron") {
+        if(this.noEncryption && this._SQLiteService.platform !== "ios") {
+          // Create a Database from JSON import
+          this.import = await this.testImportFromJson();
+          if(!this.import) {
+            document.querySelector('.sql-failure-json').classList.remove('display');
+          } else {
+            console.log("***** End Import From JSon *****")
+            document.querySelector('.sql-success-json').classList.remove('display');  
+          }
+        }
+        if(this.noEncryption && this.import && this._SQLiteService.platform !== "electron") {
           // Encrypt the Non Encrypted Database
           this.encryption = await this.testEncryptionDatabase();
           if(!this.encryption) {
@@ -92,14 +103,14 @@ export class TestsqliteComponent implements AfterViewInit {
       }
       // Manage All Tests Success/Failure
       if(this._SQLiteService.platform === 'electron') {
-        if (!this.initTest || !this.noEncryption) {
+        if (!this.initTest || !this.noEncryption || !this.import) {
           document.querySelector('.sql-allfailure').classList.remove('display');
         } else {
           document.querySelector('.sql-allsuccess').classList.remove('display');
         }
       } else {
         if(!this.initTest || !this.noEncryption || !this.encryption || !this.encrypted || 
-        !this.wrongSecret || !this.changeSecret || !this.newSecret) {     
+        !this.wrongSecret || !this.changeSecret || !this.newSecret || !this.import) {     
           document.querySelector('.sql-allfailure').classList.remove('display');
         } else {
           document.querySelector('.sql-allsuccess').classList.remove('display');
@@ -175,6 +186,7 @@ export class TestsqliteComponent implements AfterViewInit {
             title TEXT NOT NULL,
             body TEXT NOT NULL
         );
+        CREATE INDEX users_index_name ON users (name);
         PRAGMA user_version = 1;
         COMMIT TRANSACTION;
         `;
@@ -269,7 +281,90 @@ export class TestsqliteComponent implements AfterViewInit {
  
     });
   }
+  async testImportFromJson():Promise<boolean> {
+    return new Promise(async (resolve) => {
+      let ret:boolean = true;
+      const dataToImport: any = {
+        database : "db-from-json",
+        encrypted : false,
+        mode : "full",
+        tables :[
+            {
+                name: "users",
+                schema: [
+                    {column:"id", value: "INTEGER PRIMARY KEY NOT NULL"},
+                    {column:"email", value:"TEXT UNIQUE NOT NULL"},
+                    {column:"name", value:"TEXT"},
+                    {column:"age", value:"INTEGER"}
+                ],
+                indexes: [
+                    {name: "index_user_on_name",
+                     column: "name"   
+                    }
+                ],
+                values: [
+                    [1,"Whiteley.com","Whiteley",30],
+                    [2,"Jones.com","Jones",44],
+                    [3,"Simpson@example.com","Simpson",69],
+                    [4,"Brown@example.com","Brown",15]
+                ]
+            },
+            {
+              name: "messages",
+              schema: [
+                {column:"id", value: "INTEGER PRIMARY KEY NOT NULL"},
+                {column:"title", value:"TEXT NOT NULL"},
+                {column:"body", value:"TEXT NOT NULL"}
+              ],
+              values: [
+                  [1,"test post 1","content test post 1"],
+                  [2,"test post 2","content test post 2"]
+              ]
+            }
+    
+        ]
+      };
+     
+      let result:any = await this._SQLiteService.importFromJson(JSON.stringify(dataToImport));
+      console.log('import result ',result)
+      if(result.changes === -1 ) ret = false;
+      if(ret) {
+        const partialImport1: any = {
+          database : "db-from-json",
+          encrypted : false,
+          mode : "partial",
+          tables :[
+              {
+                  name: "users",
+                  values: [
+                      [5,"Addington.com","Addington",22],
+                      [6,"Bannister.com","Bannister",59],
+                      [2,"Jones@example.com","Jones",45],
 
+                  ]
+              },
+              {
+                name: "messages",
+                indexes: [
+                  {name: "index_messages_on_title",
+                   column: "title"   
+                  }
+                ],
+                values: [
+                    [3,"test post 3","content test post 3"],
+                    [4,"test post 4","content test post 4"]
+                ]
+              }
+      
+          ]
+        }; 
+        let result:any = await this._SQLiteService.importFromJson(JSON.stringify(partialImport1));
+        if(result.changes === -1 ) ret = false;
+      }
+      if(!ret) console.log("importFromJson: Error " + result.message);
+      resolve(ret);
+    });
+  }
   /**
   * Test an encrypted database
   */
