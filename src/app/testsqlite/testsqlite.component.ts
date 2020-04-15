@@ -51,7 +51,7 @@ export class TestsqliteComponent implements AfterViewInit {
           console.log("***** End testDatabase *****")
           document.querySelector('.sql-success1').classList.remove('display');
         }
-        if(this.noEncryption && this._SQLiteService.platform !== "ios") {
+        if(this.noEncryption) {
           // Create a Database from JSON import
           this.import = await this.testImportFromJson();
           if(!this.import) {
