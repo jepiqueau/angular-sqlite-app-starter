@@ -9,4 +9,23 @@
 <ion-content>
   <ion-button id="dark" (click)="enableDarkTheme(true)" expand="block">Dark Theme</ion-button>
   <ion-button id="light" (click)="enableDarkTheme(false)" expand="block">Light Theme</ion-button>
+  <ion-card id="card-static-images">
+      <ion-card-header>
+        <ion-card-subtitle>Static Images from Database</ion-card-subtitle>
+      </ion-card-header>   
+      <ion-card-content>
+        <div id="image-static-from-db"></div>
+      </ion-card-content>
+  </ion-card>
+  <ion-card id="card-input-file">
+    <ion-card-header>
+      <ion-card-subtitle>Pick an Image to upload to Database</ion-card-subtitle>
+    </ion-card-header>   
+    <ion-card-content>
+      <input type="file" id="inputFile">
+      <div id="image-from-db">
+      </div>
+     </ion-card-content>
+  </ion-card>
+ 
 </ion-content>

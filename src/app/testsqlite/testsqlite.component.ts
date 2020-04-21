@@ -1,5 +1,7 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { SQLiteService } from '../services/sqlite.service';
+import { Images } from '../utils/base64images';
+//import { ReadImageService } from '../services/read-images.service';
 
 @Component({
   selector: 'app-testsqlite',
@@ -186,13 +188,20 @@ export class TestsqliteComponent implements AfterViewInit {
             title TEXT NOT NULL,
             body TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS images (
+          id INTEGER PRIMARY KEY NOT NULL,
+          name TEXT UNIQUE NOT NULL,
+          type TEXT NOT NULL,
+          size INTEGER,
+          img BLOB
+        );
         CREATE INDEX users_index_name ON users (name);
         PRAGMA user_version = 1;
         COMMIT TRANSACTION;
         `;
         result = await this._SQLiteService.execute(sqlcmd);
-
-        if(result.changes === 0 || result.changes === 1) {
+        console.log('in testNoEncryption result ',result)
+        if(result.changes.changes === 0 || result.changes.changes === 1) {
             document.querySelector('.execute1').classList.remove('display'); 
             // Insert some Users
             const row: Array<Array<any>> = [["Whiteley","Whiteley.com",30],["Jones","Jones.com",44]];
@@ -204,7 +213,7 @@ export class TestsqliteComponent implements AfterViewInit {
             COMMIT TRANSACTION;
             `;
             result = await this._SQLiteService.execute(sqlcmd);
-            const retEx2 = result.changes === 0 || result.changes === 1 ? true : false;
+            const retEx2 = result.changes.changes === 2 ? true : false;
             if(retEx2) document.querySelector('.execute2').classList.remove('display'); 
 
             // Select all Users
@@ -218,13 +227,16 @@ export class TestsqliteComponent implements AfterViewInit {
             sqlcmd = "INSERT INTO users (name,email,age) VALUES (?,?,?)";
             let values: Array<any>  = ["Simpson","Simpson@example.com",69];
             result = await this._SQLiteService.run(sqlcmd,values);
-            const retRun1 = result.changes === 1 ? true : false;
+            const retRun1 = result.changes.changes === 1 &&
+                            result.changes.lastId === 3 ? true : false;
+            console.log("**** result.changes.lastId ",result.changes.lastId)
             if(retRun1) document.querySelector('.run1').classList.remove('display');        
 
             // add one user with statement              
             sqlcmd = `INSERT INTO users (name,email,age) VALUES ("Brown","Brown@example.com",15)`;
             result = await this._SQLiteService.run(sqlcmd);
-            const retRun2 = result.changes === 1 ? true : false;
+            const retRun2 = result.changes.changes === 1 &&
+                            result.changes.lastId === 4 ? true : false;
             if(retRun2) document.querySelector('.run2').classList.remove('display');
 
             // Select all Users
@@ -251,7 +263,7 @@ export class TestsqliteComponent implements AfterViewInit {
             COMMIT TRANSACTION;
             `;
             result = await this._SQLiteService.execute(sqlcmd);
-            const retEx3 = result.changes === 0 || result.changes === 1 ? true : false;
+            const retEx3 = result.changes.changes === 2 ? true : false;
             if(retEx3) document.querySelector('.execute3').classList.remove('display'); 
 
             // Select all Messages
@@ -261,6 +273,24 @@ export class TestsqliteComponent implements AfterViewInit {
                       result.values[0].title === "test post 1" && result.values[1].title === "test post 2" ? true : false;
             if(retQuery2) document.querySelector('.query2').classList.remove('display'); 
 
+            // insert some Images
+            sqlcmd = "INSERT INTO images (name,type,img) VALUES (?,?,?)";
+            let imgvalues: Array<any>  = ["meowth","png",Images[0]];
+            result = await this._SQLiteService.run(sqlcmd,imgvalues);
+            const retRun3 = result.changes.changes === 1 ? true : false;
+            if(retRun3) document.querySelector('.run3').classList.remove('display');        
+            sqlcmd = "INSERT INTO images (name,type,img) VALUES (?,?,?)";
+            imgvalues = ["feather","png",Images[1]];
+            result = await this._SQLiteService.run(sqlcmd,imgvalues);
+            const retRun4 = result.changes.changes === 1 ? true : false;
+            if(retRun4) document.querySelector('.run4').classList.remove('display');        
+            // Select all Imagess
+            sqlcmd = "SELECT * FROM images";
+            result = await this._SQLiteService.query(sqlcmd);
+            const retQuery5 = result.values.length === 2 &&
+                      result.values[0].name === "meowth" && result.values[1].type === "png" ? true : false;
+            if(retQuery5) document.querySelector('.query5').classList.remove('display');        
+             
             // Close the Database
             result = await this._SQLiteService.close("test-sqlite");
             const retClose = result.result
@@ -268,7 +298,7 @@ export class TestsqliteComponent implements AfterViewInit {
             if (retClose) document.querySelector('.close').classList.remove('display'); 
             let ret = false;
             if(retEx2 && retQuery1 && retRun1 && retRun2 && retQuery3 && retQuery4 &&
-              retEx3 && retQuery2 && retClose) ret = true;
+              retEx3 && retQuery2  && retRun3 && retRun4 && retClose && retQuery5) ret = true;
             resolve(ret);
           
         } else {
@@ -320,6 +350,20 @@ export class TestsqliteComponent implements AfterViewInit {
                   [1,"test post 1","content test post 1"],
                   [2,"test post 2","content test post 2"]
               ]
+            },
+            {
+              name: "images",
+              schema: [
+                {column:"id", value: "INTEGER PRIMARY KEY NOT NULL"},
+                {column:"name", value:"TEXT UNIQUE NOT NULL"},
+                {column:"type", value:"TEXT NOT NULL"},
+                {column:"size", value:"INTEGER"},
+                {column:"img", value:"BLOB"}
+              ],
+              values: [
+                [1,"meowth","png","NULL",Images[0]],
+                [2,"feather","png","NULL",Images[1]]
+              ]
             }
     
         ]
@@ -327,7 +371,7 @@ export class TestsqliteComponent implements AfterViewInit {
      
       let result:any = await this._SQLiteService.importFromJson(JSON.stringify(dataToImport));
       console.log('import result ',result)
-      if(result.changes === -1 ) ret = false;
+      if(result.changes.changes === -1 ) ret = false;
       if(ret) {
         const partialImport1: any = {
           database : "db-from-json",
@@ -359,7 +403,7 @@ export class TestsqliteComponent implements AfterViewInit {
           ]
         }; 
         let result:any = await this._SQLiteService.importFromJson(JSON.stringify(partialImport1));
-        if(result.changes === -1 ) ret = false;
+        if(result.changes.changes === -1 ) ret = false;
       }
       if(!ret) console.log("importFromJson: Error " + result.message);
       resolve(ret);
@@ -386,7 +430,7 @@ export class TestsqliteComponent implements AfterViewInit {
         COMMIT TRANSACTION;
         `;
         result = await this._SQLiteService.execute(sqlcmd);
-        const retEx1 = result.changes === 0 || result.changes === 1 ? true : false;
+        const retEx1 = result.changes.changes === 0 || result.changes.changes === 1 ? true : false;
         if(retEx1) {
           // Insert some Contacts
           sqlcmd = `
@@ -397,7 +441,7 @@ export class TestsqliteComponent implements AfterViewInit {
           COMMIT TRANSACTION;
           `;
           result = await this._SQLiteService.execute(sqlcmd);
-          const retEx2 = result.changes === 0 || result.changes === 1 ? true : false;
+          const retEx2 = result.changes.changes === 2 ? true : false;
           // Select all Contacts
           sqlcmd = "SELECT * FROM contacts";
           result = await this._SQLiteService.query(sqlcmd);
