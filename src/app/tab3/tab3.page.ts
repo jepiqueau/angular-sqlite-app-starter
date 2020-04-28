@@ -63,13 +63,15 @@ export class Tab3Page implements AfterViewInit{
       let result:any = await this._SQLiteService.openDB("db-from-json"); 
       if(result.result) {
         // upload image to db 
-        let sqlcmd: string= "INSERT INTO images (name,type,size,img) VALUES (?,?,?,?)";
+
+        let sqlcmd: string= "INSERT INTO images (name,type,size,img,last_modified) VALUES (?,?,?,?,?)";
+        const imgDate = Math.round((new Date()).getTime() / 1000);
         const fsize: number = Math.round(file.size/1024);
         console.log('fsize ',fsize)
         const imgBase64:any = await this._ImageService.base64StringFromBlob(file);
         if(imgBase64 && imgBase64.length > 0) {
           let imgvalues: Array<any>  = [file.name.split(".")[0],file.type.split("/")[1],
-          fsize,imgBase64];
+          fsize,imgBase64,imgDate];
           const resRun = await this._SQLiteService.run(sqlcmd,imgvalues);
           if(resRun.changes.changes === 1) {
             // read image from db

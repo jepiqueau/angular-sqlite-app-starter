@@ -12,6 +12,8 @@ export class TestsqliteComponent implements AfterViewInit {
   platform: string;
   noEncryption: boolean = false;
   import: boolean = false;
+  exportFull: boolean = false;
+  exportPartial: boolean = false;
   encryption: boolean = false;
   encrypted: boolean = false; 
   wrongSecret: boolean = false;
@@ -34,23 +36,21 @@ export class TestsqliteComponent implements AfterViewInit {
   *******************************/
 
   async runTests(): Promise<void> {
-    console.log("****** entering run tests")
+    console.log("****** entering run tests");
     // In case of multiple test runs
     this.resetDOM();
     // Start Running the Set of Tests
     const cardSQLite = document.querySelector('.card-sqlite');
     if(cardSQLite && cardSQLite.classList.contains("hidden")) cardSQLite.classList.remove('hidden');
-    console.log('this.sqliteService.isService ',this._SQLiteService.isService)
     if(this._SQLiteService.isService) {
       this.initTest = await this.testInitialization();
       if (this.initTest) {
         // Create a Database with No-Encryption
         this.noEncryption = await this.testNoEncryption();
-        console.log('this.noEncryption this.import ',this.noEncryption,this.import)
         if(!this.noEncryption) {     
           document.querySelector('.sql-failure1').classList.remove('display');
         } else {
-          console.log("***** End testDatabase *****")
+          console.log("***** End testDatabase *****");
           document.querySelector('.sql-success1').classList.remove('display');
         }
         if(this.noEncryption) {
@@ -59,11 +59,28 @@ export class TestsqliteComponent implements AfterViewInit {
           if(!this.import) {
             document.querySelector('.sql-failure-json').classList.remove('display');
           } else {
-            console.log("***** End Import From JSon *****")
+            console.log("***** End Import From JSon *****");
             document.querySelector('.sql-success-json').classList.remove('display');  
           }
+          // Full Export a database to JSON Object
+          this.exportFull = await this.testFullExportToJson();
+          if(!this.exportFull) {
+            document.querySelector('.sql-failure-fullexport-json').classList.remove('display');
+          } else {
+            console.log("***** End Export to JSon *****");
+            document.querySelector('.sql-success-fullexport-json').classList.remove('display');  
+          }
+          // Partial Export a database to JSON Object
+          this.exportPartial = await this.testPartialExportToJson();
+          if(!this.exportPartial) {
+            document.querySelector('.sql-failure-partialexport-json').classList.remove('display');
+          } else {
+            console.log("***** End Export to JSon *****");
+            document.querySelector('.sql-success-partialexport-json').classList.remove('display');  
+          }
         }
-        if(this.noEncryption && this.import && this._SQLiteService.platform !== "electron") {
+        if(this.noEncryption && this.import && this.exportFull && 
+              this.exportPartial&& this._SQLiteService.platform !== "electron") {
           // Encrypt the Non Encrypted Database
           this.encryption = await this.testEncryptionDatabase();
           if(!this.encryption) {
@@ -105,14 +122,16 @@ export class TestsqliteComponent implements AfterViewInit {
       }
       // Manage All Tests Success/Failure
       if(this._SQLiteService.platform === 'electron') {
-        if (!this.initTest || !this.noEncryption || !this.import) {
+        if (!this.initTest || !this.noEncryption || !this.import ||
+               !this.exportFull || !this.exportPartial) {
           document.querySelector('.sql-allfailure').classList.remove('display');
         } else {
           document.querySelector('.sql-allsuccess').classList.remove('display');
         }
       } else {
         if(!this.initTest || !this.noEncryption || !this.encryption || !this.encrypted || 
-        !this.wrongSecret || !this.changeSecret || !this.newSecret || !this.import) {     
+        !this.wrongSecret || !this.changeSecret || !this.newSecret || !this.import
+         || !this.exportFull || !this.exportPartial) {     
           document.querySelector('.sql-allfailure').classList.remove('display');
         } else {
           document.querySelector('.sql-allsuccess').classList.remove('display');
@@ -152,9 +171,40 @@ export class TestsqliteComponent implements AfterViewInit {
       // as after the first pass the database is encrypted
       if(this._SQLiteService.platform === "ios" || this._SQLiteService.platform === "android" 
           || this._SQLiteService.platform === "electron") {
-        let result: any = await this._SQLiteService.deleteDB("test-sqlite"); 
+        // check if the database test-sqlite exists 
+        let result: any = await this._SQLiteService.isDBExists("test-sqlite"); 
+        if(result.result) {
+          // open the DB
+          let resOpen = await this._SQLiteService.openDB("test-sqlite",true,"secret"); 
+          if(resOpen.result) {
+            let resDel: any = await this._SQLiteService.deleteDB("test-sqlite");
+            if(!resDel) {
+              console.log("Error in deleting the database test-sqlite");
+              resolve(false);
+            }
+          } else {
+            console.log("Error database test-sqlite does not exist");
+            resolve(false);
+          }
+        }
+
         if (this._SQLiteService.platform != "electron") {
-          result = await this._SQLiteService.deleteDB("test-encrypted");
+          // check if the database test-encrypted exists 
+          result = await this._SQLiteService.isDBExists("test-encrypted");
+          if(result.result) {
+            // open the DB
+            let resOpen = await this._SQLiteService.openDB("test-encrypted",true,"secret"); 
+            if(resOpen.result) {
+              let resDel: any = await this._SQLiteService.deleteDB("test-encrypted"); 
+              if(!resDel) {
+                console.log("Error in deleting the database test-encrypted");
+                resolve(false);
+              }
+            } else {
+              console.log("Error database test-encrypted does not exist");
+              resolve(false);  
+            }
+          }
         }
       }
       const echo = await this._SQLiteService.getEcho("Hello from JEEP");
@@ -170,9 +220,9 @@ export class TestsqliteComponent implements AfterViewInit {
       // open the database
       let result:any = await this._SQLiteService.openDB("test-sqlite"); 
       if(result.result) {
-        console.log('result.result ',result.result)
         console.log("*** Database test-sqlite Opened");
         document.querySelector('.openDB').classList.remove('display');
+        result = await this._SQLiteService.createSyncTable();
 
         // create tables
         const sqlcmd: string = `
@@ -200,7 +250,6 @@ export class TestsqliteComponent implements AfterViewInit {
         COMMIT TRANSACTION;
         `;
         result = await this._SQLiteService.execute(sqlcmd);
-        console.log('in testNoEncryption result ',result)
         if(result.changes.changes === 0 || result.changes.changes === 1) {
             document.querySelector('.execute1').classList.remove('display'); 
             // Insert some Users
@@ -229,7 +278,7 @@ export class TestsqliteComponent implements AfterViewInit {
             result = await this._SQLiteService.run(sqlcmd,values);
             const retRun1 = result.changes.changes === 1 &&
                             result.changes.lastId === 3 ? true : false;
-            console.log("**** result.changes.lastId ",result.changes.lastId)
+            console.log("**** result.changes.lastId ",result.changes.lastId);
             if(retRun1) document.querySelector('.run1').classList.remove('display');        
 
             // add one user with statement              
@@ -249,8 +298,6 @@ export class TestsqliteComponent implements AfterViewInit {
             sqlcmd = "SELECT name,email,age FROM users WHERE age > ?";
             values = ["35"];
             result = await this._SQLiteService.query(sqlcmd,values);
-            console.log("*** result ",result)
-
             const retQuery4 = result.values.length === 2 ? true : false;
             if(retQuery4) document.querySelector('.query4').classList.remove('display'); 
 
@@ -311,7 +358,11 @@ export class TestsqliteComponent implements AfterViewInit {
  
     });
   }
-  async testImportFromJson():Promise<boolean> {
+  
+  /**
+  * Test an ImportFromJson
+  */
+ async testImportFromJson():Promise<boolean> {
     return new Promise(async (resolve) => {
       let ret:boolean = true;
       const dataToImport: any = {
@@ -325,18 +376,18 @@ export class TestsqliteComponent implements AfterViewInit {
                     {column:"id", value: "INTEGER PRIMARY KEY NOT NULL"},
                     {column:"email", value:"TEXT UNIQUE NOT NULL"},
                     {column:"name", value:"TEXT"},
-                    {column:"age", value:"INTEGER"}
+                    {column:"age", value:"INTEGER"},
+                    {column:"last_modified", value:"INTEGER"}
                 ],
                 indexes: [
-                    {name: "index_user_on_name",
-                     column: "name"   
-                    }
+                    {name: "index_user_on_name",column: "name"},
+                    {name: "index_user_on_last_modified",column: "last_modified"}
                 ],
                 values: [
-                    [1,"Whiteley.com","Whiteley",30],
-                    [2,"Jones.com","Jones",44],
-                    [3,"Simpson@example.com","Simpson",69],
-                    [4,"Brown@example.com","Brown",15]
+                    [1,"Whiteley.com","Whiteley",30,1582536810],
+                    [2,"Jones.com","Jones",44,1582812800],
+                    [3,"Simpson@example.com","Simpson",69,1583570630],
+                    [4,"Brown@example.com","Brown",15,1590383895]
                 ]
             },
             {
@@ -344,11 +395,12 @@ export class TestsqliteComponent implements AfterViewInit {
               schema: [
                 {column:"id", value: "INTEGER PRIMARY KEY NOT NULL"},
                 {column:"title", value:"TEXT NOT NULL"},
-                {column:"body", value:"TEXT NOT NULL"}
+                {column:"body", value:"TEXT NOT NULL"},
+                {column:"last_modified", value:"INTEGER"}
               ],
               values: [
-                  [1,"test post 1","content test post 1"],
-                  [2,"test post 2","content test post 2"]
+                  [1,"test post 1","content test post 1",1587310030],
+                  [2,"test post 2","content test post 2",1590388125]
               ]
             },
             {
@@ -358,18 +410,19 @@ export class TestsqliteComponent implements AfterViewInit {
                 {column:"name", value:"TEXT UNIQUE NOT NULL"},
                 {column:"type", value:"TEXT NOT NULL"},
                 {column:"size", value:"INTEGER"},
-                {column:"img", value:"BLOB"}
+                {column:"img", value:"BLOB"},
+                {column:"last_modified", value:"INTEGER"}
               ],
               values: [
-                [1,"meowth","png","NULL",Images[0]],
-                [2,"feather","png","NULL",Images[1]]
+                [1,"feather","png","NULL",Images[1],1582536810],
+                [2,"meowth","png","NULL",Images[0],1590151132]
               ]
             }
     
         ]
       };
      
-      let result:any = await this._SQLiteService.importFromJson(JSON.stringify(dataToImport));
+      let result:any = await this._SQLiteService.importFromJson(JSON.stringify(dataToImport));    
       console.log('import result ',result)
       if(result.changes.changes === -1 ) ret = false;
       if(ret) {
@@ -381,22 +434,22 @@ export class TestsqliteComponent implements AfterViewInit {
               {
                   name: "users",
                   values: [
-                      [5,"Addington.com","Addington",22],
-                      [6,"Bannister.com","Bannister",59],
-                      [2,"Jones@example.com","Jones",45],
+                      [5,"Addington.com","Addington",22,1590388335],
+                      [6,"Bannister.com","Bannister",59,1590393015],
+                      [2,"Jones@example.com","Jones",45,1590393325]
 
                   ]
               },
               {
                 name: "messages",
                 indexes: [
-                  {name: "index_messages_on_title",
-                   column: "title"   
-                  }
+                  {name: "index_messages_on_title",column: "title"},
+                  {name: "index_messages_on_last_modified",column: "last_modified"}
+
                 ],
                 values: [
-                    [3,"test post 3","content test post 3"],
-                    [4,"test post 4","content test post 4"]
+                    [3,"test post 3","content test post 3",1590396146],
+                    [4,"test post 4","content test post 4",1590396288]
                 ]
               }
       
@@ -405,10 +458,70 @@ export class TestsqliteComponent implements AfterViewInit {
         let result:any = await this._SQLiteService.importFromJson(JSON.stringify(partialImport1));
         if(result.changes.changes === -1 ) ret = false;
       }
-      if(!ret) console.log("importFromJson: Error " + result.message);
+      if(ret) {
+        // create the async table
+        result = await this._SQLiteService.openDB("db-from-json"); 
+        if(result.result) {
+          result = await this._SQLiteService.createSyncTable();
+        }
+      } else {
+          console.log("importFromJson: Error " + result.message);
+      }
       resolve(ret);
     });
   }
+
+  /**
+  * Test a full export to Json
+  */
+  async testFullExportToJson():Promise<boolean> {
+    return new Promise(async (resolve) => {
+      // open the database
+      let result:any = await this._SQLiteService.openDB("db-from-json"); 
+      if(result.result) {
+        let ret:boolean = true;
+        let result:any = await this._SQLiteService.exportToJson("full");
+        console.log('result fullexportToJson ',result);
+        if (Object.keys(result.export).length === 0)  ret = false;
+        const jsObj: string = JSON.stringify(result.export); 
+        result = await this._SQLiteService.isJsonValid(jsObj);
+        if(!result.result) ret = false;  
+        resolve(ret);
+      } else {
+        console.log("*** Error: Database db-from-json not opened");
+        resolve(false);
+      }
+    });
+  }
+
+  /**
+  * Test a partial export to Json
+  */
+ async testPartialExportToJson():Promise<boolean> {
+  return new Promise(async (resolve) => {
+    // open the database
+    let result:any = await this._SQLiteService.openDB("db-from-json"); 
+    if(result.result) {
+      let ret:boolean = true;
+      const syncDate: string = "2020-03-27T08:30:25.000Z";
+      ret = await this._SQLiteService.setSyncDate(syncDate);
+      if(ret) {
+        let result:any = await this._SQLiteService.exportToJson("partial");
+        console.log('result partialexportToJson ',result);
+        if (Object.keys(result.export).length === 0)  ret = false;
+        const jsObj: string = JSON.stringify(result.export); 
+        result = await this._SQLiteService.isJsonValid(jsObj);
+        if(!result.result) ret = false;  
+      }     
+      resolve(ret);
+    } else {
+      console.log("*** Error: Database db-from-json not opened");
+      resolve(false);
+    }
+
+  });
+}
+
   /**
   * Test an encrypted database
   */

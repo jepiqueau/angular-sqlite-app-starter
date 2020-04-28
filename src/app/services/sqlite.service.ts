@@ -55,6 +55,13 @@ export class SQLiteService {
       return Promise.resolve({result:false,message:"Service not started"});
     }
   }
+  async createSyncTable(): Promise<any> {
+    if(this.isService) {
+      return await this.sqlite.createSyncTable();
+    } else {
+      return Promise.resolve({changes:-1,message:"Service not started"});
+    }
+  }
   /**
    * Execute a set of Raw Statements
    * @param statements string 
@@ -104,6 +111,17 @@ export class SQLiteService {
     }
   }
   /**
+   * Check if the Database file exists
+   * @param dbName string
+   */
+  async isDBExists(dbName:string): Promise<any> {
+    if(this.isService) {
+      return await this.sqlite.isDBExists({database:dbName});
+    } else {
+      return Promise.resolve({result:false,message:"Service not started"});
+    }
+  }
+  /**
    * Delete the Database file
    * @param dbName string
    */
@@ -114,17 +132,50 @@ export class SQLiteService {
       return Promise.resolve({result:false,message:"Service not started"});
     }
   }
-    /**
-   * Execute a set of Raw Statements
-   * @param statements string 
+  /**
+   * Check the validity of a JSON Object
+   * @param jsonstring string 
    */
-  async importFromJson(jsonObject:any): Promise<any> {
+  async isJsonValid(jsonstring:string): Promise<any> {
     if(this.isService ) {
-      console.log('jsonObject ', jsonObject)
-      return await this.sqlite.importFromJson({jsonstring:jsonObject});
+      console.log('jsonObject ', jsonstring)
+      return await this.sqlite.isJsonValid({jsonstring:jsonstring});
+    } else {
+      return Promise.resolve({result:false,message:"Service not started"});
+    }
+  }
+
+  /**
+   * Import a database From a JSON
+   * @param jsonstring string 
+   */
+  async importFromJson(jsonstring:string): Promise<any> {
+    if(this.isService ) {
+      console.log('jsonObject ', jsonstring)
+      return await this.sqlite.importFromJson({jsonstring:jsonstring});
     } else {
       return Promise.resolve({changes:-1,message:"Service not started"});
     }
   }
+  /**
+   * Export the given database to a JSON Object
+   * @param dbName 
+   * @param encrypted 
+   * @param mode 
+   */
+  async exportToJson(mode:string): Promise<any> {
+    if(this.isService ) {
+      return await this.sqlite.exportToJson({jsonexportmode:mode});
+    } else {
+      return Promise.resolve({export:{},message:"Service not started"});
+    }    
+  }
+  async setSyncDate(syncDate: string): Promise<any> {
+    if(this.isService ) {
+      return await this.sqlite.setSyncDate({syncdate:syncDate});
+    } else {
+      return Promise.resolve({result:false,message:"Service not started"});
+    }    
 
+  }
 }
