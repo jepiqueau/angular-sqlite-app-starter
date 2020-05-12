@@ -417,12 +417,15 @@ Add a script in the index.html file of your application in the body tag
   <app-root></app-root>
   <script>
     if (typeof (process.versions.electron) === 'string' && process.versions.hasOwnProperty('electron')) {
-      const sqlite3 = require('sqlite3');
-      const fs = require('fs');
-      const path = require('path');
-      window.sqlite3 = sqlite3;
-      window.fs = fs;
-      window.path = path;
+        const sqlite3 = require('sqlite3');
+        const fs = require('fs');
+        const path = require('path');
+        const homeDir = require('os').homedir();
+        window.sqlite3 = sqlite3;
+        window.fs = fs;
+        window.path = path;
+        window.appName = "angular-sqlite-app-starter";
+        window.homeDir = homeDir;
     }
   </script>
 </body>
