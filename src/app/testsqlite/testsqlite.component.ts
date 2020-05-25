@@ -119,6 +119,7 @@ export class TestsqliteComponent implements AfterViewInit {
             }
           }
         }
+
       }
       // Manage All Tests Success/Failure
       if(this._SQLiteService.platform === 'electron') {
@@ -178,7 +179,7 @@ export class TestsqliteComponent implements AfterViewInit {
           let resOpen = await this._SQLiteService.openDB("test-sqlite",true,"secret"); 
           if(resOpen.result) {
             let resDel: any = await this._SQLiteService.deleteDB("test-sqlite");
-            if(!resDel) {
+            if(!resDel.result) {
               console.log("Error in deleting the database test-sqlite");
               resolve(false);
             }
@@ -231,13 +232,17 @@ export class TestsqliteComponent implements AfterViewInit {
             id INTEGER PRIMARY KEY NOT NULL,
             email TEXT UNIQUE NOT NULL,
             name TEXT,
+            company TEXT,
+            size FLOAT,
             age INTEGER
         );
         CREATE TABLE IF NOT EXISTS messages (
             id INTEGER PRIMARY KEY NOT NULL,
+            userid INTEGER,
             title TEXT NOT NULL,
-            body TEXT NOT NULL
-        );
+            body TEXT NOT NULL,
+            FOREIGN KEY (userid) REFERENCES users(id) ON DELETE SET DEFAULT
+          );
         CREATE TABLE IF NOT EXISTS images (
           id INTEGER PRIMARY KEY NOT NULL,
           name TEXT UNIQUE NOT NULL,
@@ -266,13 +271,65 @@ export class TestsqliteComponent implements AfterViewInit {
             if(retEx2) document.querySelector('.execute2').classList.remove('display'); 
 
             // Select all Users
-            sqlcmd = "SELECT * FROM users";
+            sqlcmd = "SELECT * FROM users;";
             result = await this._SQLiteService.query(sqlcmd);
             const retQuery1 = result.values.length === 2 &&
             result.values[0].name === "Whiteley" && result.values[1].name === "Jones" ? true : false;
             if(retQuery1) document.querySelector('.query1').classList.remove('display'); 
-
-            // add one user with statement and values              
+        if(!retQuery1) console.log('Select all users not successful')
+        sqlcmd = "SELECT * FROM users WHERE company IS NULL;";
+        result = await this._SQLiteService.query(sqlcmd);
+        const retQuery20 = result.values.length === 2 &&
+        result.values[0].name === "Whiteley" && result.values[1].name === "Jones" ? true : false;
+        if(!retQuery20) console.log('Select all users company is null not successful')
+        sqlcmd = "SELECT * FROM users WHERE size IS NULL;";
+        result = await this._SQLiteService.query(sqlcmd);
+        const retQuery21 = result.values.length === 2 &&
+        result.values[0].name === "Whiteley" && result.values[1].name === "Jones" ? true : false;
+        if(!retQuery21) console.log('Select all users size is null not successful')
+        sqlcmd = `
+        BEGIN TRANSACTION;
+        CREATE TABLE IF NOT EXISTS temp (
+            temp_id INTEGER PRIMARY KEY NOT NULL,
+            temp_email TEXT UNIQUE NOT NULL,
+            temp_name TEXT,
+            temp_company TEXT,
+            temp_size FLOAT,
+            temp_age INTEGER
+        );
+        COMMIT TRANSACTION;
+        `;
+        result = await this._SQLiteService.execute(sqlcmd);
+        const retExe21 = result.changes.changes === 0 || result.changes.changes === 1 ? true : false;
+        if(!retExe21) console.log('Create table  temp not successful')
+        sqlcmd = `INSERT INTO temp
+        (temp_id, temp_email, temp_name, temp_size, temp_company, temp_age)
+        SELECT id, email, name, size, company, age
+        FROM users
+        WHERE company IS NULL;`;
+        result = await this._SQLiteService.run(sqlcmd);
+        console.log("result insert temp ", result)
+        const retRun21 = result.changes.changes === 2 &&
+        result.changes.lastId === 2 ? true : false;
+        if(!retRun21) console.log('Insert into temp not successful')
+        sqlcmd = "SELECT * FROM temp;";
+        result = await this._SQLiteService.query(sqlcmd);
+        const retQuery22 = result.values.length === 2 &&
+        result.values[0].temp_name === "Whiteley" && result.values[1].temp_name === "Jones" ? true : false;
+        if(!retQuery22) console.log('Select all users 1 from temp not successful')
+        sqlcmd = "INSERT INTO temp (temp_name,temp_email) VALUES (?,?)";
+        let values1: Array<any>  = ["Simpson","Simpson@example.com"];
+        result = await this._SQLiteService.run(sqlcmd,values1);
+        const retRun22 = result.changes.changes === 1 &&
+                        result.changes.lastId === 3 ? true : false;
+        if(!retRun22) console.log('Insert new users to temp not successful')
+        sqlcmd = "SELECT * FROM temp;";
+        result = await this._SQLiteService.query(sqlcmd);
+        const retQuery23 = result.values.length === 3 &&
+        result.values[2].temp_name === "Simpson" && result.values[2].temp_email === "Simpson@example.com" ? true : false;
+        if(!retQuery23) console.log('Select all users 2 from temp not successful')
+console.log('result.values ',result.values)
+    // add one user with statement and values              
             sqlcmd = "INSERT INTO users (name,email,age) VALUES (?,?,?)";
             let values: Array<any>  = ["Simpson","Simpson@example.com",69];
             result = await this._SQLiteService.run(sqlcmd,values);
@@ -305,19 +362,21 @@ export class TestsqliteComponent implements AfterViewInit {
             sqlcmd = `
             BEGIN TRANSACTION;
             DELETE FROM messages;
-            INSERT INTO messages (title,body) VALUES ("test post 1","content test post 1");
-            INSERT INTO messages (title,body) VALUES ("test post 2","content test post 2");
+            INSERT INTO messages (userid,title,body) VALUES (1,"test post 1","content test post 1");
+            INSERT INTO messages (userid,title,body) VALUES (2,"test post 2","content test post 2");
+            INSERT INTO messages (userid,title,body) VALUES (1,"test post 3","content test post 3");
             COMMIT TRANSACTION;
             `;
             result = await this._SQLiteService.execute(sqlcmd);
-            const retEx3 = result.changes.changes === 2 ? true : false;
+            const retEx3 = result.changes.changes === 3 ? true : false;
             if(retEx3) document.querySelector('.execute3').classList.remove('display'); 
 
             // Select all Messages
             sqlcmd = "SELECT * FROM messages";
             result = await this._SQLiteService.query(sqlcmd);
-            const retQuery2 = result.values.length === 2 &&
-                      result.values[0].title === "test post 1" && result.values[1].title === "test post 2" ? true : false;
+            const retQuery2 = result.values.length === 3 &&
+                      result.values[0].title === "test post 1" && result.values[1].title === "test post 2"
+                        && result.values[2].title === "test post 3" ? true : false;
             if(retQuery2) document.querySelector('.query2').classList.remove('display'); 
 
             // insert some Images
