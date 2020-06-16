@@ -67,7 +67,7 @@ export class TestsqliteComponent implements AfterViewInit {
           if(!this.exportFull) {
             document.querySelector('.sql-failure-fullexport-json').classList.remove('display');
           } else {
-            console.log("***** End Export to JSon *****");
+            console.log("***** End Full Export to JSon *****");
             document.querySelector('.sql-success-fullexport-json').classList.remove('display');  
           }
           // Partial Export a database to JSON Object
@@ -75,12 +75,12 @@ export class TestsqliteComponent implements AfterViewInit {
           if(!this.exportPartial) {
             document.querySelector('.sql-failure-partialexport-json').classList.remove('display');
           } else {
-            console.log("***** End Export to JSon *****");
+            console.log("***** End Partial Export to JSon *****");
             document.querySelector('.sql-success-partialexport-json').classList.remove('display');  
           }
         }
         if(this.noEncryption && this.import && this.exportFull && 
-              this.exportPartial&& this._SQLiteService.platform !== "electron") {
+              this.exportPartial && this._SQLiteService.platform !== "electron") {
           // Encrypt the Non Encrypted Database
           this.encryption = await this.testEncryptionDatabase();
           if(!this.encryption) {

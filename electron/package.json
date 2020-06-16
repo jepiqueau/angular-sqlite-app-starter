@@ -8,7 +8,7 @@
     "postinstall": "electron-rebuild -f -w sqlite3"
   },
   "dependencies": {
-    "@capacitor/electron": "^2.1.0",
+    "@capacitor/electron": "^2.2.0",
     "electron-is-dev": "^1.1.0",
     "sqlite3": "^4.1.1"
   },
