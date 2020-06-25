@@ -14,6 +14,8 @@ export class TestsqliteComponent implements AfterViewInit {
   import: boolean = false;
   exportFull: boolean = false;
   exportPartial: boolean = false;
+  executeSet: boolean = false;
+  importFullIssue: boolean = false;
   encryption: boolean = false;
   encrypted: boolean = false; 
   wrongSecret: boolean = false;
@@ -78,9 +80,28 @@ export class TestsqliteComponent implements AfterViewInit {
             console.log("***** End Partial Export to JSon *****");
             document.querySelector('.sql-success-partialexport-json').classList.remove('display');  
           }
+          // Create a database from import schemas in one import and data in another import
+          this.importFullIssue = await this.testTwoImports();
+          if(!this.importFullIssue) {
+            document.querySelector('.sql-failure-two-imports-schema-data').classList.remove('display');
+          } else {
+            console.log("***** End Two Imports Schema/Data  From Json *****");
+            document.querySelector('.sql-success-two-imports-schema-data').classList.remove('display');  
+          }
+          
+          // Create a database and test executeSet
+          this.executeSet = await this.testExecuteSet();
+          if(!this.executeSet) {
+            document.querySelector('.sql-failure-test-executeset').classList.remove('display');
+          } else {
+            console.log("***** End Test Execute Set *****");
+            document.querySelector('.sql-success-test-executeset').classList.remove('display');  
+          }
+          
         }
         if(this.noEncryption && this.import && this.exportFull && 
-              this.exportPartial && this._SQLiteService.platform !== "electron") {
+              this.exportPartial && this.importFullIssue && this.executeSet &&
+              this._SQLiteService.platform !== "electron") {
           // Encrypt the Non Encrypted Database
           this.encryption = await this.testEncryptionDatabase();
           if(!this.encryption) {
@@ -328,8 +349,7 @@ export class TestsqliteComponent implements AfterViewInit {
         const retQuery23 = result.values.length === 3 &&
         result.values[2].temp_name === "Simpson" && result.values[2].temp_email === "Simpson@example.com" ? true : false;
         if(!retQuery23) console.log('Select all users 2 from temp not successful')
-console.log('result.values ',result.values)
-    // add one user with statement and values              
+            // add one user with statement and values              
             sqlcmd = "INSERT INTO users (name,email,age) VALUES (?,?,?)";
             let values: Array<any>  = ["Simpson","Simpson@example.com",69];
             result = await this._SQLiteService.run(sqlcmd,values);
@@ -421,7 +441,7 @@ console.log('result.values ',result.values)
   /**
   * Test an ImportFromJson
   */
- async testImportFromJson():Promise<boolean> {
+  async testImportFromJson():Promise<boolean> {
     return new Promise(async (resolve) => {
       let ret:boolean = true;
       const dataToImport: any = {
@@ -556,30 +576,174 @@ console.log('result.values ',result.values)
   /**
   * Test a partial export to Json
   */
- async testPartialExportToJson():Promise<boolean> {
-  return new Promise(async (resolve) => {
-    // open the database
-    let result:any = await this._SQLiteService.openDB("db-from-json"); 
-    if(result.result) {
-      let ret:boolean = true;
-      const syncDate: string = "2020-03-27T08:30:25.000Z";
-      ret = await this._SQLiteService.setSyncDate(syncDate);
-      if(ret) {
-        let result:any = await this._SQLiteService.exportToJson("partial");
-        console.log('result partialexportToJson ',result);
-        if (Object.keys(result.export).length === 0)  ret = false;
-        const jsObj: string = JSON.stringify(result.export); 
-        result = await this._SQLiteService.isJsonValid(jsObj);
-        if(!result.result) ret = false;  
-      }     
-      resolve(ret);
-    } else {
-      console.log("*** Error: Database db-from-json not opened");
-      resolve(false);
-    }
+  async testPartialExportToJson():Promise<boolean> {
+    return new Promise(async (resolve) => {
+      // open the database
+      let result:any = await this._SQLiteService.openDB("db-from-json"); 
+      if(result.result) {
+        let ret:boolean = true;
+        const syncDate: string = "2020-03-27T08:30:25.000Z";
+        ret = await this._SQLiteService.setSyncDate(syncDate);
+        if(ret) {
+          let result:any = await this._SQLiteService.exportToJson("partial");
+          console.log('result partialexportToJson ',result);
+          if (Object.keys(result.export).length === 0)  ret = false;
+          const jsObj: string = JSON.stringify(result.export); 
+          result = await this._SQLiteService.isJsonValid(jsObj);
+          if(!result.result) ret = false;  
+        }     
+        resolve(ret);
+      } else {
+        console.log("*** Error: Database db-from-json not opened");
+        resolve(false);
+      }
 
-  });
-}
+    });
+  }
+  /**
+  * Test executeSet method
+  */
+  async testExecuteSet(): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      // open the database
+      let result:any = await this._SQLiteService.openDB("test-executeset"); 
+      if(result.result) {
+
+        result = await this._SQLiteService.createSyncTable();
+        console.log('****** create db ******');
+        // create tables
+        let sqlcmd: string = `
+        BEGIN TRANSACTION;
+        CREATE TABLE IF NOT EXISTS users (
+          id INTEGER PRIMARY KEY NOT NULL,
+          email TEXT UNIQUE NOT NULL,
+          name TEXT,
+          FirstName TEXT,
+          company TEXT,
+          size REAL,
+          age INTEGER,
+          MobileNumber TEXT
+        );
+        CREATE INDEX users_index_name ON users (name);
+        CREATE INDEX users_index_email ON users (email);
+        DELETE FROM users;
+        PRAGMA user_version = 1;
+        PRAGMA foreign_keys = ON;
+        COMMIT TRANSACTION;
+        `;
+        result = await this._SQLiteService.execute(sqlcmd);
+        if(result.changes.changes == -1) resolve(false);
+        let set: Array<any>  = [
+          { statement:"INSERT INTO users (name,FirstName,email,age,MobileNumber) VALUES (?,?,?,?,?);",
+            values:["Simpson","Tom","Simpson@example.com",69,"4405060708"]
+          },
+          { statement:"INSERT INTO users (name,FirstName,email,age,MobileNumber) VALUES (?,?,?,?,?);",
+            values:["Jones","David","Jones@example.com",42,"4404030201"]
+          },
+          { statement:"INSERT INTO users (name,FirstName,email,age,MobileNumber) VALUES (?,?,?,?,?);",
+            values:["Whiteley","Dave","Whiteley@example.com",45,"4405162732"]
+          },
+          { statement:"INSERT INTO users (name,FirstName,email,age,MobileNumber) VALUES (?,?,?,?,?);",
+            values:["Brown","John","Brown@example.com",35,"4405243853"]
+          },
+          { statement:"UPDATE users SET age = ? , MobileNumber = ? WHERE id = ?;",
+            values:[51,"4404030202",2]
+          }
+        ];
+        result = await this._SQLiteService.executeSet(set);
+        console.log("result.changes.changes ",result.changes.changes)
+        if(result.changes.changes != 5) resolve(false);
+        resolve(true);
+      } else {
+        resolve(false);
+      } 
+    });
+  }
+  /**
+  * Test Two imports Schema/Data
+  */
+  async testTwoImports(): Promise<boolean> {
+    return new Promise(async (resolve) => {
+      const tableImport: any = {
+        database: "twoimports",
+        encrypted: false,
+        mode: "full",
+        tables: [
+          {
+            name: "areas",
+            schema: [
+              { column: "id", value: "INTEGER PRIMARY KEY NOT NULL" },
+              { column: "name", value: "TEXT" },
+              { column: "favourite", value: "INTEGER" },
+            ],
+          },
+          {
+            name: "elements",
+            schema: [
+              { column: "id", value: "INTEGER PRIMARY KEY NOT NULL" },
+              { column: "name", value: "TEXT" },
+              { column: "favourite", value: "INTEGER" },
+            ],
+          },
+          {
+            name: "issues",
+            schema: [
+              { column: "id", value: "INTEGER PRIMARY KEY NOT NULL" },
+              { column: "name", value: "TEXT" },
+              { column: "favourite", value: "INTEGER" },
+            ],
+          },
+        ],
+      }; 
+    
+      let result: any = await this._SQLiteService.importFromJson(JSON.stringify(tableImport));
+      console.log('import result ', result)
+     
+      if(result.changes.changes === -1 ) resolve(false);
+      // import the data
+      const partialImport: any = {
+        database: "twoimports",
+        encrypted: false,
+        mode: "partial",
+        tables: [
+          {
+            name: "areas",
+            values: [
+              [1, "Access road", 0],
+              [2, "Accessway", 0],
+              [3, "Air handling system", 0],
+            ],
+
+          },
+          {
+            name: "elements",
+            values: [
+              [1, "Access door < 3m in height", 0],
+              [2, "Access door > 3m in height", 0],
+              [3, "Air inflitration", 0],
+              [4, "Air ventilation", 0],
+            ],
+          },
+          {
+            name: "issues",
+            values: [
+              [1, "Accumulation of internal moisture", 0],
+              [2, "Backflow prevention device", 0],
+              [3, "Backpressure", 0],
+              [4, "Backsiphonage", 0],
+            ],
+          },
+        ],
+      };
+      result = await this._SQLiteService.importFromJson(JSON.stringify(partialImport));
+      console.log('import result ', result)
+     
+      if(result.changes.changes === -1 ) resolve(false);
+     
+      resolve(true);
+
+    });
+  }
 
   /**
   * Test an encrypted database

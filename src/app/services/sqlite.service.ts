@@ -74,6 +74,17 @@ export class SQLiteService {
     }
   }
   /**
+   * Execute a set of Raw Statements as Array<any>
+   * @param set Array<any> 
+   */
+  async executeSet(set:Array<any>): Promise<any> {
+    if(this.isService && set.length > 0) {
+      return await this.sqlite.executeSet({set:set});
+    } else {
+      return Promise.resolve({changes:-1,message:"Service not started"});
+    }
+  }
+  /**
    * Execute a Single Raw Statement
    * @param statement string
    */
