@@ -145,7 +145,7 @@ export class TestsqliteComponent implements AfterViewInit {
       // Manage All Tests Success/Failure
       if(this._SQLiteService.platform === 'electron') {
         if (!this.initTest || !this.noEncryption || !this.import ||
-               !this.exportFull || !this.exportPartial) {
+               !this.exportFull || !this.exportPartial || !this.importFullIssue || !this.executeSet) {
           document.querySelector('.sql-allfailure').classList.remove('display');
         } else {
           document.querySelector('.sql-allsuccess').classList.remove('display');
@@ -153,7 +153,7 @@ export class TestsqliteComponent implements AfterViewInit {
       } else {
         if(!this.initTest || !this.noEncryption || !this.encryption || !this.encrypted || 
         !this.wrongSecret || !this.changeSecret || !this.newSecret || !this.import
-         || !this.exportFull || !this.exportPartial) {     
+         || !this.exportFull || !this.exportPartial || !this.importFullIssue || !this.executeSet) {     
           document.querySelector('.sql-allfailure').classList.remove('display');
         } else {
           document.querySelector('.sql-allsuccess').classList.remove('display');
@@ -206,6 +206,22 @@ export class TestsqliteComponent implements AfterViewInit {
             }
           } else {
             console.log("Error database test-sqlite does not exist");
+            resolve(false);
+          }
+        }
+        // check if the database test-executeset exists 
+        result = await this._SQLiteService.isDBExists("test-executeset"); 
+        if(result.result) {
+          // open the DB
+          let resOpen = await this._SQLiteService.openDB("test-executeset"); 
+          if(resOpen.result) {
+            let resDel: any = await this._SQLiteService.deleteDB("test-executeset");
+            if(!resDel.result) {
+              console.log("Error in deleting the database test-executeset");
+              resolve(false);
+            }
+          } else {
+            console.log("Error database test-executeset does not exist");
             resolve(false);
           }
         }
@@ -624,9 +640,8 @@ export class TestsqliteComponent implements AfterViewInit {
           age INTEGER,
           MobileNumber TEXT
         );
-        CREATE INDEX users_index_name ON users (name);
-        CREATE INDEX users_index_email ON users (email);
-        DELETE FROM users;
+        CREATE INDEX IF NOT EXISTS users_index_name ON users (name);
+        CREATE INDEX IF NOT EXISTS users_index_email ON users (email);
         PRAGMA user_version = 1;
         PRAGMA foreign_keys = ON;
         COMMIT TRANSACTION;
