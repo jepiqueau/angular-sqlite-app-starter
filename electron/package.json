@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@types/sqlite3": "^3.1.6",
-    "electron": "^8.0.0",
+    "electron": "^8.3.4",
     "electron-rebuild": "^1.10.1"
   },
   "keywords": [
