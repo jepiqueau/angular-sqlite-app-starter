@@ -1,6 +1,6 @@
 {
   "name": "angular-sqlite-app-starter",
-  "version": "2.2.1-1",
+  "version": "2.2.1-2",
   "description": "Ionic/Angular SQLite Application Starter",
   "author": "Jean Pierre Quéau",
   "license": "MIT",
@@ -28,7 +28,7 @@
     "@ionic-native/splash-screen": "latest",
     "@ionic-native/status-bar": "latest",
     "@ionic/angular": "latest",
-    "capacitor-sqlite": "^2.2.1-1",
+    "capacitor-sqlite": "^2.2.1-2",
     "rxjs": "~6.5.4",
     "tslib": "^1.11.1",
     "zone.js": "^0.10.2"
