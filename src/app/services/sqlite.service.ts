@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Plugins } from '@capacitor/core';
-import * as CapacitorSQLPlugin from 'capacitor-sqlite';
+import * as CapacitorSQLPlugin from '@capacitor-community/sqlite';
 const { CapacitorSQLite, Device } = Plugins;
 
 @Injectable({
