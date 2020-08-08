@@ -313,8 +313,7 @@ async fooMethod(): Promise<void> {
             ...
 
             ...
-        }
-      }),
+      }
 
     } else {
         console.log('CapacitorSQLite Plugin: Initialization Failed');
