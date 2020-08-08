@@ -1,11 +1,11 @@
 # Ionic/Angular SQLite App Starter
 
-Ionic/Angular application demonstrating the use of the ```capacitor-sqlite``` plugin and can be use as an Ionic/Angular application starter.
+Ionic/Angular application demonstrating the use of the ```@capacitor-community/sqlite``` plugin and can be use as an Ionic/Angular application starter.
 
 
-The ```capacitor-sqlite``` test is accessible in the Tab2 of the Application by clicking on the SQLite test button.
+The ```@capacitor-community/sqlite``` test is accessible in the Tab2 of the Application by clicking on the SQLite test button.
 
-The application uses a service class as a wrapper to the ```capacitor-sqlite``` plugin 
+The application uses a service class as a wrapper to the ```@capacitor-community/sqlite``` plugin 
 
 ## Getting Started
 
@@ -42,7 +42,7 @@ the capacitor config parameters are:
 
 ### Building Web Code
 
-The ```capacitor-sqlite``` is not implemented for Web Browsers.
+The ```@capacitor-community/sqlite``` is not implemented for Web Browsers.
 if you run
 
 ```bash
@@ -106,24 +106,24 @@ test-encryptedSQLite.db
 #### IOS
 
 In Xcode, before building your app, 
- - Go to the ```Pods/Development Pods/CapacitorSqlite``` folder, 
+ - Go to the ```Pods/Development Pods/CapacitorCommunitySqlite``` folder, 
  - Modify the ```secret``` and ```newsecret```strings in the GlobalSQLite.swift file.
 
 #### Android
 
 In Android Studio, before building your app,
- - Go to the ```capacitor-sqlite/java/com.jeep.plugins.capacitor/cdssUtils```folder,
+ - Go to the ```capacitor-community-sqlite/java/com.getcapacitor.community.database.sqlite/cdssUtils```folder,
  - Modify the ```secret``` and ```newsecret```strings in the GlobalSQLite.java file.
 
 ### Angular Service
 
-A Angular Service has been defined as a wrapper to the ```capacitor-sqlite``` plugin.
+A Angular Service has been defined as a wrapper to the ```@capacitor-community/sqlite``` plugin.
 
 ```tsx
 import { Injectable } from '@angular/core';
 
 import { Plugins } from '@capacitor/core';
-import * as CapacitorSQLPlugin from 'capacitor-sqlite';
+import * as CapacitorSQLPlugin from '@capacitor-community/sqlite';
 const { CapacitorSQLite, Device } = Plugins;
 
 @Injectable({
@@ -260,10 +260,10 @@ npx cap init mySQLiteApp com.example.app
 Your App information [appName] [appId] can be whathever you would like. 
 Here we choose for the example [mySQLiteApp] [com.example.app]
 
-### Install capacitor-sqlite plugin
+### Install @capacitor-community/sqlite plugin
 
 ```bash
-npm install --save capacitor-sqlite@latest
+npm install --save @capacitor-community/sqlite@latest
 ```
 
 ### Add an Angular Service
@@ -279,9 +279,8 @@ In your favorite editor open the ```sqlite.services.ts``` file under the ```src/
 #### Import in your Angular Component
 
 ```ts
-import { SQLiteService } from '../sqlite.service';
-import { concatAll } from 'rxjs/operators';
-import { Observable, concat} from 'rxjs';
+import { Component, AfterViewInit } from '@angular/core';
+import { SQLiteService } from '../services/sqlite.service';
 ```
 
 #### Inject the SQLiteService in your Angular Component Constructor
@@ -309,9 +308,8 @@ async fooMethod(): Promise<void> {
     ...
     if(this._SQLiteService.isService) {
       // open the database
-      this._SQLiteService.openDB("fooDB") 
-      .subscribe(result => {
-        if(result.result) {
+      let resOpen = await this._SQLiteService.openDB("fooDB"); 
+      if(resOpen.result) {
             ...
 
             ...
@@ -368,7 +366,7 @@ Once Android launches,
  - Edit the MainActivity.java and add the following import:
 
 ```java
-import com.jeep.plugin.capacitor.CapacitorSQLite;
+import com.getcapacitor.community.database.sqlite.CapacitorSQLite;
 ```
 
  - Add the CapacitorSQLite declaration in the this.init method
@@ -381,10 +379,11 @@ add(CapacitorSQLite.class);
 
 #### Electron
 
-In your application folder add the Electron platform
+In your application folder add the @capacitor-community/electron
 
 ```bash
-npx cap add electron
+npm i @capacitor-community/electron
+npx cap add @capacitor-community/electron
 ```
 
 In the Electron folder of your application
@@ -399,7 +398,11 @@ Modify the Electron package.json file by adding a script "postinstall"
 
 ```json
   "scripts": {
-    "electron:start": "electron ./",
+    "build": "tsc",
+    "electron:start": "npm run build && electron ./",
+    "electron:pack": "npm run build && electron-builder build --dir",
+    "electron:build-windows": "npm run build && electron-builder build --windows",
+    "electron:build-mac": "npm run build && electron-builder build --mac",
     "postinstall": "electron-rebuild -f -w sqlite3"
   },
 ```
@@ -416,21 +419,29 @@ Add a script in the index.html file of your application in the body tag
 <body>
   <app-root></app-root>
   <script>
-    if (typeof (process.versions.electron) === 'string' && process.versions.hasOwnProperty('electron')) {
-        const sqlite3 = require('sqlite3');
-        const fs = require('fs');
-        const path = require('path');
-        const homeDir = require('os').homedir();
-        window.sqlite3 = sqlite3;
-        window.fs = fs;
-        window.path = path;
-        window.appName = "angular-sqlite-app-starter";
-        window.homeDir = homeDir;
-    }
+      try {
+        if (
+          process &&
+          typeof process.versions.electron === 'string' &&
+          process.versions.hasOwnProperty('electron')
+        ) {
+          const sqlite3 = require('sqlite3');
+          const fs = require('fs');
+          const path = require('path');
+          const homeDir = require('os').homedir();
+          window.sqlite3 = sqlite3;
+          window.fs = fs;
+          window.path = path;
+          window.appName = 'YOUR_APP_NAME';
+          window.homeDir = homeDir;
+        }
+      } catch {
+        console.log("process doesn't exists");
+      }
   </script>
 </body>
 ```
-and then build the apllication
+and then build the application
 
 ```bash
  npx cap update
@@ -439,23 +450,20 @@ and then build the apllication
  npx cap open electron
 ```
 
-The datastores created are under **YourApplication/Electron/DataSbases**
+The datastores created are under **User/Databases/YOUR_APP_NAME/**
 
-
-
-
-
-### When capacitor-sqlite is updated
+### When @capacitor-community/sqlite is updated
 
 Follow this process:
 
 ```bash
-npm install --save capacitor-sqlite@latest
+npm install --save @capacitor-community/sqlite@latest
 npx cap update
 npm run build
 npx cap copy
 npx cap copy web
 npx cap open ios
 npx cap open android
+npx cap open electron
 ```
 
