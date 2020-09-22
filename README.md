@@ -4,9 +4,8 @@
 <p align="center"><strong><code>angular-sqlite-app-starter</code></strong></p>
 <p align="center">Ionic/Angular application demonstrating the use of the</p>
 <p align="center"><strong><code>@capacitor-community/sqlite<code></strong></p>
-<p align="center">plugin and can be use as an Ionic/Angular application starter
-</p>
-
+<p align="center">plugin and can be use as an Ionic/Angular application starter</p>
+<br>
 <p align="center">
   <img src="https://img.shields.io/maintenance/yes/2020?style=flat-square" />
   <a href="https://github.com/jepiqueau/angular-sqlite-app-starter"><img src="https://img.shields.io/github/license/jepiqueau/angular-sqlite-app-starter?style=flat-square" /></a>
@@ -21,13 +20,6 @@
 | Maintainer        | GitHub                                    | Social |
 | ----------------- | ----------------------------------------- | ------ |
 | Quéau Jean Pierre | [jepiqueau](https://github.com/jepiqueau) |        |
-
-
-# Ionic/Angular SQLite App Starter
-
-Ionic/Angular application demonstrating the use of the ```@capacitor-community/sqlite``` plugin and can be use as an Ionic/Angular application starter.
-
-
 
 
 ## Installation
@@ -512,7 +504,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/jepiqueau"><img src="https://avatars3.githubusercontent.com/u/16580653?v=4" width="100px;" alt=""/><br /><sub><b>Jean Pierre Quéau</b></sub></a><br /><a href="https://github.com/capacitor-community/sqlite/commits?author=jepiqueau" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/jepiqueau"><img src="https://avatars3.githubusercontent.com/u/16580653?v=4" width="100px;" alt=""/><br /><sub><b>Jean Pierre Quéau</b></sub></a><br /><a href="https://github.com/jepiqueau/angular-sqlite-app-starter/commits?author=jepiqueau" title="Code">💻</a></td>
   </tr>
 </table>
 
