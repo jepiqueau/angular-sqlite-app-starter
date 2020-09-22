@@ -4,7 +4,6 @@
 <p align="center"><strong><code>angular-sqlite-app-starter</code></strong></p>
 <p align="center">Ionic/Angular application demonstrating the use of the</p>
 <p align="center"><strong><code>@capacitor-community/sqlite<code></strong></p>
-<p align="center">plugin and can be use as an Ionic/Angular application starter</p>
 <br>
 <p align="center">
   <img src="https://img.shields.io/maintenance/yes/2020?style=flat-square" />
