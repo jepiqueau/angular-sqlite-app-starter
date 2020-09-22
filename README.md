@@ -1,13 +1,36 @@
+<p align="center"><br><img src="https://avatars3.githubusercontent.com/u/16580653?v=4" width="128" height="128" /></p>
+
+<h3 align="center">Ionic/Angular SQLite App Starter</h3>
+<p align="center"><strong><code>angular-sqlite-app-starter</code></strong></p>
+<p align="center">Ionic/Angular application demonstrating the use of the</p>
+<p align="center"><strong><code>@capacitor-community/sqlite<code></strong></p>
+<p align="center">plugin and can be use as an Ionic/Angular application starter
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/maintenance/yes/2020?style=flat-square" />
+  <a href="https://github.com/jepiqueau/angular-sqlite-app-starter"><img src="https://img.shields.io/github/license/jepiqueau/angular-sqlite-app-starter?style=flat-square" /></a>
+  <a href="https://github.com/jepiqueau/angular-sqlite-app-starter"><img src="https://img.shields.io/github/package-json/v/jepiqueau/angular-sqlite-app-starter?style=flat-square" /></a>
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+<a href="#contributors-"><img src="https://img.shields.io/badge/all%20contributors-1-orange?style=flat-square" /></a>
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+</p>
+
+## Maintainers
+
+| Maintainer        | GitHub                                    | Social |
+| ----------------- | ----------------------------------------- | ------ |
+| Quéau Jean Pierre | [jepiqueau](https://github.com/jepiqueau) |        |
+
+
 # Ionic/Angular SQLite App Starter
 
 Ionic/Angular application demonstrating the use of the ```@capacitor-community/sqlite``` plugin and can be use as an Ionic/Angular application starter.
 
 
-The ```@capacitor-community/sqlite``` test is accessible in the Tab2 of the Application by clicking on the SQLite test button.
 
-The application uses a service class as a wrapper to the ```@capacitor-community/sqlite``` plugin 
 
-## Getting Started
+## Installation
 
 To start building your App using this Starter App, clone this repo to a new directory:
 
@@ -69,7 +92,13 @@ npx cap open android
 ```
 Once Android Studio launches, you can build your app through the standard Android Studio workflow.
 
-#### Resulting Output
+### Test SQLite access
+
+The ```@capacitor-community/sqlite``` test is accessible in the Tab2 of the Application by clicking on the SQLite test button.
+
+The application uses a service class as a wrapper to the ```@capacitor-community/sqlite``` plugin 
+
+### Resulting Output
 
 ```
 Open Database successful
@@ -144,6 +173,14 @@ export class SQLiteService {
     if (this.platform === "ios" || this.platform === "android") {
       this.sqlite = CapacitorSQLite;
       this.isService = true;
+      if(this.platform === "android") {
+        try {
+          await CapacitorSQLite.requestPermissions();
+        } catch (e) {
+          console.log("Error requesting permissions " + e);
+          this.isService = false;
+        }
+      }
     } else if(this.platform === "electron") {
       this.sqlite = CapacitorSQLPlugin.CapacitorSQLiteElectron;
       this.isService = true;
@@ -465,4 +502,24 @@ npx cap open ios
 npx cap open android
 npx cap open electron
 ```
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/jepiqueau"><img src="https://avatars3.githubusercontent.com/u/16580653?v=4" width="100px;" alt=""/><br /><sub><b>Jean Pierre Quéau</b></sub></a><br /><a href="https://github.com/capacitor-community/sqlite/commits?author=jepiqueau" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 

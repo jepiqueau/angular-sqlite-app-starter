@@ -22,6 +22,15 @@ export class SQLiteService {
     if (this.platform === "ios" || this.platform === "android") {
       this.sqlite = CapacitorSQLite;
       this.isService = true;
+      if(this.platform === "android") {
+        try {
+          await CapacitorSQLite.requestPermissions();
+        } catch (e) {
+          console.log("Error requesting permissions " + e);
+          this.isService = false;
+        }
+      }
+  
     } else if(this.platform === "electron") {
       this.sqlite = CapacitorSQLPlugin.CapacitorSQLiteElectron;
       this.isService = true;
