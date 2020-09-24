@@ -1,6 +1,6 @@
 {
   "name": "angular-sqlite-app-starter",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "An Amazing Capacitor App",
   "main": "./build/index.js",
   "scripts": {
@@ -16,10 +16,12 @@
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
+    "@types/node": "^14.11.2",
     "@types/sqlite3": "^3.1.6",
     "electron": "^9.1.1",
     "electron-builder": "^22.7.0",
-    "electron-rebuild": "^1.11.0",
+    "electron-rebuild": "^2.0.3",
+    "tslib": "^2.0.1",
     "typescript": "~3.9.5"
   },
   "keywords": [

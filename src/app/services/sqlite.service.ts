@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Plugins } from '@capacitor/core';
 import * as CapacitorSQLPlugin from '@capacitor-community/sqlite';
+import * as CapacitorSQLElectronPlugin from '@capacitor-community/sqlite/electron/dist/esm/electron/src';
 const { CapacitorSQLite, Device } = Plugins;
 
 @Injectable({
@@ -32,7 +33,7 @@ export class SQLiteService {
       }
   
     } else if(this.platform === "electron") {
-      this.sqlite = CapacitorSQLPlugin.CapacitorSQLiteElectron;
+      this.sqlite = CapacitorSQLElectronPlugin.CapacitorSQLiteElectron;
       this.isService = true;
     } else {
       this.sqlite = CapacitorSQLPlugin.CapacitorSQLite;
