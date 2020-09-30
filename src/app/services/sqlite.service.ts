@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Plugins } from '@capacitor/core';
-import * as CapacitorSQLPlugin from '@capacitor-community/sqlite';
+import '@capacitor-community/sqlite';
 const { CapacitorSQLite, Device } = Plugins;
 
 @Injectable({
@@ -19,24 +19,19 @@ export class SQLiteService {
   async initializePlugin(): Promise<void> {
     const info = await Device.getInfo();
     this.platform = info.platform;
-    if (this.platform === "ios" || this.platform === "android") {
-      this.sqlite = CapacitorSQLite;
-      this.isService = true;
-      if(this.platform === "android") {
-        try {
-          await CapacitorSQLite.requestPermissions();
-        } catch (e) {
-          console.log("Error requesting permissions " + e);
-          this.isService = false;
-        }
+    console.log("*** platform " + this.platform)
+    this.sqlite = CapacitorSQLite;
+    this.isService = true;
+
+    if(this.platform === "android") {
+      try {
+        await this.sqlite.requestPermissions();
+      } catch (e) {
+        console.log("Error requesting permissions " + e);
+        this.isService = false;
       }
-  
-    } else if(this.platform === "electron") {
-      this.sqlite = CapacitorSQLPlugin.CapacitorSQLiteElectron;
-      this.isService = true;
-    } else {
-      this.sqlite = CapacitorSQLPlugin.CapacitorSQLite;
     }
+ 
   }
   /**
    * Get Echo 
