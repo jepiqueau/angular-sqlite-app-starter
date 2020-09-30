@@ -190,12 +190,17 @@ export class TestsqliteComponent implements AfterViewInit {
    */
   async testInitialization(): Promise<boolean> {
     return new Promise(async (resolve) => {
+      const echo = await this._SQLiteService.getEcho("Hello from JEEP");
+      console.log("*** echo ",echo);
+      resolve(true);
       // delete databases to enable test restart
       // as after the first pass the database is encrypted
       if(this._SQLiteService.platform === "ios" || this._SQLiteService.platform === "android" 
           || this._SQLiteService.platform === "electron") {
         // check if the database test-sqlite exists 
-        let result: any = await this._SQLiteService.isDBExists("test-sqlite"); 
+        let result: any = await this._SQLiteService.isDBExists("test-sqlite");
+        console.log("isDBExists 'test-sqlite' " + JSON.stringify(result));
+        console.log("*** ") 
         if(result.result) {
           // open the DB
           let resOpen = await this._SQLiteService.openDB("test-sqlite",true,"secret"); 
@@ -246,9 +251,6 @@ export class TestsqliteComponent implements AfterViewInit {
           }
         }
       }
-      const echo = await this._SQLiteService.getEcho("Hello from JEEP");
-      console.log("*** echo ",echo);
-      resolve(true);
     });
   }
   /**
