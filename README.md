@@ -44,6 +44,7 @@ npm run build
 npx cap update
 npm run build
 npx cap copy
+npx cap copy @capacitor-community/electron
 npx cap copy web
 ```
 
@@ -143,7 +144,7 @@ A Angular Service has been defined as a wrapper to the ```@capacitor-community/s
 import { Injectable } from '@angular/core';
 
 import { Plugins } from '@capacitor/core';
-import * as CapacitorSQLPlugin from '@capacitor-community/sqlite';
+import '@capacitor-community/sqlite';
 const { CapacitorSQLite, Device } = Plugins;
 
 @Injectable({
@@ -161,23 +162,19 @@ export class SQLiteService {
   async initializePlugin(): Promise<void> {
     const info = await Device.getInfo();
     this.platform = info.platform;
-    if (this.platform === "ios" || this.platform === "android") {
-      this.sqlite = CapacitorSQLite;
-      this.isService = true;
-      if(this.platform === "android") {
-        try {
-          await CapacitorSQLite.requestPermissions();
-        } catch (e) {
-          console.log("Error requesting permissions " + e);
-          this.isService = false;
-        }
+    console.log("*** platform " + this.platform)
+    this.sqlite = CapacitorSQLite;
+    this.isService = true;
+
+    if(this.platform === "android") {
+      try {
+        await this.sqlite.requestPermissions();
+      } catch (e) {
+        console.log("Error requesting permissions " + e);
+        this.isService = false;
       }
-    } else if(this.platform === "electron") {
-      this.sqlite = CapacitorSQLPlugin.CapacitorSQLiteElectron;
-      this.isService = true;
-    } else {
-      this.sqlite = CapacitorSQLPlugin.CapacitorSQLite;
     }
+ 
   }
   /**
    * Get Echo 
@@ -439,42 +436,14 @@ Execute the postinstall script
 ```bash
 npm run postinstall
 ```
-Go back in the main folder of your application
-Add a script in the index.html file of your application in the body tag
 
-```html
-<body>
-  <app-root></app-root>
-  <script>
-      try {
-        if (
-          process &&
-          typeof process.versions.electron === 'string' &&
-          process.versions.hasOwnProperty('electron')
-        ) {
-          const sqlite3 = require('sqlite3');
-          const fs = require('fs');
-          const path = require('path');
-          const homeDir = require('os').homedir();
-          window.sqlite3 = sqlite3;
-          window.fs = fs;
-          window.path = path;
-          window.appName = 'YOUR_APP_NAME';
-          window.homeDir = homeDir;
-        }
-      } catch {
-        console.log("process doesn't exists");
-      }
-  </script>
-</body>
-```
 and then build the application
 
 ```bash
- npx cap update
+ npx cap sync @capacitor-community/electron
  npm run build
- npx cap copy
- npx cap open electron
+ npx cap copy @capacitor-community/electron
+ npx cap open @capacitor-community/electron
 ```
 
 The datastores created are under **User/Databases/YOUR_APP_NAME/**
@@ -486,12 +455,14 @@ Follow this process:
 ```bash
 npm install --save @capacitor-community/sqlite@latest
 npx cap update
+npx cap sync @capacitor-community/electron
 npm run build
 npx cap copy
+ npx cap copy @capacitor-community/electron
 npx cap copy web
 npx cap open ios
 npx cap open android
-npx cap open electron
+npx cap open @capacitor-community/electron
 ```
 
 ## Contributors ✨
