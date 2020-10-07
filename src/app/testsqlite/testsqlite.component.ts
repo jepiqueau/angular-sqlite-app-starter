@@ -274,23 +274,49 @@ export class TestsqliteComponent implements AfterViewInit {
             name TEXT,
             company TEXT,
             size FLOAT,
-            age INTEGER
+            age INTEGER,
+            last_modified INTEGER DEFAULT (strftime('%s', 'now'))
         );
         CREATE TABLE IF NOT EXISTS messages (
             id INTEGER PRIMARY KEY NOT NULL,
             userid INTEGER,
             title TEXT NOT NULL,
             body TEXT NOT NULL,
+            last_modified INTEGER DEFAULT (strftime('%s', 'now')),
             FOREIGN KEY (userid) REFERENCES users(id) ON DELETE SET DEFAULT
-          );
+        );
         CREATE TABLE IF NOT EXISTS images (
           id INTEGER PRIMARY KEY NOT NULL,
           name TEXT UNIQUE NOT NULL,
           type TEXT NOT NULL,
           size INTEGER,
-          img BLOB
+          img BLOB,
+          last_modified INTEGER DEFAULT (strftime('%s', 'now'))
         );
-        CREATE INDEX users_index_name ON users (name);
+        CREATE INDEX IF NOT EXISTS users_index_name ON users (name);
+        CREATE INDEX IF NOT EXISTS users_index_last_modified ON users (last_modified);
+        CREATE INDEX IF NOT EXISTS messages_index_name ON messages (title);
+        CREATE INDEX IF NOT EXISTS messages_index_last_modified ON messages (last_modified);
+        CREATE INDEX IF NOT EXISTS images_index_name ON images (name);
+        CREATE INDEX IF NOT EXISTS images_index_last_modified ON images (last_modified);
+        CREATE TRIGGER IF NOT EXISTS users_trigger_last_modified
+        AFTER UPDATE ON users
+        FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
+        BEGIN
+            UPDATE users SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+        END;
+        CREATE TRIGGER IF NOT EXISTS messages_trigger_last_modified
+        AFTER UPDATE ON messages
+        FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
+        BEGIN
+            UPDATE messages SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+        END;
+        CREATE TRIGGER IF NOT EXISTS images_trigger_last_modified
+        AFTER UPDATE ON images
+        FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
+        BEGIN
+            UPDATE images SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+        END;
         PRAGMA user_version = 1;
         COMMIT TRANSACTION;
         `;
@@ -693,6 +719,7 @@ export class TestsqliteComponent implements AfterViewInit {
               { column: "id", value: "INTEGER PRIMARY KEY NOT NULL" },
               { column: "name", value: "TEXT" },
               { column: "favourite", value: "INTEGER" },
+              { column:"last_modified", value:"INTEGER"},
             ],
           },
           {
@@ -701,6 +728,7 @@ export class TestsqliteComponent implements AfterViewInit {
               { column: "id", value: "INTEGER PRIMARY KEY NOT NULL" },
               { column: "name", value: "TEXT" },
               { column: "favourite", value: "INTEGER" },
+              { column:"last_modified", value:"INTEGER"},
             ],
           },
           {
@@ -709,6 +737,7 @@ export class TestsqliteComponent implements AfterViewInit {
               { column: "id", value: "INTEGER PRIMARY KEY NOT NULL" },
               { column: "name", value: "TEXT" },
               { column: "favourite", value: "INTEGER" },
+              { column:"last_modified", value:"INTEGER"},
             ],
           },
         ],
@@ -727,28 +756,28 @@ export class TestsqliteComponent implements AfterViewInit {
           {
             name: "areas",
             values: [
-              [1, "Access road", 0],
-              [2, "Accessway", 0],
-              [3, "Air handling system", 0],
+              [1, "Access road", 0, 1590396146],
+              [2, "Accessway", 0, 1590396146],
+              [3, "Air handling system", 0, 1590396146],
             ],
 
           },
           {
             name: "elements",
             values: [
-              [1, "Access door < 3m in height", 0],
-              [2, "Access door > 3m in height", 0],
-              [3, "Air inflitration", 0],
-              [4, "Air ventilation", 0],
+              [1, "Access door < 3m in height", 0, 1590396288],
+              [2, "Access door > 3m in height", 0, 1590396288],
+              [3, "Air inflitration", 0, 1590396288],
+              [4, "Air ventilation", 0, 1590396288],
             ],
           },
           {
             name: "issues",
             values: [
-              [1, "Accumulation of internal moisture", 0],
-              [2, "Backflow prevention device", 0],
-              [3, "Backpressure", 0],
-              [4, "Backsiphonage", 0],
+              [1, "Accumulation of internal moisture", 0, 1590388335],
+              [2, "Backflow prevention device", 0, 1590388335],
+              [3, "Backpressure", 0, 1590388335],
+              [4, "Backsiphonage", 0, 1590388335],
             ],
           },
         ],
@@ -918,7 +947,7 @@ export class TestsqliteComponent implements AfterViewInit {
             ? true : false;
         
         // Close the Database
-        result = await this._SQLiteService.close("test-encrypted");
+        result = await this._SQLiteService.close("test-sqlite");
         const retClose = result.result;
         if(retQuery1 && retClose) {
           resolve(true);
@@ -932,3 +961,9 @@ export class TestsqliteComponent implements AfterViewInit {
     });
   }
 }
+
+/*
+
+
+
+*/

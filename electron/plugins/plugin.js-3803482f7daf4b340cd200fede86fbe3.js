@@ -2700,6 +2700,7 @@ var capacitorPlugin = (function (exports) {
                         isSchema = true;
                         if (jsonData.mode === 'full')
                             statements.push(`DROP TABLE IF EXISTS ${jsonData.tables[i].name};`);
+                        // create table
                         statements.push(`CREATE TABLE IF NOT EXISTS ${jsonData.tables[i].name} (`);
                         for (let j = 0; j < jsonData.tables[i].schema.length; j++) {
                             if (j === jsonData.tables[i].schema.length - 1) {
@@ -2720,6 +2721,8 @@ var capacitorPlugin = (function (exports) {
                             }
                         }
                         statements.push(');');
+                        // create trigger last_modified associated with the table
+                        statements.push(`CREATE TRIGGER IF NOT EXISTS ${jsonData.tables[i].name}_trigger_last_modified AFTER UPDATE ON ${jsonData.tables[i].name} FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified BEGIN UPDATE ${jsonData.tables[i].name} SET last_modified = (strftime('%s','now')) WHERE id=OLD.id; END;`);
                     }
                     if (jsonData.tables[i].indexes != null &&
                         jsonData.tables[i].indexes.length >= 1) {
@@ -3201,7 +3204,7 @@ var capacitorPlugin = (function (exports) {
         }
     }
 
-    const { remote } = require("electron");
+    const { remote } = require('electron');
     class CapacitorSQLiteElectronWeb extends WebPlugin {
         constructor() {
             super({
@@ -3210,13 +3213,13 @@ var capacitorPlugin = (function (exports) {
             });
             this.NodeFs = null;
             this.RemoteRef = null;
-            console.log("CapacitorSQLite Electron");
+            console.log('CapacitorSQLite Electron');
             this.RemoteRef = remote;
-            this.NodeFs = require("fs");
+            this.NodeFs = require('fs');
         }
         echo(options) {
             return __awaiter(this, void 0, void 0, function* () {
-                console.log("ECHO in CapacitorSQLiteElectronWeb ", options);
+                console.log('ECHO in CapacitorSQLiteElectronWeb ', options);
                 console.log(this.RemoteRef);
                 return options;
             });
@@ -3336,13 +3339,13 @@ var capacitorPlugin = (function (exports) {
             return __awaiter(this, void 0, void 0, function* () {
                 if (typeof options.statement === 'undefined') {
                     return Promise.reject({
-                        changes: -1,
+                        values: [],
                         message: 'Query command failed : Must provide a SQL statement',
                     });
                 }
                 if (typeof options.values === 'undefined') {
                     return Promise.reject({
-                        changes: -1,
+                        values: [],
                         message: 'Query command failed : Values should be an Array of values',
                     });
                 }
