@@ -50,11 +50,14 @@ export class SQLiteService {
    * @param _encrypted boolean optional 
    * @param _mode string optional
    */  
-  async openDB(dbName:string,_encrypted?:boolean,_mode?:string): Promise<any> {
+  async openDB(dbName:string,_encrypted?:boolean,_mode?:string,
+               _version?:number): Promise<any> {
     if(this.isService) {
       const encrypted:boolean = _encrypted ? _encrypted : false;
       const mode: string = _mode ? _mode : "no-encryption";
-      return await this.sqlite.open({database:dbName,encrypted:encrypted,mode:mode});
+      const version: number = _version ? _version : 1;
+      return await this.sqlite.open({database:dbName,encrypted:encrypted,
+                                     mode:mode,version:version});
     } else {
       return Promise.resolve({result:false,message:"Service not started"});
     }
@@ -192,5 +195,13 @@ export class SQLiteService {
       return Promise.resolve({result:false,message:"Service not started"});
     }    
 
+  }
+  async addUpgradeStatement(database: string, upgrade: any): Promise<any> {
+    if(this.isService ) {
+      return await this.sqlite.addUpgradeStatement({database:database,
+                                                    upgrade:upgrade});
+    } else {
+      return Promise.resolve({result:false,message:"Service not started"});
+    }    
   }
 }

@@ -11,6 +11,7 @@ import { Images } from '../utils/base64images';
 export class TestsqliteComponent implements AfterViewInit {
   platform: string;
   noEncryption: boolean = false;
+  updVersion: boolean = false;
   import: boolean = false;
   exportFull: boolean = false;
   exportPartial: boolean = false;
@@ -43,20 +44,34 @@ export class TestsqliteComponent implements AfterViewInit {
     this.resetDOM();
     // Start Running the Set of Tests
     const cardSQLite = document.querySelector('.card-sqlite');
-    if(cardSQLite && cardSQLite.classList.contains("hidden")) cardSQLite.classList.remove('hidden');
+    if(cardSQLite && cardSQLite.classList.contains("hidden")) 
+              cardSQLite.classList.remove('hidden');
     if(this._SQLiteService.isService) {
       this.initTest = await this.testInitialization();
-      if (this.initTest) {
+    if (this.initTest) {
         // Create a Database with No-Encryption
         this.noEncryption = await this.testNoEncryption();
         if(!this.noEncryption) {     
-          document.querySelector('.sql-failure1').classList.remove('display');
+          document.querySelector('.sql-failure1').classList
+                  .remove('display');
         } else {
           console.log("***** End testDatabase *****");
-          document.querySelector('.sql-success1').classList.remove('display');
+          document.querySelector('.sql-success1').classList
+                  .remove('display');
         }
 
         if(this.noEncryption) {
+          // Test update database version
+          this.updVersion = await this.testUpdateVersion();
+          if(!this.updVersion) {
+            document.querySelector('.sql-failure-version').classList
+                .remove('display');
+          } else {
+            console.log("***** End Update Version *****");
+            document.querySelector('.sql-success-version').classList
+                .remove('display');  
+          }
+          
           // Create a Database from JSON import
           this.import = await this.testImportFromJson();
           if(!this.import) {
@@ -97,18 +112,20 @@ export class TestsqliteComponent implements AfterViewInit {
           } else {
             console.log("***** End Test Execute Set *****");
             document.querySelector('.sql-success-test-executeset').classList.remove('display');  
-          }
-          
+          }        
         }
-        if(this.noEncryption && this.import && this.exportFull && 
-              this.exportPartial && this.importFullIssue && this.executeSet &&
-              this._SQLiteService.platform !== "electron") {
+        if(this.noEncryption && this.updVersion && this.import && 
+            this.exportFull && this.exportPartial && 
+            this.importFullIssue && this.executeSet &&
+            this._SQLiteService.platform !== "electron") {
           // Encrypt the Non Encrypted Database
           this.encryption = await this.testEncryptionDatabase();
           if(!this.encryption) {
-            document.querySelector('.sql-failure2').classList.remove('display');
+            document.querySelector('.sql-failure2').classList
+                    .remove('display');
           } else {
-            document.querySelector('.sql-success2').classList.remove('display');
+            document.querySelector('.sql-success2').classList
+                    .remove('display');
           }
           // Create a Database Encrypted
           this.encrypted = await this.testEncryptedDatabase();
@@ -132,12 +149,13 @@ export class TestsqliteComponent implements AfterViewInit {
               document.querySelector('.sql-success5').classList.remove('display');
 
             // Open the Encrypted Database with the new secret
-              this.newSecret = await this.testDatabaseNewPassword();
+            this.newSecret = await this.testDatabaseNewPassword();
               if(!this.newSecret) {
                 document.querySelector('.sql-failure6').classList.remove('display');
               } else {
                 document.querySelector('.sql-success6').classList.remove('display');
               }
+
             }
           }
         }
@@ -145,24 +163,31 @@ export class TestsqliteComponent implements AfterViewInit {
       }
       // Manage All Tests Success/Failure
       if(this._SQLiteService.platform === 'electron') {
-        if (!this.initTest || !this.noEncryption || !this.import ||
-               !this.exportFull || !this.exportPartial || !this.importFullIssue || !this.executeSet) {
-          document.querySelector('.sql-allfailure').classList.remove('display');
+        if (!this.initTest || !this.noEncryption || !this.updVersion ||
+            !this.import || !this.exportFull || !this.exportPartial ||
+            !this.importFullIssue || !this.executeSet) {
+          document.querySelector('.sql-allfailure').classList
+              .remove('display');
         } else {
-          document.querySelector('.sql-allsuccess').classList.remove('display');
+          document.querySelector('.sql-allsuccess').classList
+              .remove('display');
         }
       } else {
-        if(!this.initTest || !this.noEncryption || !this.encryption || !this.encrypted || 
-        !this.wrongSecret || !this.changeSecret || !this.newSecret || !this.import
-         || !this.exportFull || !this.exportPartial || !this.importFullIssue || !this.executeSet) {     
-          document.querySelector('.sql-allfailure').classList.remove('display');
+        if(!this.initTest || !this.noEncryption || !this.encryption ||
+          !this.encrypted || !this.wrongSecret || !this.changeSecret ||
+          !this.newSecret || !this.import || !this.exportFull ||
+          !this.exportPartial || !this.importFullIssue ||
+          !this.executeSet || !this.updVersion) {     
+          document.querySelector('.sql-allfailure').classList
+              .remove('display');
         } else {
-          document.querySelector('.sql-allsuccess').classList.remove('display');
+          document.querySelector('.sql-allsuccess').classList
+              .remove('display');
         }
       }
     } else {
-      this.platform = this._SQLiteService.platform.charAt(0).toUpperCase() + 
-      this._SQLiteService.platform.slice(1);
+      this.platform = this._SQLiteService.platform.charAt(0)
+          .toUpperCase() + this._SQLiteService.platform.slice(1);
       if(this._SQLiteService.platform === "web") {
         console.log(`CapacitorSQLite Plugin: Not available for ${this.platform} Platform`);
         document.querySelector('.web').classList.remove('display');
@@ -228,6 +253,22 @@ export class TestsqliteComponent implements AfterViewInit {
             }
           } else {
             console.log("Error database test-executeset does not exist");
+            resolve(false);
+          }
+        }
+        // check if the database test-updversion exists 
+        result = await this._SQLiteService.isDBExists("test-updversion"); 
+        if(result.result) {
+          // open the DB
+          let resOpen = await this._SQLiteService.openDB("test-updversion"); 
+          if(resOpen.result) {
+            let resDel: any = await this._SQLiteService.deleteDB("test-updversion");
+            if(!resDel.result) {
+              console.log("Error in deleting the database test-updversion");
+              resolve(false);
+            }
+          } else {
+            console.log("Error database test-updversion does not exist");
             resolve(false);
           }
         }
@@ -482,7 +523,170 @@ export class TestsqliteComponent implements AfterViewInit {
  
     });
   }
-  
+//1234567890123456789012345678901234567890123456789012345678901234567890
+  /**
+  * Test Update Version
+  */
+ async testUpdateVersion():Promise<boolean> {
+  return new Promise(async (resolve) => {
+    let ret:boolean = true;
+    console.log("*** Starting testUpdateVersion ***")
+
+    // Create Database Version 1
+
+    // open the database
+    let result:any = await this._SQLiteService.openDB("test-updversion");
+    console.log('openDB result.result ' + result.result); 
+    if(result.result) {
+      console.log("*** Database test-updversion Opened");
+      document.querySelector('.openDB').classList.remove('display');
+
+      result = await this._SQLiteService.createSyncTable();
+      console.log('createSyncTable result ' + result); 
+
+      // create tables
+      const sqlcmd: string = `
+      BEGIN TRANSACTION;
+      CREATE TABLE IF NOT EXISTS users (
+          id INTEGER PRIMARY KEY NOT NULL,
+          email TEXT UNIQUE NOT NULL,
+          name TEXT,
+          company TEXT,
+          size FLOAT,
+          age INTEGER,
+          last_modified INTEGER DEFAULT (strftime('%s', 'now'))    
+      );
+      CREATE INDEX IF NOT EXISTS users_index_name ON users (name);
+      CREATE INDEX IF NOT EXISTS users_index_last_modified ON users (last_modified);
+      CREATE TRIGGER IF NOT EXISTS users_trigger_last_modified
+      AFTER UPDATE ON users
+      FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
+      BEGIN
+          UPDATE users SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+      END;
+      COMMIT TRANSACTION;
+      `;
+      result = await this._SQLiteService.execute(sqlcmd);
+      if(result.changes.changes === 0 || result.changes.changes === 1) {
+          document.querySelector('.execute1').classList.remove('display'); 
+          // Insert some Users
+          const row: Array<Array<any>> = [["Whiteley","Whiteley.com",30],["Jones","Jones.com",44]];
+          let sqlcmd: string = `
+          BEGIN TRANSACTION;
+          DELETE FROM users;
+          INSERT INTO users (name,email,age) VALUES ("${row[0][0]}","${row[0][1]}",${row[0][2]});
+          INSERT INTO users (name,email,age) VALUES ("${row[1][0]}","${row[1][1]}",${row[1][2]});
+          COMMIT TRANSACTION;
+          `;
+          result = await this._SQLiteService.execute(sqlcmd);
+          const retEx2 = result.changes.changes === 2 ? true : false;
+          if(retEx2) document.querySelector('.execute2').classList.remove('display'); 
+
+          // Select all Users
+          sqlcmd = "SELECT * FROM users;";
+          result = await this._SQLiteService.query(sqlcmd);
+          const retQuery1 = result.values.length === 2 &&
+          result.values[0].name === "Whiteley" && result.values[1].name === "Jones" ? true : false;
+          if(retQuery1) document.querySelector('.query1').classList.remove('display'); 
+          if(!retQuery1) console.log('Select all users not successful')
+          sqlcmd = "SELECT * FROM users WHERE company IS NULL;";
+          result = await this._SQLiteService.query(sqlcmd);
+          const retQuery20 = result.values.length === 2 &&
+          result.values[0].name === "Whiteley" && result.values[1].name === "Jones" ? true : false;
+          if(!retQuery20) console.log('Select all users company is null not successful')
+          sqlcmd = "SELECT * FROM users WHERE size IS NULL;";
+          result = await this._SQLiteService.query(sqlcmd);
+          const retQuery21 = result.values.length === 2 &&
+          result.values[0].name === "Whiteley" && result.values[1].name === "Jones" ? true : false;
+          if(!retQuery21) console.log('Select all users size is null not successful')
+          // Close the Database
+          result = await this._SQLiteService.close("test-updversion");
+          const retClose = result.result
+
+          if (retClose) document.querySelector('.close').classList.remove('display'); 
+          if(!retEx2 || !retQuery1) resolve(false);
+      } else {
+        resolve(false);
+      }
+    } else {
+      console.log("*** Error: Database test-updversion not opened");
+      resolve(false);
+    }
+
+    // Create Database Version 2
+    const schemaStmt: string = `
+    CREATE TABLE users (
+      id INTEGER PRIMARY KEY NOT NULL,
+      email TEXT UNIQUE NOT NULL,
+      name TEXT,
+      company TEXT,
+      country TEXT,
+      age INTEGER,
+      last_modified INTEGER DEFAULT (strftime('%s', 'now'))       
+    );
+    CREATE TABLE messages (
+      id INTEGER PRIMARY KEY NOT NULL,
+      userid INTEGER,
+      title TEXT NOT NULL,
+      body TEXT NOT NULL,
+      last_modified INTEGER DEFAULT (strftime('%s', 'now')),        
+      FOREIGN KEY (userid) REFERENCES users(id) ON DELETE SET DEFAULT
+    );
+    CREATE INDEX users_index_name ON users (name);
+    CREATE INDEX users_index_last_modified ON users (last_modified);
+    CREATE INDEX messages_index_title ON messages (title);
+    CREATE INDEX messages_index_last_modified ON messages (last_modified);
+    CREATE TRIGGER users_trigger_last_modified
+    AFTER UPDATE ON users
+    FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
+    BEGIN
+        UPDATE users SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+    END;
+    CREATE TRIGGER messages_trigger_last_modified
+    AFTER UPDATE ON messages
+    FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
+    BEGIN
+        UPDATE messages SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+    END;
+    `
+    const setArray: Array<any> = [
+      { statement:"INSERT INTO messages (userid,title,body) VALUES (?,?,?);",
+        values:[1,"test message 1","content test message 1"]
+      },
+      { statement:"INSERT INTO messages (userid,title,body) VALUES (?,?,?);",
+        values:[2,"test message 2","content test message 2"]
+      },
+      { statement:"INSERT INTO messages (userid,title,body) VALUES (?,?,?);",
+        values:[1,"test message 3","content test message 3"]
+      },
+      { statement:"UPDATE users SET country = ?  WHERE id = ?;",
+        values:["United Kingdom",1]
+      },
+      { statement:"UPDATE users SET country = ?  WHERE id = ?;",
+        values:["Australia",2]
+      },
+
+    ]
+    
+    result = await this._SQLiteService.addUpgradeStatement("test-updversion",
+    [{fromVersion: 1, toVersion: 2, statement: schemaStmt, set: setArray}]);     
+    console.log("*** addUpgradeStatement result " + result + " ***")
+    if(!result.result) {
+      console.log("*** Error: addUpgradeStatement failed");
+      resolve(false);
+    }
+    // open the database
+    result = await this._SQLiteService.openDB("test-updversion",false,"no-encryption",2);
+    console.log('openDB version 2 result.result ' + result.result); 
+    if(!result.result) {
+      console.log("*** Database test-updversion failed opening version 2");
+      resolve(false);
+    } else {
+      console.log("*** Database test-updversion Opened");
+      resolve(true);
+    }
+  });
+}
   /**
   * Test an ImportFromJson
   */
@@ -491,6 +695,7 @@ export class TestsqliteComponent implements AfterViewInit {
       let ret:boolean = true;
       const dataToImport: any = {
         database : "db-from-json",
+        version : 1,
         encrypted : false,
         mode : "full",
         tables :[
@@ -552,6 +757,7 @@ export class TestsqliteComponent implements AfterViewInit {
       if(ret) {
         const partialImport1: any = {
           database : "db-from-json",
+          version : 1,
           encrypted : false,
           mode : "partial",
           tables :[
@@ -710,6 +916,7 @@ export class TestsqliteComponent implements AfterViewInit {
     return new Promise(async (resolve) => {
       const tableImport: any = {
         database: "twoimports",
+        version : 1,
         encrypted: false,
         mode: "full",
         tables: [
@@ -750,6 +957,7 @@ export class TestsqliteComponent implements AfterViewInit {
       // import the data
       const partialImport: any = {
         database: "twoimports",
+        version : 1,
         encrypted: false,
         mode: "partial",
         tables: [
@@ -855,9 +1063,12 @@ export class TestsqliteComponent implements AfterViewInit {
     return new Promise(async (resolve) => {
       // open the database
       const result: any = await this._SQLiteService.openDB("test-encrypted",true,"wrongsecret"); 
+      console.log("*** out of testWrongSecret result.result " + result.result)
       if(!result.result) {
+        console.log("*** out of testWrongSecret true")
         resolve(true);
       } else {
+        console.log("*** out of testWrongSecret false")
         resolve(false);
       }
     });
@@ -898,6 +1109,7 @@ export class TestsqliteComponent implements AfterViewInit {
 
   async testDatabaseNewPassword(): Promise<boolean> {
     return new Promise(async (resolve) => {
+      console.log("*** Entyering testDatabaseNewPassword ***");
       // open the database
       let result:any = await this._SQLiteService.openDB("test-encrypted",true,"secret"); 
       if(result.result) {
