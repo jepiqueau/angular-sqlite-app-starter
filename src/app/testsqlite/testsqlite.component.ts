@@ -669,7 +669,7 @@ export class TestsqliteComponent implements AfterViewInit {
     ]
     
     result = await this._SQLiteService.addUpgradeStatement("test-updversion",
-    [{fromVersion: 1, toVersion: 2, statement: schemaStmt, set: setArray}]);     
+    {fromVersion: 1, toVersion: 2, statement: schemaStmt, set: setArray});     
     console.log("*** addUpgradeStatement result " + result + " ***")
     if(!result.result) {
       console.log("*** Error: addUpgradeStatement failed");

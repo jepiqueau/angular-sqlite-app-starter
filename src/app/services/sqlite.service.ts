@@ -199,7 +199,7 @@ export class SQLiteService {
   async addUpgradeStatement(database: string, upgrade: any): Promise<any> {
     if(this.isService ) {
       return await this.sqlite.addUpgradeStatement({database:database,
-                                                    upgrade:upgrade});
+                                                    upgrade:[upgrade]});
     } else {
       return Promise.resolve({result:false,message:"Service not started"});
     }    
