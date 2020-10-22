@@ -71,7 +71,7 @@ export class TestsqliteComponent implements AfterViewInit {
             document.querySelector('.sql-success-version').classList
                 .remove('display');  
           }
-          
+ 
           // Create a Database from JSON import
           this.import = await this.testImportFromJson();
           if(!this.import) {
