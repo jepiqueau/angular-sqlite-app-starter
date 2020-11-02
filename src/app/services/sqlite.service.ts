@@ -24,14 +24,18 @@ export class SQLiteService {
     this.isService = true;
 
     if(this.platform === "android") {
+      console.log("%%% in androidPremissions platform " 
+      + this.platform + "%%%");
       try {
+        console.log("%%% before requesting permissions %%%")
         await this.sqlite.requestPermissions();
+        console.log("%%% after requesting permissions %%%")
       } catch (e) {
         console.log("Error requesting permissions " + e);
         this.isService = false;
       }
     }
- 
+    return;
   }
   /**
    * Get Echo 
