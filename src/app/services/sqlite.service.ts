@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Plugins } from '@capacitor/core';
+import { Plugins, Capacitor } from '@capacitor/core';
 import '@capacitor-community/sqlite';
 const { CapacitorSQLite, Device } = Plugins;
 
@@ -8,45 +8,39 @@ const { CapacitorSQLite, Device } = Plugins;
   providedIn: 'root'
 })
 export class SQLiteService {
+  handlerPermissions: any;
   sqlite: any;
   isService: boolean = false;
   platform: string;
+
   constructor() {
   }
   /**
    * Plugin Initialization
    */
-  async initializePlugin(): Promise<void> {
-    const info = await Device.getInfo();
-    this.platform = info.platform;
+  initializePlugin(): boolean {
+    this.platform = Capacitor.platform;
     console.log("*** platform " + this.platform)
     this.sqlite = CapacitorSQLite;
-    this.isService = true;
+    const ret: boolean = true;
 
     if(this.platform === "android") {
-      console.log("%%% in androidPremissions platform " 
-      + this.platform + "%%%");
       try {
-        console.log("%%% before requesting permissions %%%")
-        await this.sqlite.requestPermissions();
-        console.log("%%% after requesting permissions %%%")
+        this.sqlite.requestPermissions();
+        return true;
       } catch (e) {
-        console.log("Error requesting permissions " + e);
-        this.isService = false;
+        console.log("Error requesting permissions " + JSON.stringify(e));
+        return false;
       }
     }
-    return;
+    return ret;
   }
   /**
    * Get Echo 
    * @param value string 
    */
   async getEcho(value:string): Promise<any> {
-    if (this.isService) {
       return await this.sqlite.echo({value:"Hello from JEEP"});
-    } else {
-      return Promise.resolve("");
-    }
   }
   /**
    * Open a Database
@@ -56,15 +50,33 @@ export class SQLiteService {
    */  
   async openDB(dbName:string,_encrypted?:boolean,_mode?:string,
                _version?:number): Promise<any> {
-    if(this.isService) {
+    return new Promise (async (resolve) => {
+    
       const encrypted:boolean = _encrypted ? _encrypted : false;
       const mode: string = _mode ? _mode : "no-encryption";
       const version: number = _version ? _version : 1;
-      return await this.sqlite.open({database:dbName,encrypted:encrypted,
-                                     mode:mode,version:version});
-    } else {
-      return Promise.resolve({result:false,message:"Service not started"});
-    }
+      if(this.platform === "android") {
+        this.handlerPermissions = this.sqlite.addListener(
+                  'androidPermissionsRequest', async (data:any) => { 
+          if (data.permissionGranted === 1) {
+            this.isService = true;
+            resolve(await this.sqlite.open({database: dbName,
+                                            encrypted: encrypted,
+                                            mode: mode,
+                                            version: version}));
+          } else {
+            resolve({ result: false,
+                              message: "Permission not granted" });
+          }      
+        });
+      }
+      const res = await this.sqlite.open({database: dbName,
+                                          encrypted: encrypted,
+                                          mode: mode,
+                                          version: version});
+      if (res.result) this.isService = true;
+      resolve(res);
+    });
   }
   async createSyncTable(): Promise<any> {
     if(this.isService) {

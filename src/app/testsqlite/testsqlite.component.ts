@@ -23,6 +23,7 @@ export class TestsqliteComponent implements AfterViewInit {
   changeSecret: boolean = false;
   newSecret: boolean = false;    
   initTest:boolean = false;
+  initPlugin: boolean = false;
 
   constructor(private _SQLiteService: SQLiteService) { }
   /*******************************
@@ -31,9 +32,14 @@ export class TestsqliteComponent implements AfterViewInit {
 
   async ngAfterViewInit() {
     // Initialize the CapacitorSQLite plugin
-    await this._SQLiteService.initializePlugin();
+    this.initPlugin = this._SQLiteService.initializePlugin();
+    console.log(`in ngAfterViewInit this.initPlugin: ${this.initPlugin}`);
+    console.log(`isService ${this._SQLiteService.isService}`);
   }
-
+  ngOnDestroy() {
+    console.log("ngOnDestroy");
+    this._SQLiteService.handlerPermissions.remove();
+  }
   /*******************************
   * Component Methods           *
   *******************************/
@@ -46,9 +52,9 @@ export class TestsqliteComponent implements AfterViewInit {
     const cardSQLite = document.querySelector('.card-sqlite');
     if(cardSQLite && cardSQLite.classList.contains("hidden")) 
               cardSQLite.classList.remove('hidden');
-    if(this._SQLiteService.isService) {
+    if(this.initPlugin) {
       this.initTest = await this.testInitialization();
-    if (this.initTest) {
+      if (this.initTest) {
         // Create a Database with No-Encryption
         this.noEncryption = await this.testNoEncryption();
         if(!this.noEncryption) {     
