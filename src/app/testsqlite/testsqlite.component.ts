@@ -340,6 +340,10 @@ export class TestsqliteComponent implements AfterViewInit {
           img BLOB,
           last_modified INTEGER DEFAULT (strftime('%s', 'now'))
         );
+        CREATE TABLE IF NOT EXISTS test (
+          id INTEGER PRIMARY KEY NOT NULL,
+          name TEXT
+        );
         CREATE INDEX IF NOT EXISTS users_index_name ON users (name);
         CREATE INDEX IF NOT EXISTS users_index_last_modified ON users (last_modified);
         CREATE INDEX IF NOT EXISTS messages_index_name ON messages (title);
@@ -507,7 +511,29 @@ export class TestsqliteComponent implements AfterViewInit {
             result = await this._SQLiteService.query(sqlcmd);
             const retQuery5 = result.values.length === 2 &&
                       result.values[0].name === "meowth" && result.values[1].type === "png" ? true : false;
-            if(retQuery5) document.querySelector('.query5').classList.remove('display');        
+            if(retQuery5) document.querySelector('.query5').classList.remove('display');  
+            // Insert some Names in Test issue#56
+            sqlcmd = `
+            BEGIN TRANSACTION;
+            DELETE FROM test;
+            INSERT INTO test (name) VALUES ("test 1");
+            INSERT INTO test (name) VALUES ("test 2");
+            COMMIT TRANSACTION;
+            `;
+            result = await this._SQLiteService.execute(sqlcmd);
+            const retEx4 = result.changes.changes === 2 ? true : false;
+            if(retEx4) document.querySelector('.execute4').classList.remove('display'); 
+            // add one user with statement and values              
+            sqlcmd = "INSERT INTO test (name) VALUES (?)";
+            let vals: Array<any>  = [];
+            result = await this._SQLiteService.run(sqlcmd,vals);
+            console.log("**** result.changes.lastId ",result.changes.lastId);
+            console.log("**** result.changes.changes ",result.changes.changes);
+            const retRun5 = result.changes.changes === 1 &&
+                            result.changes.lastId === 3 ? true : false;
+            console.log("**** result.changes.lastId ",result.changes.lastId);
+            if(retRun5) document.querySelector('.run5').classList.remove('display');        
+
              
             // Close the Database
             result = await this._SQLiteService.close("test-sqlite");
@@ -516,7 +542,8 @@ export class TestsqliteComponent implements AfterViewInit {
             if (retClose) document.querySelector('.close').classList.remove('display'); 
             let ret = false;
             if(retEx2 && retQuery1 && retRun1 && retRun2 && retQuery3 && retQuery4 &&
-              retEx3 && retQuery2  && retRun3 && retRun4 && retClose && retQuery5) ret = true;
+              retEx3 && retQuery2  && retRun3 && retRun4 && retClose && retQuery5 &&
+              retEx4 && retRun5) ret = true;
             resolve(ret);
           
         } else {
