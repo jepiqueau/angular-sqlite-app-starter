@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SQLiteService } from '../services/sqlite.service';
 import { Images } from '../utils/base64images';
 //import { ReadImageService } from '../services/read-images.service';
@@ -8,7 +8,7 @@ import { Images } from '../utils/base64images';
   templateUrl: './testsqlite.component.html',
   styleUrls: ['./testsqlite.component.scss'],
 })
-export class TestsqliteComponent implements AfterViewInit {
+export class TestsqliteComponent {
   platform: string;
   noEncryption: boolean = false;
   updVersion: boolean = false;
@@ -25,21 +25,14 @@ export class TestsqliteComponent implements AfterViewInit {
   initTest:boolean = false;
   initPlugin: boolean = false;
 
-  constructor(private _SQLiteService: SQLiteService) { }
+  constructor(private _SQLiteService: SQLiteService) {
+    console.log(`TestsqliteComponent isService ${this._SQLiteService.isService}`);
+    this.initPlugin = this._SQLiteService.isService;
+  }
   /*******************************
    * Component Lifecycle Methods *
    *******************************/
 
-  async ngAfterViewInit() {
-    // Initialize the CapacitorSQLite plugin
-    this.initPlugin = this._SQLiteService.initializePlugin();
-    console.log(`in ngAfterViewInit this.initPlugin: ${this.initPlugin}`);
-    console.log(`isService ${this._SQLiteService.isService}`);
-  }
-  ngOnDestroy() {
-    console.log("ngOnDestroy");
-    this._SQLiteService.handlerPermissions.remove();
-  }
   /*******************************
   * Component Methods           *
   *******************************/
@@ -54,8 +47,10 @@ export class TestsqliteComponent implements AfterViewInit {
               cardSQLite.classList.remove('hidden');
     if(this.initPlugin) {
       this.initTest = await this.testInitialization();
+      console.log(`>>>> initTest ${this.initTest} <<<<`)
       if (this.initTest) {
         // Create a Database with No-Encryption
+        console.log(`>>>> Entering  testNoEncryption <<<<`)
         this.noEncryption = await this.testNoEncryption();
         if(!this.noEncryption) {     
           document.querySelector('.sql-failure1').classList
@@ -179,6 +174,19 @@ export class TestsqliteComponent implements AfterViewInit {
               .remove('display');
         }
       } else {
+          console.log(`this.initTest ${this.initTest} ` +
+          `this.noEncryption ${this.noEncryption} ` +
+          `this.encryption ${this.encryption} ` +
+          `this.encrypted ${this.encrypted} ` +
+          `this.wrongSecret ${this.wrongSecret} ` +
+          `this.changeSecret ${this.changeSecret} ` +
+          `this.newSecret ${this.newSecret} ` +
+          `this.import ${this.import} ` +
+          `this.exportFull ${this.exportFull} ` +
+          `this.exportPartial ${this.exportPartial} ` +
+          `this.importFullIssue ${this.importFullIssue} ` +
+          `this.executeSet ${this.executeSet} ` +
+          `this.updVersion ${this.updVersion} `)
         if(!this.initTest || !this.noEncryption || !this.encryption ||
           !this.encrypted || !this.wrongSecret || !this.changeSecret ||
           !this.newSecret || !this.import || !this.exportFull ||
@@ -221,9 +229,21 @@ export class TestsqliteComponent implements AfterViewInit {
    */
   async testInitialization(): Promise<boolean> {
     return new Promise(async (resolve) => {
+      this.noEncryption = false;
+      this.updVersion = false;
+      this.import = false;
+      this.exportFull = false;
+      this.exportPartial = false;
+      this.executeSet = false;
+      this.importFullIssue = false;
+      this.encryption = false;
+      this.encrypted = false; 
+      this.wrongSecret = false;
+      this.changeSecret = false;
+      this.newSecret = false;    
+    
       const echo = await this._SQLiteService.getEcho("Hello from JEEP");
       console.log("*** echo ",echo);
-      resolve(true);
       // delete databases to enable test restart
       // as after the first pass the database is encrypted
       if(this._SQLiteService.platform === "ios" || this._SQLiteService.platform === "android" 
@@ -266,7 +286,9 @@ export class TestsqliteComponent implements AfterViewInit {
         result = await this._SQLiteService.isDBExists("test-updversion"); 
         if(result.result) {
           // open the DB
-          let resOpen = await this._SQLiteService.openDB("test-updversion"); 
+          let resOpen = await this._SQLiteService.openDB("test-updversion",
+                                                         false,"no-encryption",
+                                                         2); 
           if(resOpen.result) {
             let resDel: any = await this._SQLiteService.deleteDB("test-updversion");
             if(!resDel.result) {
@@ -297,6 +319,8 @@ export class TestsqliteComponent implements AfterViewInit {
             }
           }
         }
+        console.log("$$$$$$ End of Initialization $$$$$$")
+        resolve(true);
       }
     });
   }
@@ -342,7 +366,8 @@ export class TestsqliteComponent implements AfterViewInit {
         );
         CREATE TABLE IF NOT EXISTS test (
           id INTEGER PRIMARY KEY NOT NULL,
-          name TEXT
+          name TEXT,
+          name1 TEXT
         );
         CREATE INDEX IF NOT EXISTS users_index_name ON users (name);
         CREATE INDEX IF NOT EXISTS users_index_last_modified ON users (last_modified);
@@ -533,7 +558,24 @@ export class TestsqliteComponent implements AfterViewInit {
                             result.changes.lastId === 3 ? true : false;
             console.log("**** result.changes.lastId ",result.changes.lastId);
             if(retRun5) document.querySelector('.run5').classList.remove('display');        
+            // add a null test
+            vals  = [null];
+            result = await this._SQLiteService.run(sqlcmd,vals);
+            console.log("**** result.changes.lastId ",result.changes.lastId);
+            console.log("**** result.changes.changes ",result.changes.changes);
+            const retRun6 = result.changes.changes === 1 &&
+                            result.changes.lastId === 4 ? true : false;
+            if(retRun6) document.querySelector('.run6').classList.remove('display');        
 
+            // add test [null, 'test2']
+            sqlcmd = "INSERT INTO test (name,name1) VALUES (?,?)";
+            vals = [null, 'test2']
+            result = await this._SQLiteService.run(sqlcmd,vals);
+            console.log("**** result.changes.lastId ",result.changes.lastId);
+            console.log("**** result.changes.changes ",result.changes.changes);
+            const retRun7 = result.changes.changes === 1 &&
+                            result.changes.lastId === 5 ? true : false;
+            if(retRun7) document.querySelector('.run7').classList.remove('display');        
              
             // Close the Database
             result = await this._SQLiteService.close("test-sqlite");
@@ -543,7 +585,8 @@ export class TestsqliteComponent implements AfterViewInit {
             let ret = false;
             if(retEx2 && retQuery1 && retRun1 && retRun2 && retQuery3 && retQuery4 &&
               retEx3 && retQuery2  && retRun3 && retRun4 && retClose && retQuery5 &&
-              retEx4 && retRun5) ret = true;
+              retEx4 && retRun5 && retRun6 && retRun7) ret = true;
+            console.log(`$$$ before ending test no encryption '${ret}'`);
             resolve(ret);
           
         } else {

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Tab2Page } from './tab2.page';
 import { TestsqliteComponentModule } from '../testsqlite/testsqlite.module';
+import { Issue59ComponentModule } from '../issue59/issue59.module';
 
 @NgModule({
   imports: [
@@ -12,6 +13,7 @@ import { TestsqliteComponentModule } from '../testsqlite/testsqlite.module';
     CommonModule,
     FormsModule,
     TestsqliteComponentModule,
+    Issue59ComponentModule,
     RouterModule.forChild([{ path: '', component: Tab2Page }])
   ],
   declarations: [Tab2Page]

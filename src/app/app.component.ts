@@ -4,6 +4,7 @@ import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { DarkModeService } from './services/darkmode.service';
+import { SQLiteService } from './services/sqlite.service';
 
 
 @Component({
@@ -12,10 +13,13 @@ import { DarkModeService } from './services/darkmode.service';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+  private initPlugin: boolean;
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
+    private _sqlite: SQLiteService,
     private darkMode: DarkModeService
   ) {
     // Deal with Dark Mode
@@ -30,6 +34,10 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this._sqlite.initializePlugin().then(ret => {
+        this.initPlugin = ret;
+        console.log(">>>> in App  this.initPlugin " + this.initPlugin)
+      });
     });
   }
 }

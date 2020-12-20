@@ -3163,7 +3163,23 @@ var capacitorPlugin = (function (exports) {
                         let openPar = tables[i].sql.indexOf('(');
                         let closePar = tables[i].sql.lastIndexOf(')');
                         let sstr = tables[i].sql.substring(openPar + 1, closePar);
+                        let isStrfTime = false;
+                        if (sstr.includes("strftime"))
+                            isStrfTime = true;
                         let sch = sstr.replace(/\n/g, '').split(',');
+                        if (isStrfTime) {
+                            let nSch = [];
+                            for (let j = 0; j < sch.length; j++) {
+                                if (sch[j].includes("strftime")) {
+                                    nSch.push(sch[j] + "," + sch[j + 1]);
+                                    j++;
+                                }
+                                else {
+                                    nSch.push(sch[j]);
+                                }
+                            }
+                            sch = [...nSch];
+                        }
                         for (let j = 0; j < sch.length; j++) {
                             const rstr = sch[j].trim();
                             let idx = rstr.indexOf(' ');

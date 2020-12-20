@@ -4,9 +4,7 @@ import { Plugins, Capacitor } from '@capacitor/core';
 import '@capacitor-community/sqlite';
 const { CapacitorSQLite, Device } = Plugins;
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SQLiteService {
   handlerPermissions: any;
   sqlite: any;
@@ -18,22 +16,40 @@ export class SQLiteService {
   /**
    * Plugin Initialization
    */
-  initializePlugin(): boolean {
-    this.platform = Capacitor.platform;
-    console.log("*** platform " + this.platform)
-    this.sqlite = CapacitorSQLite;
-    const ret: boolean = true;
-
-    if(this.platform === "android") {
-      try {
-        this.sqlite.requestPermissions();
-        return true;
-      } catch (e) {
-        console.log("Error requesting permissions " + JSON.stringify(e));
-        return false;
+  initializePlugin(): Promise<boolean> {
+    return new Promise(resolve => {
+      this.platform = Capacitor.platform;
+      console.log("*** platform " + this.platform)
+      this.sqlite = CapacitorSQLite;
+      if(this.platform === "android") {
+        this.handlerPermissions = this.sqlite.addListener(
+            'androidPermissionsRequest', async (data:any) => { 
+            if (data.permissionGranted === 1) {
+                this.handlerPermissions.remove();
+                this.isService = true;
+                resolve(true);
+            } else {
+                console.log("Permission not granted");
+                this.handlerPermissions.remove();
+                this.sqlite = null;
+                resolve(false);
+            }      
+        });
+        try {
+            console.log("%%%%% before requestPermissions");
+            this.sqlite.requestPermissions();
+            console.log("%%%%% after requestPermissions");
+        } catch (e) {
+            console.log("Error requesting permissions " + JSON.stringify(e));
+            resolve(false);
+        }
+      } else {
+          this.isService = true;
+          console.log("$$$ in service this.isService " + this.isService + " $$$")
+          resolve(true);
       }
-    }
-    return ret;
+
+    });
   }
   /**
    * Get Echo 
@@ -55,26 +71,10 @@ export class SQLiteService {
       const encrypted:boolean = _encrypted ? _encrypted : false;
       const mode: string = _mode ? _mode : "no-encryption";
       const version: number = _version ? _version : 1;
-      if(this.platform === "android") {
-        this.handlerPermissions = this.sqlite.addListener(
-                  'androidPermissionsRequest', async (data:any) => { 
-          if (data.permissionGranted === 1) {
-            this.isService = true;
-            resolve(await this.sqlite.open({database: dbName,
-                                            encrypted: encrypted,
-                                            mode: mode,
-                                            version: version}));
-          } else {
-            resolve({ result: false,
-                              message: "Permission not granted" });
-          }      
-        });
-      }
       const res = await this.sqlite.open({database: dbName,
                                           encrypted: encrypted,
                                           mode: mode,
                                           version: version});
-      if (res.result) this.isService = true;
       resolve(res);
     });
   }
