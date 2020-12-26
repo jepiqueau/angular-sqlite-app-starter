@@ -3164,14 +3164,14 @@ var capacitorPlugin = (function (exports) {
                         let closePar = tables[i].sql.lastIndexOf(')');
                         let sstr = tables[i].sql.substring(openPar + 1, closePar);
                         let isStrfTime = false;
-                        if (sstr.includes("strftime"))
+                        if (sstr.includes('strftime'))
                             isStrfTime = true;
                         let sch = sstr.replace(/\n/g, '').split(',');
                         if (isStrfTime) {
                             let nSch = [];
                             for (let j = 0; j < sch.length; j++) {
-                                if (sch[j].includes("strftime")) {
-                                    nSch.push(sch[j] + "," + sch[j + 1]);
+                                if (sch[j].includes('strftime')) {
+                                    nSch.push(sch[j] + ',' + sch[j + 1]);
                                     j++;
                                 }
                                 else {
@@ -4164,6 +4164,8 @@ var capacitorPlugin = (function (exports) {
 
     exports.CapacitorSQLite = CapacitorSQLite;
     exports.CapacitorSQLiteElectronWeb = CapacitorSQLiteElectronWeb;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
 
     return exports;
 
