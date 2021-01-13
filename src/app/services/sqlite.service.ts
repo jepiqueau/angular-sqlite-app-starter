@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { Plugins, Capacitor } from '@capacitor/core';
 import '@capacitor-community/sqlite';
-const { CapacitorSQLite, Device } = Plugins;
+const { CapacitorSQLite } = Plugins;
 
 @Injectable()
 export class SQLiteService {
-  handlerPermissions: any;
   sqlite: any;
   isService: boolean = false;
   platform: string;
@@ -21,33 +20,9 @@ export class SQLiteService {
       this.platform = Capacitor.platform;
       console.log("*** platform " + this.platform)
       this.sqlite = CapacitorSQLite;
-      if(this.platform === "android") {
-        this.handlerPermissions = this.sqlite.addListener(
-            'androidPermissionsRequest', async (data:any) => { 
-            if (data.permissionGranted === 1) {
-                this.handlerPermissions.remove();
-                this.isService = true;
-                resolve(true);
-            } else {
-                console.log("Permission not granted");
-                this.handlerPermissions.remove();
-                this.sqlite = null;
-                resolve(false);
-            }      
-        });
-        try {
-            console.log("%%%%% before requestPermissions");
-            this.sqlite.requestPermissions();
-            console.log("%%%%% after requestPermissions");
-        } catch (e) {
-            console.log("Error requesting permissions " + JSON.stringify(e));
-            resolve(false);
-        }
-      } else {
-          this.isService = true;
-          console.log("$$$ in service this.isService " + this.isService + " $$$")
-          resolve(true);
-      }
+      this.isService = true;
+      console.log("$$$ in service this.isService " + this.isService + " $$$")
+      resolve(true);
 
     });
   }

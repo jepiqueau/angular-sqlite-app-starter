@@ -1,0 +1,22 @@
+<ion-list>
+  <ion-item>
+    <ion-button (click)="runTests()" expand="block">SQLite IssueDino Test</ion-button>
+  </ion-item>
+</ion-list>
+<ion-card class="card-issueDino hidden">
+  <p class="web display">
+    SQLite Plugin not available for {{this.platform}} Platform
+  </p>
+  <p class="import-1-issueDino display">
+    First Import To Json successful
+  </p>
+  <p class="import-2-issueDino display">
+    Second Import To Json successful
+  </p>
+  <p class="sql-success-issueDino display">
+    The test database was successful
+  </p>
+  <p class="sql-failure-issueDino display">
+    The test database failed
+  </p>
+</ion-card>

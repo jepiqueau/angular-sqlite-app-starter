@@ -15,20 +15,6 @@ var capacitorPlugin = (function (exports) {
     OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
     PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
-    /* global Reflect, Promise */
-
-    var extendStatics = function(d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-
-    function __extends(d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    }
 
     function __awaiter(thisArg, _arguments, P, generator) {
         function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -38,34 +24,6 @@ var capacitorPlugin = (function (exports) {
             function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
-    }
-
-    function __generator(thisArg, body) {
-        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-        function verb(n) { return function (v) { return step([n, v]); }; }
-        function step(op) {
-            if (f) throw new TypeError("Generator is already executing.");
-            while (_) try {
-                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-                if (y = 0, t) op = [op[0] & 2, t.value];
-                switch (op[0]) {
-                    case 0: case 1: t = op; break;
-                    case 4: _.label++; return { value: op[1], done: false };
-                    case 5: _.label++; y = op[1]; op = [0]; continue;
-                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                    default:
-                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                        if (t[2]) _.ops.pop();
-                        _.trys.pop(); continue;
-                }
-                op = body.call(thisArg, _);
-            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-        }
     }
 
     var CameraSource;
@@ -437,6 +395,73 @@ var capacitorPlugin = (function (exports) {
         knownPlugins[plugin.config.name] = plugin;
     };
 
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+    /* global Reflect, Promise */
+
+    var extendStatics = function(d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+
+    function __extends(d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+
+    function __awaiter$1(thisArg, _arguments, P, generator) {
+        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    }
+
+    function __generator(thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    }
+
     var AccessibilityPluginWeb = /** @class */ (function (_super) {
         __extends(AccessibilityPluginWeb, _super);
         function AccessibilityPluginWeb() {
@@ -509,7 +534,7 @@ var capacitorPlugin = (function (exports) {
             }) || this;
         }
         BrowserPluginWeb.prototype.open = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     this._lastWindow = window.open(options.url, options.windowName || '_blank');
                     return [2 /*return*/, Promise.resolve()];
@@ -517,7 +542,7 @@ var capacitorPlugin = (function (exports) {
             });
         };
         BrowserPluginWeb.prototype.prefetch = function (_options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     // Does nothing
                     return [2 /*return*/, Promise.resolve()];
@@ -525,7 +550,7 @@ var capacitorPlugin = (function (exports) {
             });
         };
         BrowserPluginWeb.prototype.close = function () {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     this._lastWindow && this._lastWindow.close();
                     return [2 /*return*/, Promise.resolve()];
@@ -545,10 +570,10 @@ var capacitorPlugin = (function (exports) {
             }) || this;
         }
         CameraPluginWeb.prototype.getPhoto = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var _this = this;
                 return __generator(this, function (_a) {
-                    return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                    return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter$1(_this, void 0, void 0, function () {
                             var cameraModal_1, e_1;
                             var _this = this;
                             return __generator(this, function (_a) {
@@ -567,7 +592,7 @@ var capacitorPlugin = (function (exports) {
                                         return [4 /*yield*/, cameraModal_1.componentOnReady()];
                                     case 3:
                                         _a.sent();
-                                        cameraModal_1.addEventListener('onPhoto', function (e) { return __awaiter(_this, void 0, void 0, function () {
+                                        cameraModal_1.addEventListener('onPhoto', function (e) { return __awaiter$1(_this, void 0, void 0, function () {
                                             var photo, _a;
                                             return __generator(this, function (_b) {
                                                 switch (_b.label) {
@@ -718,7 +743,7 @@ var capacitorPlugin = (function (exports) {
             }) || this;
         }
         ClipboardPluginWeb.prototype.write = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var blob, clipboardItemInput, err_1;
                 var _a;
                 return __generator(this, function (_b) {
@@ -763,7 +788,7 @@ var capacitorPlugin = (function (exports) {
             });
         };
         ClipboardPluginWeb.prototype.read = function () {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var clipboardItems, type, clipboardBlob, data, err_2;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -798,7 +823,7 @@ var capacitorPlugin = (function (exports) {
             });
         };
         ClipboardPluginWeb.prototype.readText = function () {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var text;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -846,7 +871,7 @@ var capacitorPlugin = (function (exports) {
             return _this;
         }
         FilesystemPluginWeb.prototype.initDb = function () {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var _this = this;
                 return __generator(this, function (_a) {
                     if (this._db !== undefined) {
@@ -885,7 +910,7 @@ var capacitorPlugin = (function (exports) {
             }
         };
         FilesystemPluginWeb.prototype.dbRequest = function (cmd, args) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var readFlag;
                 return __generator(this, function (_a) {
                     readFlag = this._writeCmds.indexOf(cmd) !== -1 ? 'readwrite' : 'readonly';
@@ -903,7 +928,7 @@ var capacitorPlugin = (function (exports) {
             });
         };
         FilesystemPluginWeb.prototype.dbIndexRequest = function (indexName, cmd, args) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var readFlag;
                 return __generator(this, function (_a) {
                     readFlag = this._writeCmds.indexOf(cmd) !== -1 ? 'readwrite' : 'readonly';
@@ -930,7 +955,7 @@ var capacitorPlugin = (function (exports) {
             return fsPath;
         };
         FilesystemPluginWeb.prototype.clear = function () {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var conn, tx, store;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -951,7 +976,7 @@ var capacitorPlugin = (function (exports) {
          * @return a promise that resolves with the read file data result
          */
         FilesystemPluginWeb.prototype.readFile = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var path, entry;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -973,7 +998,7 @@ var capacitorPlugin = (function (exports) {
          * @return a promise that resolves with the file write result
          */
         FilesystemPluginWeb.prototype.writeFile = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var path, data, doRecursive, occupiedEntry, encoding, parentPath, parentEntry, subDirIndex, parentArgPath, now, pathObj;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -1026,7 +1051,7 @@ var capacitorPlugin = (function (exports) {
          * @return a promise that resolves with the file write result
          */
         FilesystemPluginWeb.prototype.appendFile = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var path, data, parentPath, now, ctime, occupiedEntry, parentEntry, subDirIndex, parentArgPath, pathObj;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -1080,7 +1105,7 @@ var capacitorPlugin = (function (exports) {
          * @return a promise that resolves with the deleted file data result
          */
         FilesystemPluginWeb.prototype.deleteFile = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var path, entry, entries;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -1110,7 +1135,7 @@ var capacitorPlugin = (function (exports) {
          * @return a promise that resolves with the mkdir result
          */
         FilesystemPluginWeb.prototype.mkdir = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var path, doRecursive, parentPath, depth, parentEntry, occupiedEntry, parentArgPath, now, pathObj;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -1157,7 +1182,7 @@ var capacitorPlugin = (function (exports) {
          * @param options the options for the directory remove
          */
         FilesystemPluginWeb.prototype.rmdir = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var path, directory, recursive, fullPath, entry, readDirResult, _i, _a, entry_1, entryPath, entryObj;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
@@ -1211,7 +1236,7 @@ var capacitorPlugin = (function (exports) {
          * @return a promise that resolves with the readdir directory listing result
          */
         FilesystemPluginWeb.prototype.readdir = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var path, entry, entries, names;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -1239,7 +1264,7 @@ var capacitorPlugin = (function (exports) {
          * @return a promise that resolves with the file stat result
          */
         FilesystemPluginWeb.prototype.getUri = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var path, entry;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -1269,7 +1294,7 @@ var capacitorPlugin = (function (exports) {
          * @return a promise that resolves with the file stat result
          */
         FilesystemPluginWeb.prototype.stat = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var path, entry;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -1303,7 +1328,7 @@ var capacitorPlugin = (function (exports) {
          * @return a promise that resolves with the rename result
          */
         FilesystemPluginWeb.prototype.rename = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     return [2 /*return*/, this._copy(options, true)];
                 });
@@ -1315,7 +1340,7 @@ var capacitorPlugin = (function (exports) {
          * @return a promise that resolves with the copy result
          */
         FilesystemPluginWeb.prototype.copy = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     return [2 /*return*/, this._copy(options, false)];
                 });
@@ -1329,7 +1354,7 @@ var capacitorPlugin = (function (exports) {
          */
         FilesystemPluginWeb.prototype._copy = function (options, doRename) {
             if (doRename === void 0) { doRename = false; }
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var to, from, fromDirectory, toDirectory, fromPath, toPath, toObj, e_1, toPathComponents, toPath_1, toParentDirectory, fromObj, updateTime, _a, file, e_2, contents, _i, contents_1, filename;
                 var _this = this;
                 return __generator(this, function (_b) {
@@ -1390,7 +1415,7 @@ var capacitorPlugin = (function (exports) {
                                 })];
                         case 7:
                             fromObj = _b.sent();
-                            updateTime = function (path, ctime, mtime) { return __awaiter(_this, void 0, void 0, function () {
+                            updateTime = function (path, ctime, mtime) { return __awaiter$1(_this, void 0, void 0, function () {
                                 var fullPath, entry;
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
@@ -1591,7 +1616,7 @@ var capacitorPlugin = (function (exports) {
             }) || this;
         }
         DevicePluginWeb.prototype.getInfo = function () {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var ua, uaFields;
                 return __generator(this, function (_a) {
                     ua = navigator.userAgent;
@@ -1613,7 +1638,7 @@ var capacitorPlugin = (function (exports) {
             });
         };
         DevicePluginWeb.prototype.getBatteryInfo = function () {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var battery, e_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -1638,7 +1663,7 @@ var capacitorPlugin = (function (exports) {
             });
         };
         DevicePluginWeb.prototype.getLanguageCode = function () {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     return [2 /*return*/, {
                             value: navigator.language
@@ -1847,7 +1872,7 @@ var capacitorPlugin = (function (exports) {
             }) || this;
         }
         ModalsPluginWeb.prototype.alert = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     window.alert(options.message);
                     return [2 /*return*/, Promise.resolve()];
@@ -1855,7 +1880,7 @@ var capacitorPlugin = (function (exports) {
             });
         };
         ModalsPluginWeb.prototype.prompt = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var val;
                 return __generator(this, function (_a) {
                     val = window.prompt(options.message, options.inputText || '');
@@ -1867,7 +1892,7 @@ var capacitorPlugin = (function (exports) {
             });
         };
         ModalsPluginWeb.prototype.confirm = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var val;
                 return __generator(this, function (_a) {
                     val = window.confirm(options.message);
@@ -1878,10 +1903,10 @@ var capacitorPlugin = (function (exports) {
             });
         };
         ModalsPluginWeb.prototype.showActions = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var _this = this;
                 return __generator(this, function (_a) {
-                    return [2 /*return*/, new Promise(function (resolve, _reject) { return __awaiter(_this, void 0, void 0, function () {
+                    return [2 /*return*/, new Promise(function (resolve, _reject) { return __awaiter$1(_this, void 0, void 0, function () {
                             var actionSheet;
                             var _this = this;
                             return __generator(this, function (_a) {
@@ -1893,7 +1918,7 @@ var capacitorPlugin = (function (exports) {
                                 actionSheet.header = options.title;
                                 actionSheet.cancelable = false;
                                 actionSheet.options = options.options;
-                                actionSheet.addEventListener('onSelection', function (e) { return __awaiter(_this, void 0, void 0, function () {
+                                actionSheet.addEventListener('onSelection', function (e) { return __awaiter$1(_this, void 0, void 0, function () {
                                     var selection;
                                     return __generator(this, function (_a) {
                                         selection = e.detail;
@@ -1981,7 +2006,7 @@ var capacitorPlugin = (function (exports) {
             }) || this;
         }
         PermissionsPluginWeb.prototype.query = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var navigator, name, ret;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
@@ -2094,7 +2119,7 @@ var capacitorPlugin = (function (exports) {
             }) || this;
         }
         ToastPluginWeb.prototype.show = function (options) {
-            return __awaiter(this, void 0, void 0, function () {
+            return __awaiter$1(this, void 0, void 0, function () {
                 var duration, toast;
                 return __generator(this, function (_a) {
                     duration = 2000;
