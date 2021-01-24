@@ -29,5 +29,3 @@ npm-debug.log*
 /platforms
 /plugins
 /www
-/electron/Databases
-/electron/Databases/*.db

@@ -7,8 +7,8 @@ describe('new App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
+  it('should be blank', () => {
     page.navigateTo();
-    expect(page.getPageTitle()).toContain('Tab One');
+    expect(page.getParagraphText()).toContain('Start with Ionic UI Components');
   });
 });

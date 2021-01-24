@@ -5,10 +5,11 @@ import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { SQLiteService } from './services/sqlite.service';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { SQLiteService } from './services/sqlite.service';
+import { DetailService } from './services/detail.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,7 +19,7 @@ import { AppComponent } from './app.component';
     StatusBar,
     SplashScreen,
     SQLiteService,
-
+    DetailService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
