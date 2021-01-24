@@ -3,12 +3,12 @@
 <h3 align="center">Ionic/Angular SQLite App Starter</h3>
 <p align="center"><strong><code>angular-sqlite-app-starter</code></strong></p>
 <p align="center">Ionic/Angular application demonstrating the use of the</p>
-<p align="center"><strong><code>@capacitor-community/sqlite<code></strong></p>
+<p align="center"><strong><code>@capacitor-community/sqlite@initial<code></strong></p>
 <br>
 <p align="center">
-  <img src="https://img.shields.io/maintenance/yes/2020?style=flat-square" />
+  <img src="https://img.shields.io/maintenance/yes/2021?style=flat-square" />
   <a href="https://github.com/jepiqueau/angular-sqlite-app-starter"><img src="https://img.shields.io/github/license/jepiqueau/angular-sqlite-app-starter?style=flat-square" /></a>
-  <a href="https://github.com/jepiqueau/angular-sqlite-app-starter"><img src="https://img.shields.io/github/package-json/v/jepiqueau/angular-sqlite-app-starter?style=flat-square" /></a>
+  <a href="https://github.com/jepiqueau/angular-sqlite-app-starter"><img src="https://img.shields.io/github/package-json/v/jepiqueau/angular-sqlite-app-starter/2.4.x?style=flat-square" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 <a href="#contributors-"><img src="https://img.shields.io/badge/all%20contributors-1-orange?style=flat-square" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
