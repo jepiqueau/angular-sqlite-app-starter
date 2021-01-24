@@ -26,7 +26,7 @@
 To start building your App using this Starter App, clone this repo to a new directory:
 
 ```bash
-git clone https://github.com/jepiqueau/angular-sqlite-app-starter.git 
+git clone --branch 2.4.x https://github.com/jepiqueau/angular-sqlite-app-starter.git 
 cd angular-sqlite-app-starter
 git remote rm origin
 ```
@@ -288,7 +288,7 @@ Here we choose for the example [mySQLiteApp] [com.example.app]
 ### Install @capacitor-community/sqlite plugin
 
 ```bash
-npm install --save @capacitor-community/sqlite@latest
+npm install --save @capacitor-community/sqlite@initial
 ```
 
 ### Add an Angular Service
