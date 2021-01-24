@@ -1,7 +1,7 @@
 <p align="center"><br><img src="https://avatars3.githubusercontent.com/u/16580653?v=4" width="128" height="128" /></p>
 
-<h3 align="center">Ionic/Angular SQLite App Refactor</h3>
-<p align="center"><strong><code>angular-sqlite-app-refactor</code></strong></p>
+<h3 align="center">Ionic/Angular SQLite App Starter</h3>
+<p align="center"><strong><code>angular-sqlite-app-starter</code></strong></p>
 <p align="center">Ionic/Angular application demonstrating the use of the</p>
 <p align="center"><strong><code>@capacitor-community/sqlite@latest</code></strong></p>
 <br>
