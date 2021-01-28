@@ -2,6 +2,7 @@ import { Component, AfterViewInit } from '@angular/core';
 import { SQLiteService } from '../services/sqlite.service';
 import { createSchema, twoUsers} from '../utils/no-encryption-utils';
 import { deleteDatabase } from '../utils/db-utils';
+import { Dialog } from '@capacitor/dialog';
 
 @Component({
   selector: 'app-testencryption',
@@ -18,6 +19,12 @@ export class TestencryptionPage implements AfterViewInit {
 
   async ngAfterViewInit() {
     console.log("%%%% in TestencryptionPage this._sqlite " + this._sqlite)
+    const showAlert = async (message: string) => {
+      await Dialog.alert({
+      title: 'Error Dialog',
+      message: message,
+      });
+    };
     try {
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
@@ -27,6 +34,7 @@ export class TestencryptionPage implements AfterViewInit {
       document.querySelector('.sql-allfailure').classList
       .remove('display');
       console.log(`$$$ runTest failed ${err.message}`);
+      await showAlert(err.message);
     }
   }
 

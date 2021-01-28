@@ -3,6 +3,7 @@ import { setUsers } from '../utils/no-encryption-utils';
 import { createSchemaMessages, setMessages } from '../utils/encrypted-set-utils';
 import { SQLiteService } from '../services/sqlite.service';
 import { DetailService } from '../services/detail.service';
+import { Dialog } from '@capacitor/dialog';
 
 @Component({
   selector: 'app-existingconnection',
@@ -19,6 +20,12 @@ export class ExistingconnectionPage implements AfterViewInit {
               private _detailService: DetailService) {}
 
   async ngAfterViewInit() {
+    const showAlert = async (message: string) => {
+      await Dialog.alert({
+      title: 'Error Dialog',
+      message: message,
+      });
+    };
     try {
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
@@ -28,6 +35,7 @@ export class ExistingconnectionPage implements AfterViewInit {
       document.querySelector('.sql-allfailure').classList
       .remove('display');
       console.log(`$$$ runTest failed ${err.message}`);
+      await showAlert(err.message);
     }
   }
 

@@ -5,6 +5,7 @@ import { DetailService } from '../services/detail.service';
 import { createSchema, twoUsers, twoTests } from '../utils/no-encryption-utils';
 import { createSchemaContacts, setContacts } from '../utils/encrypted-set-utils';
 import { deleteDatabase } from '../utils/db-utils';
+import { Dialog } from '@capacitor/dialog';
 
 @Component({
   selector: 'app-test2dbs',
@@ -22,6 +23,12 @@ export class Test2dbsPage implements AfterViewInit {
               private _detailService: DetailService) {}
 
   async ngAfterViewInit() {
+    const showAlert = async (message: string) => {
+      await Dialog.alert({
+      title: 'Error Dialog',
+      message: message,
+      });
+    };
     console.log("%%%% in Test2dbsPage this._sqlite " + this._sqlite)
     try {
       await this.runTest();
@@ -32,6 +39,7 @@ export class Test2dbsPage implements AfterViewInit {
       document.querySelector('.sql-allfailure').classList
       .remove('display');
       console.log(`$$$ runTest failed ${err.message}`);
+      await showAlert(err.message);
     }
   }
 

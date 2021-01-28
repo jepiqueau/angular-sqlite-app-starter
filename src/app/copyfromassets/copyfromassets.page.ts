@@ -1,5 +1,6 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { SQLiteService } from '../services/sqlite.service';
+import { Dialog } from '@capacitor/dialog';
 
 @Component({
   selector: 'app-copyfromassets',
@@ -15,6 +16,12 @@ export class CopyfromassetsPage implements AfterViewInit {
   constructor(private _sqlite: SQLiteService) {}
 
   async ngAfterViewInit() {
+    const showAlert = async (message: string) => {
+      await Dialog.alert({
+      title: 'Error Dialog',
+      message: message,
+      });
+    };
     try {
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
@@ -24,6 +31,7 @@ export class CopyfromassetsPage implements AfterViewInit {
       document.querySelector('.sql-allfailure').classList
       .remove('display');
       console.log(`$$$ runTest failed ${err.message}`);
+      await showAlert(err.message);
     }
   }
 

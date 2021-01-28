@@ -2,6 +2,8 @@ import { Component, AfterViewInit } from '@angular/core';
 import { SQLiteService } from '../services/sqlite.service';
 import { DetailService } from '../services/detail.service';
 import { dataToImport, partialImport1, dataToImport2 } from '../utils/import-json-utils';
+import { Dialog } from '@capacitor/dialog';
+
 @Component({
   selector: 'app-testimportjson',
   templateUrl: 'testimportjson.page.html',
@@ -17,6 +19,12 @@ export class TestimportjsonPage implements AfterViewInit {
                     private _detailService: DetailService) {}
 
   async ngAfterViewInit() {
+    const showAlert = async (message: string) => {
+      await Dialog.alert({
+      title: 'Error Dialog',
+      message: message,
+      });
+    };
     // Initialize the CapacitorSQLite plugin
     console.log("%%%% in TestimportjsonPage this._sqlite " + 
                                                   this._sqlite)
@@ -30,6 +38,7 @@ export class TestimportjsonPage implements AfterViewInit {
       document.querySelector('.sql-allfailure').classList
       .remove('display');
       console.log(`$$$ runTest failed ${err.message}`);
+      await showAlert(err.message);
     }
   }
 

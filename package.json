@@ -24,6 +24,7 @@
     "@capacitor-community/sqlite": "^3.0.0-beta.2",
     "@capacitor/android": "next",
     "@capacitor/core": "next",
+    "@capacitor/dialog": "^0.4.1",
     "@capacitor/ios": "next",
     "@ionic-native/core": "latest",
     "@ionic-native/splash-screen": "latest",

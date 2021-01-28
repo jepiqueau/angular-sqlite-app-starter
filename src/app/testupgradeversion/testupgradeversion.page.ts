@@ -4,6 +4,8 @@ import { createSchemaVersion1, twoUsers, createSchemaVersion2,
           setArrayVersion2, userMessages } from '../utils/upgrade-version-utils';
 import { deleteDatabase } from '../utils/db-utils';
 import { SQLiteDBConnection } from '@capacitor-community/sqlite';
+import { Dialog } from '@capacitor/dialog';
+
 @Component({
   selector: 'app-testupgradeversion',
   templateUrl: 'testupgradeversion.page.html',
@@ -18,6 +20,12 @@ export class TestupgradeversionPage implements AfterViewInit {
   constructor(private _sqlite: SQLiteService) {}
 
   async ngAfterViewInit() {
+    const showAlert = async (message: string) => {
+      await Dialog.alert({
+      title: 'Error Dialog',
+      message: message,
+      });
+    };
     console.log("%%%% in TestupgradeversionPage this._sqlite " + this._sqlite)
     try {
       await this.runTest();
@@ -28,6 +36,7 @@ export class TestupgradeversionPage implements AfterViewInit {
       document.querySelector('.sql-allfailure').classList
       .remove('display');
       console.log(`$$$ runTest failed ${err.message}`);
+      await showAlert(err.message);
     }
   }
 
