@@ -167,3 +167,29 @@ export const dataToImport2: any = {
 
   ]
 };
+export const dataToImport71: any = {
+  database : "db-from-json71",
+  version : 1,
+  encrypted : false,
+  mode : "full",
+  tables :[
+      {
+          name: "company",
+          schema: [
+              {column:"id", value: "INTEGER NOT NULL"},
+              {column:"name", value:"TEXT NOT NULL"},
+              {column:"age", value:"INTEGER NOT NULL"},
+              {column:"country", value:"TEXT"},
+              {column:"salary", value:"REAL"},
+              {column:"last_modified", value:"INTEGER"},
+              {constraint:"PK_id_name", value:"PRIMARY KEY (id,name,age)"}
+          ],
+          values: [
+              [1,"Jones",55,"Australia",1250.98,1608216034],
+              [2,"Lawson",32,"Ireland",2345.60,1608216034],
+              [3,"Bush",44,"USA",1850.10,1608216034],
+          ]
+      },
+    ]
+  };
+  

@@ -3250,6 +3250,9 @@ var capacitorPlugin = (function (exports) {
                                     else if (jsonData.tables[i].schema[j].foreignkey) {
                                         statements.push(`FOREIGN KEY (${jsonData.tables[i].schema[j].foreignkey}) ${jsonData.tables[i].schema[j].value}`);
                                     }
+                                    else if (jsonData.tables[i].schema[j].constraint) {
+                                        statements.push(`CONSTRAINT ${jsonData.tables[i].schema[j].constraint} ${jsonData.tables[i].schema[j].value}`);
+                                    }
                                 }
                                 else {
                                     if (jsonData.tables[i].schema[j].column) {
@@ -3257,6 +3260,9 @@ var capacitorPlugin = (function (exports) {
                                     }
                                     else if (jsonData.tables[i].schema[j].foreignkey) {
                                         statements.push(`FOREIGN KEY (${jsonData.tables[i].schema[j].foreignkey}) ${jsonData.tables[i].schema[j].value},`);
+                                    }
+                                    else if (jsonData.tables[i].schema[j].constraint) {
+                                        statements.push(`CONSTRAINT ${jsonData.tables[i].schema[j].constraint} ${jsonData.tables[i].schema[j].value},`);
                                     }
                                 }
                             }
@@ -3591,7 +3597,12 @@ var capacitorPlugin = (function (exports) {
          * @param obj
          */
         isSchema(obj) {
-            const keySchemaLevel = ['column', 'value', 'foreignkey'];
+            const keySchemaLevel = [
+                'column',
+                'value',
+                'foreignkey',
+                'constraint',
+            ];
             if (obj == null ||
                 (Object.keys(obj).length === 0 && obj.constructor === Object))
                 return false;
@@ -3603,6 +3614,8 @@ var capacitorPlugin = (function (exports) {
                 if (key === 'value' && typeof obj[key] != 'string')
                     return false;
                 if (key === 'foreignkey' && typeof obj[key] != 'string')
+                    return false;
+                if (key === 'constraint' && typeof obj[key] != 'string')
                     return false;
             }
             return true;
@@ -3647,6 +3660,9 @@ var capacitorPlugin = (function (exports) {
                         }
                         if (keys.includes('foreignkey')) {
                             sch.foreignkey = schema[i].foreignkey;
+                        }
+                        if (keys.includes('constraint')) {
+                            sch.constraint = schema[i].constraint;
                         }
                         let isValid = this.isSchema(sch);
                         if (!isValid) {
@@ -4482,6 +4498,21 @@ var capacitorPlugin = (function (exports) {
             });
         }
         /**
+         * ModEmbeddedParentheses
+         * @param sqlStmt
+         */
+        modEmbeddedParentheses(sqlStmt) {
+            let stmt = sqlStmt;
+            let openPar = sqlStmt.indexOf('(');
+            if (openPar != -1) {
+                let closePar = sqlStmt.lastIndexOf(')');
+                let tStmt = sqlStmt.substring(openPar + 1, closePar);
+                let mStmt = tStmt.replace(/,/g, '§');
+                stmt = sqlStmt.replace(tStmt, mStmt);
+            }
+            return stmt;
+        }
+        /**
          * GetSchema
          * @param mDb
          * @param sqlStmt
@@ -4495,23 +4526,9 @@ var capacitorPlugin = (function (exports) {
                     let openPar = sqlStmt.indexOf('(');
                     let closePar = sqlStmt.lastIndexOf(')');
                     let sstr = sqlStmt.substring(openPar + 1, closePar);
-                    let isStrfTime = false;
-                    if (sstr.includes('strftime'))
-                        isStrfTime = true;
+                    // check if there is other parenthesis and replace the ',' by '§'
+                    sstr = this.modEmbeddedParentheses(sstr);
                     let sch = sstr.replace(/\n/g, '').split(',');
-                    if (isStrfTime) {
-                        let nSch = [];
-                        for (let j = 0; j < sch.length; j++) {
-                            if (sch[j].includes('strftime')) {
-                                nSch.push(sch[j] + ',' + sch[j + 1]);
-                                j++;
-                            }
-                            else {
-                                nSch.push(sch[j]);
-                            }
-                        }
-                        sch = [...nSch];
-                    }
                     for (let j = 0; j < sch.length; j++) {
                         const rstr = sch[j].trim();
                         let idx = rstr.indexOf(' ');
@@ -4521,10 +4538,15 @@ var capacitorPlugin = (function (exports) {
                             reject(new Error(`GetSchema: table ${tableName} row length != 2`));
                             break;
                         }
-                        if (row[0].toUpperCase() != 'FOREIGN') {
-                            schema.push({ column: row[0], value: row[1] });
+                        if (row[0].toUpperCase() == 'CONSTRAINT') {
+                            let k = row[1].indexOf(' ');
+                            let tRow = [row[1].slice(0, k), row[1].slice(k + 1)];
+                            schema.push({
+                                constraint: tRow[0],
+                                value: tRow[1].replace(/§/g, ','),
+                            });
                         }
-                        else {
+                        else if (row[0].toUpperCase() == 'FOREIGN') {
                             const oPar = rstr.indexOf('(');
                             const cPar = rstr.indexOf(')');
                             row = [rstr.slice(oPar + 1, cPar), rstr.slice(cPar + 2)];
@@ -4532,7 +4554,10 @@ var capacitorPlugin = (function (exports) {
                                 reject(new Error(`GetSchema: table ${tableName} row length != 2`));
                                 break;
                             }
-                            schema.push({ foreignkey: row[0], value: row[1] });
+                            schema.push({ foreignkey: row[0], value: row[1].replace(/§/g, ',') });
+                        }
+                        else {
+                            schema.push({ column: row[0], value: row[1].replace(/§/g, ',') });
                         }
                     }
                     resolve(schema);
