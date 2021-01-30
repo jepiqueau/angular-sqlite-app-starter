@@ -81,8 +81,8 @@ export class TestimportjsonPage implements AfterViewInit {
 
 
       result = await db.getSyncDate();
-      if(result.syncDate === 0) return Promise.reject(new Error("GetSyncDate failed"));
-      console.log("$$ syncDate " + result.syncDate);
+      if(result.length === 0) return Promise.reject(new Error("GetSyncDate failed"));
+      console.log("$$ syncDate " + result);
 
       // select all users in db
       result = await db.query("SELECT * FROM users;");
@@ -112,8 +112,8 @@ export class TestimportjsonPage implements AfterViewInit {
       await db.open();
 
       result = await db.getSyncDate();
-      if(result.syncDate === 0) return Promise.reject(new Error("getSyncDate after 'partial' failed"));
-      console.log("$$ syncDate " + result.syncDate);
+      if(result.length === 0) return Promise.reject(new Error("GetSyncDate failed"));
+      console.log("$$ syncDate " + result);
 
       // select all users in db
       result = await db.query("SELECT * FROM users;");
