@@ -49,6 +49,7 @@ export class Testexportjson59Page implements AfterViewInit {
       console.log(`isJsonValid: ${result.message}`);
       return false;
     }
+    console.log(`dataToImport59 ${JSON.stringify(dataToImport59)}`)
     console.log("$$$ dataToImport Json Object is valid $$$")
     // full import
     result = await this._sqlite

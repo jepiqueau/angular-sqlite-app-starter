@@ -122,7 +122,7 @@ export const dataToImport59: any = {
           {column:"first_name", value:"TEXT NOT NULL"},
           {column:"last_name", value:"TEXT NOT NULL"},
           {column:"gender", value:"TEXT NOT NULL"},
-          {column:"email", value:"TEXT NOT NULL"},
+          {column:"email", value:"TEXT UNIQUE NOT NULL"},
           {column:"phone", value:"TEXT"},
           {column:"national_id", value:"TEXT NOT NULL"},
           {column:"date_of_birth", value:"TEXT"},
@@ -135,9 +135,20 @@ export const dataToImport59: any = {
           {column:"last_modified", value:"INTEGER"},
           {foreignkey: "country_id", value:"REFERENCES countries(id) ON DELETE CASCADE"}
         ],
+        indexes: [
+          {name: "index_customers_on_email",value: "email", mode: "UNIQUE"},
+          {name: "index_customers_on_last_modified",value: "last_modified DESC"}
+        ],
+        triggers: [
+          {
+            name: "validate_email_before_insert_customers",
+            timeevent: "BEFORE INSERT",
+            logic: "BEGIN SELECT CASE WHEN NEW.email NOT LIKE '%_@__%.__%' THEN RAISE (ABORT,'Invalid email address') END; END"
+          }
+        ],
         values: [
-            ["3","William","Jones","1","peterjones@mail.com<peterjones@mail.com>","420305202","1234567","1983-01-04","2020-11-1212:39:02","3","2020-11-19 05:10:10","1","NULL","3",1608216040],
-            ["1","Alexander","Brown","1","alexanderbrown@mail.com<alexanderbrown@mail.com>","420305203","1234572","1990-02-07","2020-12-1210:35:15","1","2020-11-19 05:10:10","2","NULL","6",1608216040]
+            ["ef5c57d5-b885-49a9-9c4d-8b340e4abdbc","William","Jones","1","peterjones@mail.com<peterjones@mail.com>","420305202","1234567","1983-01-04","2020-11-1212:39:02","3","2020-11-19 05:10:10","1","NULL","3",1608216040],
+            ["bced3262-5d42-470a-9585-d3fd12c45452","Alexander","Brown","1","alexanderbrown@mail.com<alexanderbrown@mail.com>","420305203","1234572","1990-02-07","2020-12-1210:35:15","1","2020-11-19 05:10:10","2","NULL","6",1608216040]
         ]
       }
   ]
