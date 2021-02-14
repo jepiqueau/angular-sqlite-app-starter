@@ -81,6 +81,13 @@ var capacitorPlugin = (function (exports) {
                 return res;
             });
         }
+        isConnection(database) {
+            return __awaiter(this, void 0, void 0, function* () {
+                let res = {};
+                res.result = this._connectionDict.has(database);
+                return res;
+            });
+        }
         retrieveConnection(database) {
             return __awaiter(this, void 0, void 0, function* () {
                 const conn = this._connectionDict.has(database)
@@ -123,6 +130,28 @@ var capacitorPlugin = (function (exports) {
         copyFromAssets() {
             return __awaiter(this, void 0, void 0, function* () {
                 return yield this.sqlite.copyFromAssets();
+            });
+        }
+        isDatabase(database) {
+            return __awaiter(this, void 0, void 0, function* () {
+                return yield this.sqlite.isDatabase({ database: database });
+            });
+        }
+        getDatabaseList() {
+            return __awaiter(this, void 0, void 0, function* () {
+                return yield this.sqlite.getDatabaseList();
+            });
+        }
+        addSQLiteSuffix(folderPath) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const path = folderPath ? folderPath : 'default';
+                return yield this.sqlite.addSQLiteSuffix({ folderPath: path });
+            });
+        }
+        deleteOldDatabases(folderPath) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const path = folderPath ? folderPath : 'default';
+                return yield this.sqlite.deleteOldDatabases({ folderPath: path });
             });
         }
     }
@@ -212,6 +241,15 @@ var capacitorPlugin = (function (exports) {
             return __awaiter(this, void 0, void 0, function* () {
                 const res = yield this.sqlite.isDBExists({
                     database: this.dbName,
+                });
+                return res;
+            });
+        }
+        isTable(table) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const res = yield this.sqlite.isTableExists({
+                    database: this.dbName,
+                    table: table,
                 });
                 return res;
             });
@@ -2438,6 +2476,20 @@ var capacitorPlugin = (function (exports) {
             return this.Path.join(this.getDatabasesPath(), fileName);
         }
         /**
+         * GetCustomerPath
+         * get the customer path
+         */
+        getCustomerPath(custPath) {
+            return this.Path.join(this.HomeDir, custPath);
+        }
+        /**
+         * GetCustomerFilePath
+         * get the customer file path
+         */
+        getCustomerFilePath(custPath, file) {
+            return this.Path.join(custPath, file);
+        }
+        /**
          * GetDatabasesPath
          * get the database folder path
          */
@@ -2581,6 +2633,19 @@ var capacitorPlugin = (function (exports) {
                 }
                 else {
                     reject(new Error('CopyFilePath: cannot get the ' + 'filePath'));
+                }
+            }));
+        }
+        copyFile(fromPath, fromFile, toPath, toFile) {
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                const fPath = this.Path.join(fromPath, fromFile);
+                const tPath = this.Path.join(toPath, toFile);
+                try {
+                    this.NodeFs.copyFileSync(fPath, tPath);
+                    resolve();
+                }
+                catch (err) {
+                    reject(new Error(`CopyFile: ${err.message}`));
                 }
             }));
         }
@@ -5175,6 +5240,26 @@ var capacitorPlugin = (function (exports) {
                 }));
             });
         }
+        isTableExists(tableName) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const isOpen = this._isDBOpen;
+                try {
+                    const retB = yield this._uJson.isTableExists(this._mDB, isOpen, tableName);
+                    if (retB) {
+                        return { result: true };
+                    }
+                    else {
+                        return {
+                            result: false,
+                            message: `IsTableExists: table ${tableName} does not exist`,
+                        };
+                    }
+                }
+                catch (err) {
+                    return { result: false, message: `IsTableExists: ${err.message}` };
+                }
+            });
+        }
         /**
          * CreateSyncTable
          * create the synchronization table
@@ -5476,7 +5561,75 @@ var capacitorPlugin = (function (exports) {
         }
     }
 
-    //1234567890123456789012345678901234567890123456789012345678901234567890
+    class UtilsMigrate {
+        constructor() {
+            this._uFile = new UtilsFile();
+        }
+        addSQLiteSuffix(folderPath) {
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                const toPath = this._uFile.getDatabasesPath();
+                folderPath =
+                    folderPath !== 'default'
+                        ? this._uFile.getCustomerPath(folderPath)
+                        : toPath;
+                // check if path exists
+                const isPath = this._uFile.isPathExists(folderPath);
+                if (!isPath) {
+                    reject(new Error(`path ${folderPath} does not exists`));
+                }
+                // get the files
+                const files = yield this._uFile.getFileList(folderPath);
+                files.forEach((file) => __awaiter(this, void 0, void 0, function* () {
+                    let newFile = file;
+                    if (!file.includes('SQLite.db')) {
+                        const arFile = file.split('.db');
+                        if (arFile.length != 2) {
+                            reject(new Error('Not a .db file'));
+                        }
+                        newFile = arFile[0].concat('SQLite.db');
+                        try {
+                            yield this._uFile.copyFile(folderPath, file, toPath, newFile);
+                        }
+                        catch (err) {
+                            reject(new Error(`addSQLiteSuffix: ${err.message} `));
+                        }
+                    }
+                }));
+                resolve();
+            }));
+        }
+        deleteOldDatabases(folderPath) {
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                const toPath = this._uFile.getDatabasesPath();
+                folderPath =
+                    folderPath !== 'default'
+                        ? this._uFile.getCustomerPath(folderPath)
+                        : toPath;
+                // check if path exists
+                const isPath = this._uFile.isPathExists(folderPath);
+                if (!isPath) {
+                    reject(new Error(`path ${folderPath} does not exists`));
+                }
+                console.log(`$$folderPath ${folderPath}`);
+                // get the files
+                const files = yield this._uFile.getFileList(folderPath);
+                files.forEach((file) => __awaiter(this, void 0, void 0, function* () {
+                    if (!file.includes('SQLite.db')) {
+                        try {
+                            console.log(`$$file ${file}`);
+                            const fPath = this._uFile.getCustomerFilePath(folderPath, file);
+                            yield this._uFile.deleteFilePath(fPath);
+                        }
+                        catch (err) {
+                            reject(new Error(`deleteFilePath:  ${folderPath} failed`));
+                        }
+                    }
+                }));
+                resolve();
+            }));
+        }
+    }
+
     const { remote } = require('electron');
     class CapacitorSQLiteElectronWeb extends WebPlugin {
         constructor() {
@@ -5488,6 +5641,7 @@ var capacitorPlugin = (function (exports) {
             this._dbDict = {};
             this._uFile = new UtilsFile();
             this._uJson = new UtilsJson();
+            this._uMigrate = new UtilsMigrate();
             this._versionUpgrades = {};
             console.log('CapacitorSQLite Electron');
             this.RemoteRef = remote;
@@ -5837,6 +5991,110 @@ var capacitorPlugin = (function (exports) {
                 return Promise.resolve({
                     result: isExists,
                 });
+            });
+        }
+        isDatabase(options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                let keys = Object.keys(options);
+                if (!keys.includes('database')) {
+                    return Promise.resolve({
+                        result: false,
+                        message: 'Must provide a database name',
+                    });
+                }
+                const dbName = options.database;
+                const isExists = this._uFile.isFileExists(dbName + 'SQLite.db');
+                return Promise.resolve({
+                    result: isExists,
+                });
+            });
+        }
+        isTableExists(options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                let keys = Object.keys(options);
+                if (!keys.includes('database')) {
+                    return Promise.resolve({
+                        result: false,
+                        message: 'Must provide a database name',
+                    });
+                }
+                const dbName = options.database;
+                if (!keys.includes('table')) {
+                    return Promise.resolve({
+                        result: false,
+                        message: 'Must provide a table name',
+                    });
+                }
+                const tableName = options.table;
+                keys = Object.keys(this._dbDict);
+                if (!keys.includes(dbName)) {
+                    return Promise.resolve({
+                        result: false,
+                        message: 'IsDBExists command failed: No available ' +
+                            'connection for ' +
+                            dbName,
+                    });
+                }
+                const mDB = this._dbDict[dbName];
+                try {
+                    const res = yield mDB.isTableExists(tableName);
+                    return Promise.resolve({ result: res.result });
+                }
+                catch (err) {
+                    return Promise.resolve({
+                        result: false,
+                        message: `isTableExists: ${err.message}`,
+                    });
+                }
+            });
+        }
+        getDatabaseList() {
+            return __awaiter(this, void 0, void 0, function* () {
+                // get the database folder
+                const pathDatabase = this._uFile.getDatabasesPath();
+                // get the list of databases
+                const files = yield this._uFile.getFileList(pathDatabase);
+                return Promise.resolve({
+                    values: files,
+                });
+            });
+        }
+        addSQLiteSuffix(options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const folderPath = options.folderPath
+                    ? options.folderPath
+                    : 'default';
+                try {
+                    yield this._uMigrate.addSQLiteSuffix(folderPath);
+                    return Promise.resolve({
+                        result: true,
+                    });
+                }
+                catch (err) {
+                    return Promise.resolve({
+                        result: false,
+                        message: `addSQLiteSuffix: ${err.message}`,
+                    });
+                }
+            });
+        }
+        deleteOldDatabases(options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const folderPath = options.folderPath
+                    ? options.folderPath
+                    : 'default';
+                try {
+                    yield this._uMigrate.deleteOldDatabases(folderPath);
+                    return Promise.resolve({
+                        result: true,
+                    });
+                }
+                catch (err) {
+                    return Promise.resolve({
+                        result: false,
+                        message: `deleteOldDatabases: ${err.message}`,
+                    });
+                }
             });
         }
         deleteDatabase(options) {

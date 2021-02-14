@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Plugins, Capacitor } from '@capacitor/core';
 import '@capacitor-community/sqlite';
 import { SQLiteDBConnection, SQLiteConnection, capSQLiteSet,
-         capSQLiteChanges, capEchoResult, capSQLiteResult 
-        } from '@capacitor-community/sqlite';
+         capSQLiteChanges, capEchoResult, capSQLiteResult, 
+         capSQLiteValues} from '@capacitor-community/sqlite';
 const { CapacitorSQLite } = Plugins;
 
 @Injectable()
@@ -132,6 +132,64 @@ export class SQLiteService {
             return null;
         }
     }
+    /**
+     * Check if connection exists
+     * @param database 
+     */
+    async isConnection(database: string): Promise<capSQLiteResult> {
+        if(this.sqlite != null) {
+            return await this.sqlite.isConnection(database);
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Check if database exists
+     * @param database 
+     */
+    async isDatabase(database: string): Promise<capSQLiteResult> {
+        if(this.sqlite != null) {
+            return await this.sqlite.isDatabase(database);
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Get the list of databases
+     */    
+    async getDatabaseList() : Promise<capSQLiteValues> {
+        if(this.sqlite != null) {
+            return await this.sqlite.getDatabaseList();
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Add "SQLite" suffix to old database's names
+     */    
+    async addSQLiteSuffix(folderPath?: string): Promise<capSQLiteResult>{
+        if(this.sqlite != null) {
+            const path: string = folderPath ? folderPath : "default";
+            console.log(`in service path: ${path} `)
+            return await this.sqlite.addSQLiteSuffix(folderPath);
+        } else {
+            return null;
+        }
+    }
+    /**
+     * Delete old databases
+     */    
+    async deleteOldDatabases(folderPath?: string): Promise<capSQLiteResult>{
+        if(this.sqlite != null) {
+            const path: string = folderPath ? folderPath : "default";
+            console.log(`in service path: ${path} `)
+            return await this.sqlite.deleteOldDatabases(folderPath);
+        } else {
+            return null;
+        }
+
+    }
+
     /**
      * Import from a Json Object
      * @param jsonstring 

@@ -81,4 +81,15 @@ export const setUsers: Array<capSQLiteSet>  = [
     values:["Bush","Bush@example.com",42]
   },
 ];
-
+export const createSchema82: string = `
+CREATE TABLE IF NOT EXISTS drawings (
+  id TEXT PRIMARY KEY NOT NULL,
+  congregationId TEXT,
+  prefix TEXT,
+  creationTime TEXT NOT NULL,
+  lastUpdated TEXT,
+  featureCollection TEXT NOT NULL,
+  printConfiguration TEXT
+);
+PRAGMA drawings_version = 1;
+`
