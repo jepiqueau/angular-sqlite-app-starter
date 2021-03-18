@@ -49,9 +49,24 @@ const routes: Routes = [
                       .then( m => m.Testjson71PageModule)
   },
   {
+    path: 'json94',
+    loadChildren: () => import('./testjson94/testjson94.module')
+                      .then( m => m.Testjson94PageModule)
+  },
+  {
+    path: 'json97',
+    loadChildren: () => import('./testjson97/testjson97.module')
+                      .then( m => m.Testjson97PageModule)
+  },
+  {
     path: 'copyfromassets',
     loadChildren: () => import('./copyfromassets/copyfromassets.module')
                       .then( m => m.CopyfromassetsPageModule)
+  },
+  {
+    path: 'copy',
+    loadChildren: () => import('./testcopy/testcopy.module')
+                      .then( m => m.TestCopyPageModule)
   },
   {
     path: '',

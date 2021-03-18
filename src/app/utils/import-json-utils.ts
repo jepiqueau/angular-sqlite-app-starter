@@ -202,5 +202,29 @@ export const dataToImport71: any = {
           ]
       },
     ]
-  };
+};
   
+export const dataToImport94: any = {
+    database : "db-from-json94",
+    version : 1,
+    encrypted : false,
+    mode : "full",
+    tables :[
+        {
+            name: "reps",
+            schema: [
+                {column:"id", value: "INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE"},
+                {column:"fk_workoutexercices", value:"INTEGER NOT NULL"},
+                {column:"weight", value:"REAL NOT NULL"},
+                {column:"reps", value:"INTEGER NOT NULL"},
+                {column:"rest", value:"INTEGER NOT NULL"},
+                {column:"note", value:"TEXT"},
+            ],
+            values: [
+                [1,1,11,21,31,"NULL"],
+                [2,1,12,22,32,"NULL"],
+                [3,1,13,23,33,"NULL"],
+            ]
+        },
+    ]
+};

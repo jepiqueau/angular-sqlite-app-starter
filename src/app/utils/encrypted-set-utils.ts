@@ -15,14 +15,14 @@ CREATE INDEX IF NOT EXISTS contacts_index_email ON contacts (email);
 PRAGMA user_version = 1;
 `;
 export const setContacts: Array<capSQLiteSet>  = [
-  { statement:"INSERT INTO contacts (name,FirstName,email,age,MobileNumber) VALUES (?,?,?,?,?);",
-    values:["Simpson","Tom","Simpson@example.com",69,"4405060708"]
+  { statement:"INSERT INTO contacts (name,FirstName,email,company,age,MobileNumber) VALUES (?,?,?,?,?,?);",
+    values:["Simpson","Tom","Simpson@example.com",,69,"4405060708"]
   },
-  { statement:"INSERT INTO contacts (name,FirstName,email,age,MobileNumber) VALUES (?,?,?,?,?);",
+  { statement:"INSERT INTO contacts (name,FirstName,email,company,age,MobileNumber) VALUES (?,?,?,?,?,?);",
     values:[
-      ["Jones","David","Jones@example.com",42.1,"4404030201"],
-      ["Whiteley","Dave","Whiteley@example.com",45.3,"4405162732"],
-      ["Brown","John","Brown@example.com",35,"4405243853"]
+      ["Jones","David","Jones@example.com",,42.1,"4404030201"],
+      ["Whiteley","Dave","Whiteley@example.com",,45.3,"4405162732"],
+      ["Brown","John","Brown@example.com",,35,"4405243853"]
     ]
   },
   { statement:"UPDATE contacts SET age = ? , MobileNumber = ? WHERE id = ?;",
