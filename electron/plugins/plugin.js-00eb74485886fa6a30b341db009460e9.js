@@ -254,6 +254,14 @@ var capacitorPlugin = (function (exports) {
                 return res;
             });
         }
+        isDBOpen() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const res = yield this.sqlite.isDBOpen({
+                    database: this.dbName,
+                });
+                return res;
+            });
+        }
         delete() {
             return __awaiter(this, void 0, void 0, function* () {
                 const res = yield this.sqlite.deleteDatabase({
@@ -3358,7 +3366,11 @@ var capacitorPlugin = (function (exports) {
                                 const trigger = jsonData.tables[i].triggers[j];
                                 const tableName = jsonData.tables[i].name;
                                 let stmt = `CREATE TRIGGER IF NOT EXISTS `;
-                                stmt += `${trigger.name} ${trigger.timeevent} ON ${tableName} `;
+                                let timeEvent = trigger.timeevent;
+                                if (timeEvent.toUpperCase().slice(timeEvent.length - 3) === ' ON') {
+                                    timeEvent = timeEvent.slice(0, -3);
+                                }
+                                stmt += `${trigger.name} ${timeEvent} ON ${tableName} `;
                                 if (trigger.condition)
                                     stmt += `${trigger.condition} `;
                                 stmt += `${trigger.logic};`;
@@ -4805,7 +4817,7 @@ var capacitorPlugin = (function (exports) {
                                             reject(new Error(`GetTriggers: sql split does not contains ${tableName}`));
                                             break;
                                         }
-                                        const timeEvent = sqlArr[1].split(tableName, 1)[0].trim();
+                                        let timeEvent = sqlArr[1].split(tableName, 1)[0].trim();
                                         sqlArr = sqlArr[1].split(timeEvent + ' ' + tableName);
                                         if (sqlArr.length != 2) {
                                             reject(new Error(`GetTriggers: sql split tableName does not return 2 values`));
@@ -4826,6 +4838,9 @@ var capacitorPlugin = (function (exports) {
                                             logic = sqlArr[1].trim();
                                         }
                                         let trigger = {};
+                                        if (timeEvent.toUpperCase().slice(timeEvent.length - 3) === ' ON') {
+                                            timeEvent = timeEvent.slice(0, -3);
+                                        }
                                         trigger.name = name;
                                         trigger.logic = logic;
                                         if (condition.length > 0)
@@ -5991,6 +6006,28 @@ var capacitorPlugin = (function (exports) {
                 return Promise.resolve({
                     result: isExists,
                 });
+            });
+        }
+        isDBOpen(options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                let keys = Object.keys(options);
+                if (!keys.includes('database')) {
+                    return Promise.resolve({
+                        result: false,
+                        message: 'Must provide a database name',
+                    });
+                }
+                const dbName = options.database;
+                keys = Object.keys(this._dbDict);
+                if (!keys.includes(dbName)) {
+                    return Promise.resolve({
+                        result: false,
+                        message: `isDBOpen: No available connection for ${dbName}`,
+                    });
+                }
+                const mDB = this._dbDict[dbName];
+                const isOpen = yield mDB.isDBOpen();
+                return Promise.resolve({ result: isOpen });
             });
         }
         isDatabase(options) {
