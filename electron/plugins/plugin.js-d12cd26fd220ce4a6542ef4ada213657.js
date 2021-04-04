@@ -3941,7 +3941,8 @@ var capacitorPlugin = (function (exports) {
                     let sql = 'SELECT name FROM sqlite_master WHERE ';
                     sql += "type='table' AND name NOT LIKE 'sync_table' ";
                     sql += "AND name NOT LIKE '_temp_%' ";
-                    sql += "AND name NOT LIKE 'sqlite_%';";
+                    sql += "AND name NOT LIKE 'sqlite_%' ";
+                    sql += 'ORDER BY rootpage DESC;';
                     let retArr = [];
                     try {
                         const retQuery = yield this._uSQLite.queryAll(mDb, sql, []);

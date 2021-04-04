@@ -18,7 +18,7 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private _sqlite: SQLiteService,
-    private _detail: DetailService
+    private _detail: DetailService,
   ) {
     this.initializeApp();
   }
@@ -31,8 +31,9 @@ export class AppComponent {
       this._detail.setExportJson(false);
       this._sqlite.initializePlugin().then(ret => {
         this.initPlugin = ret;
-        console.log(">>>> in App  this.initPlugin " + this.initPlugin)
+        console.log(">>>> in App  Sqlite this.initPlugin " + this.initPlugin)
       });
+
     });
   }
 }

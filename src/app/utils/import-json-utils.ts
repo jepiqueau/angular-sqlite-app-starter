@@ -228,3 +228,230 @@ export const dataToImport71: any = {
     ]
   };
     
+export const dataToImport101: any = { 
+  database: "testdb",
+  version: 1,
+  encrypted: false,
+  mode: "full",
+  tables: [
+    { 
+      name: "access",
+      schema: [ 
+        { column: "AccessID", value: "TEXT PRIMARY KEY NOT NULL" },
+        { column: "Access", value: "TEXT NOT NULL" }
+      ],
+      values: [
+        [ "A101", "Update, delete" ],
+        [ "A102", "View" ]
+      ]
+    },
+    { 
+      name: "asset",
+      schema: [
+        { column: "AssetID", value: "TEXT PRIMARY KEY NOT NULL" },
+        { column: "AssetType", value: "TEXT DEFAULT NULL" },
+        { column: "Status", value: "TEXT DEFAULT NULL" },
+        { column: "GPSLatitude", value: "TEXT DEFAULT NULL" },
+        { column: "GPSLongitude", value: "TEXT DEFAULT NULL" },
+        { column: "Region", value: "TEXT DEFAULT NULL" },
+        { column: "Division", value: "TEXT DEFAULT NULL" },
+        { column: "SubDivision", value: "TEXT DEFAULT NULL" },
+        { column: "NearestMilePost", value: "TEXT DEFAULT NULL" },
+        { column: "LastTestedDate", value: "TEXT DEFAULT NULL" }
+      ],
+      values: [
+        [ "A101", "NULL", "Functions", "40.741895", "-73.989308", "NY", "Manhatten", "Bronx", "MP251", "2019-08-14T00:00:00.000Z" ],
+        [ "A102", "NULL", "Functions", "40.96418572610003", "-76.5923811201172", "PA", "Mechanicsville", "Brook Avenue", "MP211", "2018-09-12T03:16:39.000Z" ],
+        [ "A103", "NULL", "Not fucntioning", "39.283157046013734", "-80.50712966683095", "WV", "Lake Floyd", "Country route", "MP511", "2018-01-24T07:36:06.000Z" ],
+        [ "A104", "NULL", "Functions", "50.651895", "-29.889308", "NC", "Carolina", "Suburbs", "MP564", "2018-01-24T07:36:06.000Z" ],
+        [ "A105", "NULL", "Working", "40.742066", "-73.989204", "a", "c", "v", "b", "2020-11-26T00:00:00.000Z" ],
+        [ "A106", "NULL", "as", "40.742023", "-73.989252", "d", "d", "a", "s", "2020-11-25T00:00:00.000Z" ]
+      ]
+    },
+    {
+      name: "role",
+      schema: [
+        { column: "RoleID", value: "TEXT PRIMARY KEY NOT NULL" },
+        { column: "Title", value: "TEXT NOT NULL" },
+        { column: "CreatedDate", value: "TEXT NOT NULL" },
+        { column: "UpdatedDate", value: "TEXT DEFAULT NULL" },
+        { column: "DeletedDate", value: "TEXT DEFAULT NULL" }
+      ],
+      values: [
+        [ "R101", "Supervisor", "2018-09-12T06:24:04.000Z", "NULL", "NULL" ],
+        [ "R102", "Inspector", "2019-05-16T16:16:23.000Z", "2019-10-25T03:52:31.000Z", "NULL" ],
+        [ "R103", "Engineer", "2018-08-15T07:29:21.000Z", "NULL", "NULL" ]
+      ]
+    },
+    {
+      name: "user",
+      schema: [
+        { column: "UserID", value: "TEXT PRIMARY KEY NOT NULL" },
+        { column: "name", value: "TEXT NOT NULL" },
+        { column: "Email", value: "TEXT NOT NULL" },
+        { column: "Password", value: "TEXT NOT NULL" },
+        { column: "Region", value: "TEXT NOT NULL" },
+        { column: "RoleID", value: "TEXT NOT NULL" },
+        { constraint: "user_ibfk_1", value: "FOREIGN KEY (RoleID) REFERENCES role (RoleID) ON DELETE CASCADE" }
+      ],
+      values: [
+        [ "EMP101", "Edith Franco", "Edith.F@gmail.com", "$2b$10$XiczolHXWQIYIvfHR4XCk.WRMMNkBKejohH3NwWeGdheQToZrJ3KC", "CAL", "R102" ],
+        [ "EMP102", "Sofie Andrew", "Sofie.A@gmail.com", "$2b$10$skJne7h0YrStWOGPHutEhuCrQQbFWmuh.55GYSYWsjYK2XfWuajJG", "CAL", "R101" ],
+        [ "EMP103", "Eren Johns", "Eren.J@gmail.com", "$2b$10$XGAJtiLV5/TrVEYBNC6axO2vYsjbiYXAsoAShOP3UvH7YCQYO69C2", "NY", "R101" ],
+        [ "EMP104", "Nyle Franklin", "Nyle.F@gmail.com", "$2b$10$hG9goEpz.q4bwICgMn0JH.XeWiUNN4059SqOwXEiFsbjqyz4z1JYy", "TX", "R103" ],
+        [ "EMP105", "Robson Eaton", "Robson.E@gmail.com", "$2b$10$YCQ92k1H6FfgJZMuJou2Quo1e5kcafyX0taibfxqztk.Scxfo4AKW", "NC", "R103" ]
+      ]
+    },
+    {
+      name: "device",
+      schema: [
+        { column: "DeviceID", value: "TEXT PRIMARY KEY NOT NULL" },
+        { column: "UserID", value: "TEXT NOT NULL" },
+        { column: "PIN", value: "TEXT NOT NULL" },
+        { constraint: "device_ibfk_1", value: "FOREIGN KEY (UserID) REFERENCES user(UserID) ON DELETE CASCADE" }
+      ],
+      values: [
+        [ "D101", "EMP101", "8426" ],
+        [ "D102", "EMP102", "6248" ],
+        [ "D103", "EMP103", "7946" ],
+        [ "D104", "EMP104", "4613" ],
+        [ "D105", "EMP105", "1234" ]
+      ]
+    },
+    {
+      name: "repair",
+      schema: [
+        { column: "AssetID", value: "TEXT NOT NULL" },
+        { column: "CreatedDate", value: "TEXT NOT NULL" },
+        { column: "EngineerID", value: "TEXT DEFAULT NULL" },
+        { column: "CompletedDate", value: "TEXT DEFAULT NULL" },
+        { column: "comments", value: "TEXT DEFAULT NULL" },
+        { constraint: "PK_repair", value: "PRIMARY KEY (AssetID, CreatedDate)" },
+        { constraint: "repair_ibfk_2", value: "FOREIGN KEY (EngineerID) REFERENCES user(UserID) ON DELETE CASCADE" },
+        { constraint: "repair_ibfk_1", value: "FOREIGN KEY (AssetID) REFERENCES asset(AssetID) ON DELETE CASCADE" }
+      ],
+      values: [
+        [ "A101", "2020-04-17T00:00:00.000Z", "EMP105", "2021-03-19T00:00:00.000Z", "Complete" ],
+        [ "A101", "2020-04-17T23:16:38.000Z", "EMP105", "2020-11-18T00:48:00.000Z", "Complete" ],
+        [ "A101", "2020-11-11T00:00:00.000Z", "EMP103", "2020-12-10T00:00:00.000Z", "THis is a comment" ],
+        [ "A101", "2020-11-15T16:38:55.000Z", "NULL", "NULL", "COmment" ],
+        [ "A102", "2020-05-16T09:45:09.000Z", "NULL", "NULL", "NULL" ],
+        [ "A102", "2020-05-26T09:45:09.000Z", "NULL", "NULL", "NULL" ],
+        [ "A104", "2021-03-16T00:00:00.000Z", "EMP102", "2021-03-19T00:00:00.000Z", "Fixed" ],
+        [ "A104", "2021-03-17T00:00:00.000Z", "EMP102", "NULL", "Fixed" ],
+        [ "A106", "2020-11-13T19:26:00.000Z", "NULL", "2021-03-27T00:00:00.000Z", "NULL" ]
+      ]
+    },
+    {
+      name: "roleaccess",
+      schema: [
+        { column: "RoleID", value: "TEXT NOT NULL" },
+        { column: "AccessID", value: "TEXT NOT NULL" },
+        { column: "CreatedDate", value: "TEXT NOT NULL" },
+        { column: "UpdatedDate", value: "TEXT DEFAULT NULL" },
+        { column: "DeletedDate", value: "TEXT DEFAULT NULL" },
+        { constraint: "PK_roleaccesss", value: "PRIMARY KEY (RoleID, AccessID)" },
+        { constraint: "roleaccess_ibfk_1", value: "FOREIGN KEY (RoleID) REFERENCES role(RoleID) ON DELETE CASCADE" },
+        { constraint: "roleaccess_ibfk_2", value: "FOREIGN KEY (AccessID) REFERENCES access(AccessID) ON DELETE CASCADE" }
+      ],
+      values: [
+        [ "R101", "A101", "2019-11-22T07:20:15.000Z", "NULL", "NULL" ],
+        [ "R102", "A101", "2019-12-27T12:13:30.000Z", "NULL", "NULL" ],
+        [ "R103", "A101", "2019-09-13T00:00:00.000Z", "NULL", "2020-06-24T06:24:33.000Z" ],
+        [ "R103", "A102", "2020-01-24T05:19:29.000Z", "2020-04-17T07:22:09.000Z", "NULL" ]
+      ]
+    },
+    {
+      name: "testmodule",
+      schema: [
+        { column: "TestModID", value: "TEXT PRIMARY KEY NOT NULL" },
+        { column: "SupervisorID", value: "TEXT NOT NULL" },
+        { column: "Description", value: "TEXT NOT NULL" },
+        { constraint: "testmodule_ibfk_1", value: "FOREIGN KEY (SupervisorID) REFERENCES user (UserID) ON DELETE CASCADE" }
+      ],
+      values: [
+        [ "TM101", "EMP102", "Check Lights" ],
+        [ "TM102", "EMP105", "Check Energy source" ]
+      ]
+    },
+    {
+      name: "test",
+      schema: [
+        { column: "TestID", value: "TEXT PRIMARY KEY NOT NULL" },
+        { column: "DateIssued", value: "TEXT NOT NULL" },
+        { column: "AssetID", value: "TEXT NOT NULL" },
+        { column: "InspectorID", value: "TEXT NOT NULL" },
+        { column: "Result", value: "TEXT DEFAULT NULL" },
+        { column: "SupervisorID", value: "TEXT NOT NULL" },
+        { column: "DateCompleted", value: "TEXT DEFAULT NULL" },
+        { column: "Frequency", value: "INTEGER NOT NULL" },
+        { column: "Priority", value: "INTEGER DEFAULT NULL" },
+        { column: "TestModID", value: "TEXT NOT NULL" },
+        { column: "comments", value: "TEXT DEFAULT NULL" },
+        { constraint: "test_ibfk_1", value: "FOREIGN KEY (AssetID) REFERENCES asset(AssetID) ON DELETE CASCADE" },
+        { constraint: "test_ibfk_2", value: "FOREIGN KEY (InspectorID) REFERENCES user(UserID) ON DELETE CASCADE" },
+        { constraint: "test_ibfk_3", value: "FOREIGN KEY (SupervisorID) REFERENCES user (UserID) ON DELETE CASCADE" },
+        { constraint: "test_ibfk_4", value: "FOREIGN KEY (TestModID) REFERENCES testmodule (TestModID) ON DELETE CASCADE" }
+      ],
+      values: [
+        [ "T101", "2019-09-20T08:25:04.000Z", "A102", "EMP104", "Completed", "EMP105", "2020-07-16T19:13:09.000Z", 2, 0, "TM102", "This is a comment" ],
+        [ "T102", "2020-04-23T01:17:28.000Z", "A101", "EMP101", "Pending", "EMP103", "NULL", 1, 1, "TM101", "" ],
+        [ "T103", "2020-03-19T00:00:00.000Z", "A102", "EMP104", "Pending", "EMP102", "NULL", 3, 0, "TM102", "" ],
+        [ "T104", "2020-07-16T19:13:09.000Z", "A102", "EMP101", "Fail", "EMP102", "2020-05-16T09:45:09.000Z", 1, 1, "TM102", "Just to check if a change happened again" ],
+        [ "T105", "2020-11-20T08:40:18.000Z", "A106", "EMP104", "Fail", "EMP103", "2020-11-27T00:21:00.000Z", 1, 1, "TM102", "Checked" ],
+        [ "T106", "2020-07-16T19:13:09.000Z", "A102", "EMP101", "NULL", "EMP102", "NULL", 1, 1, "TM102", "NULL" ],
+        [ "T110", "2021-03-27T10:23:15.000Z", "A102", "EMP101", "NULL", "EMP102", "NULL", 1, 3, "TM101", "NULL" ]
+      ]
+    }
+  ]
+}
+export const dataToImport102: any = { 
+  "database": "doublenote-db",
+  "version": 1,
+  "encrypted": false,
+  "mode": "full",
+  "tables": [ 
+    { 
+      "name": "notes",
+      "schema": [
+        { "column": "id", "value": "INTEGER PRIMARY KEY NOT NULL" },
+        { "column": "title", "value": "TEXT NOT NULL" },
+        { "column": "note", "value": "TEXT NOT NULL" },
+        { "column": "color", "value": "TEXT NOT NULL" },
+        { "column": "created", "value": "INTEGER DEFAULT (strftime('%s', 'now'))" },
+        { "column": "last_modified", "value": "INTEGER DEFAULT (strftime('%s', 'now'))" }
+      ],
+      "values": [ 
+        
+      ]
+    },
+    { 
+      "name": "trash",
+      "schema": [
+        { "column": "id", "value": "INTEGER PRIMARY KEY NOT NULL" },
+        { "column": "title", "value": "TEXT NOT NULL" },
+        { "column": "note", "value": "TEXT NOT NULL" },
+        { "column": "color", "value": "TEXT NOT NULL" },
+        { "column": "created", "value": "INTEGER DEFAULT (strftime('%s', 'now'))" },
+        { "column": "last_modified", "value": "INTEGER DEFAULT (strftime('%s', 'now'))" }
+      ],
+      "values": [
+
+      ]
+    },
+    { 
+      "name": "archive",
+      "schema": [
+        { "column": "id", "value": "INTEGER PRIMARY KEY NOT NULL" },
+        { "column": "title", "value": "TEXT NOT NULL" },
+        { "column": "note", "value": "TEXT NOT NULL" },
+        { "column": "color", "value": "TEXT NOT NULL" },
+        { "column": "created", "value": "INTEGER DEFAULT (strftime('%s', 'now'))" },
+        { "column": "last_modified", "value": "INTEGER DEFAULT (strftime('%s', 'now'))" }
+      ],
+      "values": [
+
+      ]
+    }
+  ]  
+}
