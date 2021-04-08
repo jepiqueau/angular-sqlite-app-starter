@@ -455,3 +455,59 @@ export const dataToImport102: any = {
     }
   ]  
 }
+
+export const dataToImport104: any = {
+  "database": "products104-db",
+  "version": 1,
+  "encrypted": false,
+  "mode": "full",
+  "tables": [
+    {
+      "name": "categories",
+      "schema": [
+        {
+          "column": "id",
+          "value": "TEXT PRIMARY KEY NOT NULL"
+        },
+        {
+          "column": "name",
+          "value": "TEXT NOT NULL"
+        },
+        {
+          "column": "description",
+          "value": "TEXT NOT NULL"
+        },
+        { 
+          "column": "last_modified",
+          "value": "INTEGER DEFAULT (strftime('%s', 'now'))" 
+        }
+
+      ]
+    },
+    {
+      "name": "products",
+      "schema": [
+        {
+          "column": "id",
+          "value": "TEXT PRIMARY KEY NOT NULL"
+        },
+        {
+          "column": "categoryId",
+          "value": "TEXT NOT NULL"
+        },
+        {
+          "column": "expiredAt",
+          "value": "TEXT"
+        },
+        { 
+          "column": "last_modified",
+          "value": "INTEGER DEFAULT (strftime('%s', 'now'))" 
+        },
+        {
+          "foreignkey": "categoryId",
+          "value": "REFERENCES categories(id)"
+        }
+      ]
+    },
+  ]
+}

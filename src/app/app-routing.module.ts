@@ -64,6 +64,11 @@ const routes: Routes = [
                       .then( m => m.Testjson102PageModule)
   },
   {
+    path: 'json104',
+    loadChildren: () => import('./testjson104/testjson104.module')
+                      .then( m => m.Testjson104PageModule)
+  },
+  {
     path: 'copyfromassets',
     loadChildren: () => import('./copyfromassets/copyfromassets.module')
                       .then( m => m.CopyfromassetsPageModule)
