@@ -58,7 +58,7 @@ export class SQLiteService {
                                                       statement, set ? set : []);
                 return Promise.resolve();
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open for ${database}`));
@@ -84,7 +84,7 @@ export class SQLiteService {
                     return Promise.reject(new Error(`no db returned is null`));
                 }
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open for ${database}`));
@@ -100,7 +100,7 @@ export class SQLiteService {
                 await this.sqlite.closeConnection(database);
                 return Promise.resolve();
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open for ${database}`));
@@ -116,7 +116,7 @@ export class SQLiteService {
             try {
                 return Promise.resolve(await this.sqlite.retrieveConnection(database));
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open for ${database}`));
@@ -136,7 +136,7 @@ export class SQLiteService {
                 }); 
                 return Promise.resolve(myConns);
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open`));
@@ -150,7 +150,7 @@ export class SQLiteService {
             try {
                 return Promise.resolve(await this.sqlite.closeAllConnections());
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open`));
@@ -165,7 +165,23 @@ export class SQLiteService {
             try {
                 return Promise.resolve(await this.sqlite.isConnection(database));
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
+            }
+        } else {
+            return Promise.reject(new Error(`no connection open`));
+        }
+    }
+    /**
+     * Check Connections Consistency
+     * @returns 
+     */
+    async checkConnectionsConsistency(): Promise<void> {
+        if(this.sqlite != null) {
+            try {
+                console.log(`in Service checkConnectionsConsistency`)
+                return Promise.resolve(await this.sqlite.checkConnectionsConsistency());
+            } catch (err) {
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open`));
@@ -180,7 +196,7 @@ export class SQLiteService {
             try {
                 return Promise.resolve(await this.sqlite.isDatabase(database));
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open`));
@@ -194,7 +210,7 @@ export class SQLiteService {
             try {
                 return Promise.resolve(await this.sqlite.getDatabaseList());
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open`));
@@ -210,7 +226,7 @@ export class SQLiteService {
                 console.log(`in service path: ${path} `)
                 return Promise.resolve(await this.sqlite.addSQLiteSuffix(folderPath));
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open`));
@@ -226,7 +242,7 @@ export class SQLiteService {
                 console.log(`in service path: ${path} `)
                 return Promise.resolve(await this.sqlite.deleteOldDatabases(folderPath));
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open`));
@@ -242,7 +258,7 @@ export class SQLiteService {
             try {
                 return Promise.resolve(await this.sqlite.importFromJson(jsonstring));
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open`));
@@ -258,7 +274,7 @@ export class SQLiteService {
             try {
                 return Promise.resolve(await this.sqlite.isJsonValid(jsonstring));
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open`));
@@ -273,7 +289,7 @@ export class SQLiteService {
             try {
                 return Promise.resolve(await this.sqlite.copyFromAssets());
             } catch (err) {
-                return Promise.reject(err);
+                return Promise.reject(new Error(err));
             }
         } else {
             return Promise.reject(new Error(`no connection open`));

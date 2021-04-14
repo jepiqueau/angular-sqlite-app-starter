@@ -69,6 +69,12 @@ const routes: Routes = [
                       .then( m => m.TestCopyPageModule)
   },
   {
+    path: 'test111',
+    loadChildren: () => import('./testissue111/testissue111.module')
+                      .then( m => m.TestIssue111PageModule)
+  },
+
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'
