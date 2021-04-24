@@ -11,6 +11,7 @@ export class SQLiteService {
     sqlite: SQLiteConnection;
     isService: boolean = false;
     platform: string;
+    sqlitePlugin: any;
 
     constructor() {
     }
@@ -21,8 +22,8 @@ export class SQLiteService {
         return new Promise (resolve => {
             this.platform = Capacitor.getPlatform();
             console.log("*** platform " + this.platform)
-            const sqlitePlugin: any = CapacitorSQLite;
-            this.sqlite = new SQLiteConnection(sqlitePlugin);
+            this.sqlitePlugin = CapacitorSQLite;
+            this.sqlite = new SQLiteConnection(this.sqlitePlugin);
             this.isService = true;
             console.log("$$$ in service this.isService " + this.isService + " $$$")
             resolve(true);
@@ -175,11 +176,13 @@ export class SQLiteService {
      * Check Connections Consistency
      * @returns 
      */
-    async checkConnectionsConsistency(): Promise<void> {
+    async checkConnectionsConsistency(): Promise<capSQLiteResult> {
         if(this.sqlite != null) {
             try {
                 console.log(`in Service checkConnectionsConsistency`)
-                return Promise.resolve(await this.sqlite.checkConnectionsConsistency());
+                const res = await this.sqlite.checkConnectionsConsistency();
+                console.log(`&&&& in service res.result ${res.result}`)
+                return Promise.resolve(res);
             } catch (err) {
                 return Promise.reject(new Error(err));
             }

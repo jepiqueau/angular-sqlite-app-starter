@@ -71,14 +71,14 @@ INSERT INTO test56 (name) VALUES ("test 1");
 INSERT INTO test56 (name) VALUES ("test 2");
 `;
 export const setUsers: Array<capSQLiteSet>  = [
-  { statement:"INSERT INTO users (name,email,age) VALUES (?,?,?);",
-    values:["Jackson","Jackson@example.com",18]
+  { statement:"INSERT INTO users (name,email,company,size,age) VALUES (?,?,?,?,?);",
+    values:["Jackson","Jackson@example.com",null,null,18]
   },
   { statement:"INSERT INTO users (name,email,age) VALUES (?,?,?);",
     values:["Kennedy","Kennedy@example.com",25]
   },
-  { statement:"INSERT INTO users (name,email,age) VALUES (?,?,?);",
-    values:["Bush","Bush@example.com",42]
+  { statement:"INSERT INTO users (name,email,company,size,age) VALUES (?,?,?,?,?);",
+    values:["Bush","Bush@example.com",null,null,null]
   },
 ];
 export const createSchema82: string = `

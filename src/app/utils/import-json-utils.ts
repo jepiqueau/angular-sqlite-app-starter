@@ -51,8 +51,8 @@ export const dataToImport: any = {
             {column:"last_modified", value:"INTEGER"}
           ],
           values: [
-            [1,"feather","png","NULL",Images[1],1582536810],
-            [2,"meowth","png","NULL",Images[0],1590151132]
+            [1,"feather","png",null,Images[1],1582536810],
+            [2,"meowth","png",null,Images[0],1590151132]
           ]
         }
 
@@ -147,8 +147,8 @@ export const dataToImport59: any = {
           }
         ],
         values: [
-            ["ef5c57d5-b885-49a9-9c4d-8b340e4abdbc","William","Jones","1","peterjones@mail.com<peterjones@mail.com>","420305202","1234567","1983-01-04","2020-11-1212:39:02","3","2020-11-19 05:10:10","1","NULL","3",1608216040],
-            ["bced3262-5d42-470a-9585-d3fd12c45452","Alexander","Brown","1","alexanderbrown@mail.com<alexanderbrown@mail.com>","420305203","1234572","1990-02-07","2020-12-1210:35:15","1","2020-11-19 05:10:10","2","NULL","6",1608216040]
+            ["ef5c57d5-b885-49a9-9c4d-8b340e4abdbc","William","Jones","1","peterjones@mail.com<peterjones@mail.com>","420305202","1234567","1983-01-04","2020-11-1212:39:02","3","2020-11-19 05:10:10","1",null,"3",1608216040],
+            ["bced3262-5d42-470a-9585-d3fd12c45452","Alexander","Brown","1","alexanderbrown@mail.com<alexanderbrown@mail.com>","420305203","1234572","1990-02-07","2020-12-1210:35:15","1","2020-11-19 05:10:10","2",null,"6",1608216040]
         ]
       }
   ]
@@ -171,8 +171,8 @@ export const dataToImport2: any = {
           {column:"last_modified", value:"INTEGER"}
         ],
         values: [
-          [1,"feather","png","NULL",Images[1],1582536810],
-          [2,"meowth","png","NULL",Images[0],1590151132]
+          [1,"feather","png",null,Images[1],1582536810],
+          [2,"meowth","png",null,Images[0],1590151132]
         ]
       }
 
@@ -221,9 +221,9 @@ export const dataToImport94: any = {
                 {column:"note", value:"TEXT"},
             ],
             values: [
-                [1,1,11,21,31,"NULL"],
-                [2,1,12,22,32,"NULL"],
-                [3,1,13,23,33,"NULL"],
+                [1,1,11,21,31,null],
+                [2,1,12,22,32,null],
+                [3,1,13,23,33,null],
             ]
         },
     ]

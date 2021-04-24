@@ -84,6 +84,10 @@ export class Test2dbsPage implements AfterViewInit {
       }
       // select all users in db
       ret = await db.query("SELECT * FROM users;");
+      console.log(`values[0] name ${ret.values[0].name}`)
+      console.log(`values[0] company ${ret.values[0].company}`)
+      console.log(`values[0] size ${ret.values[0].size}`)
+      console.log(`values[0] age ${ret.values[0].age}`)
       if(ret.values.length !== 2 || ret.values[0].name !== "Whiteley" ||
                                     ret.values[1].name !== "Jones") {
         return Promise.reject(new Error("Query 2 users failed"));

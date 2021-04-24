@@ -172,7 +172,8 @@ export class TestIssue111Page implements AfterViewInit {
       if (ret.changes.changes !== 1 || ret.changes.lastId !== 6) {
         return Promise.reject(new Error("Run [null, 'test2'] test issue#56 failed"));
       }
-      await this._sqlite.checkConnectionsConsistency();
+      ret= await this._sqlite.checkConnectionsConsistency();
+      console.log(`$$$ checkConnectionsConsistency ${ret.result}`)
 
       var retDict: Map<string, any> = await this._sqlite.retrieveAllConnections();
       for (var conn in retDict) {

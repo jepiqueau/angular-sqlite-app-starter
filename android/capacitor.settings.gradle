@@ -7,3 +7,6 @@ project(':capacitor-community-sqlite').projectDir = new File('../node_modules/@c
 
 include ':capacitor-dialog'
 project(':capacitor-dialog').projectDir = new File('../node_modules/@capacitor/dialog/android')
+
+include ':capacitor-toast'
+project(':capacitor-toast').projectDir = new File('../node_modules/@capacitor/toast/android')
