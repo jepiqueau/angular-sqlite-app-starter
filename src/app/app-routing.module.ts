@@ -78,6 +78,16 @@ const routes: Routes = [
     loadChildren: () => import('./testtypes/testtypes.module')
                       .then( m => m.TestTypesPageModule)
   },
+  {
+    path: 'securesecret',
+    loadChildren: () => import('./testsecuresecret/testsecuresecret.module')
+                      .then( m => m.TestSecureSecretPageModule)
+  },
+  {
+    path: 'changesecuresecret',
+    loadChildren: () => import('./testchangesecuresecret/testchangesecuresecret.module')
+                      .then( m => m.TestChangeSecureSecretPageModule)
+  },
 
   {
     path: '',

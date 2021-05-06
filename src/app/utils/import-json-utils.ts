@@ -73,20 +73,57 @@ export const partialImport1: any = {
 
             ]
         },
-        {
-          name: "messages",
-          indexes: [
-            {name: "index_messages_on_title",value: "title"},
-            {name: "index_messages_on_last_modified",value: "last_modified DESC"}
-
-          ],
-          values: [
-              [3,"test post 3","content test post 3",1590396146],
-              [4,"test post 4","content test post 4",1590396288]
-          ]
-        }
-
     ]
+};
+export const partialImport2: any = {
+  database : "db-from-json",
+  version : 1,
+  encrypted : false,
+  mode : "partial",
+  tables :[
+      {
+        name: "messages",
+
+        indexes: [
+          {name: "index_messages_on_title",value: "title"},
+          {name: "index_messages_on_last_modified",value: "last_modified DESC"}
+
+        ],
+        values: [
+            [3,"test post 3","content test post 3",1590396146],
+            [4,"test post 4","content test post 4",1590396288]
+        ]
+      }
+
+  ]
+};
+export const partialImport3: any = {
+  database : "db-from-json",
+  version : 1,
+  encrypted : false,
+  mode : "partial",
+  tables :[
+      {
+        name: "test113",
+        schema: [
+          {column:"id", value: "TEXT PRIMARY KEY NOT NULL"},
+          {column:"name", value:"TEXT UNIQUE NOT NULL"},
+          {column:"code", value:"TEXT"},
+          {column:"last_modified", value:"INTEGER"}
+      ],
+    indexes: [
+          {name: "index_test113_on_title",value: "name"},
+          {name: "index_test113_on_last_modified",value: "last_modified DESC"}
+
+        ],
+        values: [
+            ["ef5c57d5-b885-49a9-9c4d-8b340e4abdbc","valve","BV50",1590396146],
+            ["bced3262-5d42-470a-9585-d3fd12c45452","pipe","PIPE100",1590396288],
+            ["ef5c57d5-b885-49a9-9c4d-8b340e4abdbc","valve","BV100",1590396300],
+        ]
+      }
+
+  ]
 };
 
 export const dataToImport59: any = {

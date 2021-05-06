@@ -84,11 +84,16 @@ export class TestexportjsonPage implements AfterViewInit {
       if(!result.result) {
         return Promise.reject(new Error("IsJsonValid 'partial' export failed "));
       }
-      if(jsonObj.export.tables.length != 3 || jsonObj.export.tables[0].name != 'users'
+      console.log(`table: ${jsonObj.export.tables[0].name} values: ${jsonObj.export.tables[0].values.length}`)
+      console.log(`table: ${jsonObj.export.tables[1].name} values: ${jsonObj.export.tables[1].values.length}`)
+      console.log(`table: ${jsonObj.export.tables[2].name} values: ${jsonObj.export.tables[2].values.length}`)
+      console.log(`table: ${jsonObj.export.tables[3].name} values: ${jsonObj.export.tables[3].values.length}`)
+      if(jsonObj.export.tables.length != 4 || jsonObj.export.tables[0].name != 'users'
           || jsonObj.export.tables[1].name != 'messages' || jsonObj.export.tables[2].name != 'images' 
-          || jsonObj.export.tables[0].values.length != 4 || jsonObj.export.tables[1].values.length != 3
-          || jsonObj.export.tables[2].values.length != 1) {
-        return Promise.reject(new Error("IsJsonValid 'partial' export failed: No 3 tables"));
+          || jsonObj.export.tables[3].name != 'test113'|| jsonObj.export.tables[0].values.length != 4
+          || jsonObj.export.tables[1].values.length != 3 || jsonObj.export.tables[2].values.length != 1
+          || jsonObj.export.tables[3].values.length != 2) {
+        return Promise.reject(new Error("IsJsonValid 'partial' export failed: No 4 tables"));
       }
       // close the connection
       await this._sqlite.closeConnection("db-from-json"); 

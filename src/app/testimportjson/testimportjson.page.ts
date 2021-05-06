@@ -1,7 +1,7 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { SQLiteService } from '../services/sqlite.service';
 import { DetailService } from '../services/detail.service';
-import { dataToImport, partialImport1, dataToImport2 } from '../utils/import-json-utils';
+import { dataToImport, partialImport1, partialImport2, partialImport3 } from '../utils/import-json-utils';
 import { Dialog } from '@capacitor/dialog';
 
 @Component({
@@ -97,11 +97,21 @@ export class TestimportjsonPage implements AfterViewInit {
       // close the connection
       await this._sqlite.closeConnection("db-from-json"); 
 
-      // partial import
+      // partial import 1
       result = await this._sqlite
                         .importFromJson(JSON.stringify(partialImport1));
       console.log(`partial import result ${result.changes.changes}`);
       if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'partial' partialImport1 failed"));
+      // partial import 2
+      result = await this._sqlite
+                        .importFromJson(JSON.stringify(partialImport2));
+      console.log(`partial import result ${result.changes.changes}`);
+      if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'partial' partialImport2 failed"));
+      // partial import 3
+      result = await this._sqlite
+                        .importFromJson(JSON.stringify(partialImport3));
+      console.log(`partial import result ${result.changes.changes}`);
+      if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'partial' partialImport2 failed"));
       // create the connection to the database
       db = await this._sqlite
                         .createConnection("db-from-json", false,

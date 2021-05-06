@@ -6,6 +6,7 @@ import { createSchema, twoUsers, twoTests } from '../utils/no-encryption-utils';
 import { createSchemaContacts, setContacts } from '../utils/encrypted-set-utils';
 import { deleteDatabase } from '../utils/db-utils';
 import { Dialog } from '@capacitor/dialog';
+import { SQLiteDBConnection } from '@capacitor-community/sqlite';
 
 @Component({
   selector: 'app-test2dbs',
@@ -49,11 +50,21 @@ export class Test2dbsPage implements AfterViewInit {
       let result: any = await this._sqlite.echo("Hello World");
       console.log(" from Echo " + result.value);
       // initialize the connection
-      const db = await this._sqlite
+      let db: SQLiteDBConnection;
+      let db1: SQLiteDBConnection;
+      if((await this._sqlite.isConnection("testNew")).result) {
+        db = await this._sqlite.retrieveConnection("testNew");
+      } else {
+        db = await this._sqlite
                   .createConnection("testNew", false, "no-encryption", 1);
+      }
       console.log("db " + db)
-      const db1 = await this._sqlite
+      if((await this._sqlite.isConnection("testSet")).result) {
+        db1 = await this._sqlite.retrieveConnection("testSet");
+      } else {
+        db1 = await this._sqlite
                   .createConnection("testSet", true, "secret", 1);
+      }
 
       // check if the databases exist 
       // and delete it for multiple successive tests

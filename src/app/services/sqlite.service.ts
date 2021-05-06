@@ -41,6 +41,43 @@ export class SQLiteService {
             return null;
         }
     }
+    async isSecretStored(): Promise<capSQLiteResult> {
+        if(this.sqlite != null) {
+            try {
+                return Promise.resolve(await this.sqlite.isSecretStored());
+            } catch (err) {
+                return Promise.reject(new Error(err));
+            }
+        } else {
+            return Promise.reject(new Error(`no connection open`));
+        }
+    }
+    async setEncryptionSecret(passphrase: string): Promise<void> {
+        if(this.sqlite != null) {
+            try {
+                return Promise.resolve(await this.sqlite.setEncryptionSecret(passphrase));
+            } catch (err) {
+                return Promise.reject(new Error(err));
+            }
+        } else {
+            return Promise.reject(new Error(`no connection open`));
+        }
+
+    }
+
+    async changeEncryptionSecret(passphrase: string, oldpassphrase: string): Promise<void> {
+        if(this.sqlite != null) {
+            try {
+                return Promise.resolve(await this.sqlite.changeEncryptionSecret(passphrase, oldpassphrase));
+            } catch (err) {
+                return Promise.reject(new Error(err));
+            }
+        } else {
+            return Promise.reject(new Error(`no connection open`));
+        }
+
+    }
+
     /**
      * addUpgradeStatement
      * @param database 
