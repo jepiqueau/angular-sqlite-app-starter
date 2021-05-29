@@ -23,7 +23,9 @@ export class SQLiteService {
             this.platform = Capacitor.getPlatform();
             console.log("*** platform " + this.platform)
             this.sqlitePlugin = CapacitorSQLite;
+            console.log(`in Service sqlitePlugin ${JSON.stringify(this.sqlitePlugin)}`)
             this.sqlite = new SQLiteConnection(this.sqlitePlugin);
+            console.log(`in Service sqlite ${JSON.stringify(this.sqlite)}`)
             this.isService = true;
             console.log("$$$ in service this.isService " + this.isService + " $$$")
             resolve(true);
@@ -34,11 +36,17 @@ export class SQLiteService {
      * @param value 
      */
     async echo(value: string): Promise<capEchoResult> {
-        console.log("&&&& in echo this.sqlite " + this.sqlite + " &&&&")
+        console.log(`&&&& in echo this.sqlite ${JSON.stringify(this.sqlite)} &&&&`)
         if(this.sqlite != null) {
-            return await this.sqlite.echo(value);
+            try {
+                return await this.sqlite.echo(value);
+            } catch (err) {
+                console.log(`Error ${err}`)
+                return Promise.reject(new Error(err));
+            }
         } else {
-            return null;
+            console.log("this.sqlite is null")
+            return Promise.reject(new Error("no connection open"));
         }
     }
     async isSecretStored(): Promise<capSQLiteResult> {

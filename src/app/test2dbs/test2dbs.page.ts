@@ -47,8 +47,8 @@ export class Test2dbsPage implements AfterViewInit {
 
   async runTest(): Promise<void> {
     try {
-      let result: any = await this._sqlite.echo("Hello World");
-      console.log(" from Echo " + result.value);
+      let result: any = await this._sqlite.echo("Hello World from Jeep");
+      console.log(" Test2dbs: from Echo " + result.value);
       // initialize the connection
       let db: SQLiteDBConnection;
       let db1: SQLiteDBConnection;
@@ -126,16 +126,16 @@ export class Test2dbsPage implements AfterViewInit {
       }
       // add one user with statement and values              
       let sqlcmd: string = 
-                  "INSERT INTO users (name,email,age) VALUES (?,?,?)";
-      let values: Array<any>  = ["Simpson","Simpson@example.com",69];
+                  "INSERT INTO users (name,email,age,size,company) VALUES (?,?,?,?,?)";
+      let values: Array<any>  = ["Simpson","Simpson@example.com",69,1.82,null];
       ret = await db.run(sqlcmd,values);
       console.log()
       if(ret.changes.lastId !== 3) {
         return Promise.reject(new Error("Run 1 users with statement & values failed"));
       }
       // add one user with statement              
-      sqlcmd = `INSERT INTO users (name,email,age) VALUES ` + 
-                                `("Brown","Brown@example.com",15)`;
+      sqlcmd = `INSERT INTO users (name,email,age,size,company) VALUES ` + 
+                                `("Brown","Brown@example.com",15,1.75,null)`;
       ret = await db.run(sqlcmd);
       if(ret.changes.lastId !== 4) {
         return Promise.reject(new Error("Run 1 users with statement failed"));
