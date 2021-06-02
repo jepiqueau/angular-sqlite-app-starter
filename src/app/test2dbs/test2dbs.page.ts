@@ -62,6 +62,7 @@ export class Test2dbsPage implements AfterViewInit {
       if((await this._sqlite.isConnection("testSet")).result) {
         db1 = await this._sqlite.retrieveConnection("testSet");
       } else {
+        
         db1 = await this._sqlite
                   .createConnection("testSet", true, "secret", 1);
       }
