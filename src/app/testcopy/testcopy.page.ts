@@ -54,13 +54,14 @@ export class TestCopyPage implements AfterViewInit {
       //      getDatabaseList, addSQLiteSuffix
       // ************************************************
 
-      result = await this._sqlite.isConnection("testcopy");
+/*      result = await this._sqlite.isConnection("testcopy");
       if(result.result) {
         return Promise.reject(new Error("Connection 'testcopy' already exists"));
       }    
       // test get the Database List
       result = await this._sqlite.getDatabaseList();
       console.log(`test get Database List: ${JSON.stringify(result)}`)
+*/
       await this._sqlite.addSQLiteSuffix();
       result = await this._sqlite.isConnection("testfromfile");
       if(result.result) {

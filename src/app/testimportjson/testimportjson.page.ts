@@ -47,7 +47,7 @@ export class TestimportjsonPage implements AfterViewInit {
     try {
       let result: any = await this._sqlite.echo("Hello World");
       console.log(" from Echo " + result.value);
-
+/*
       // ************************************************
       // Create Database from imported Json
       // ************************************************
@@ -162,6 +162,7 @@ export class TestimportjsonPage implements AfterViewInit {
       await this._sqlite.closeConnection("db-from-json"); 
 
       this._detailService.setExportJson(true);
+*/
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

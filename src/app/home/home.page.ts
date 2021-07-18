@@ -13,12 +13,13 @@ export class HomePage {
 
   constructor(private sqlite: SQLiteService,
               private detailService: DetailService) {
+    console.log("**** in HomePage constructor")
   }
   ionViewWillEnter() {
     
       this.exConn = this.detailService.getExistingConnection();
       this.exJson = this.detailService.getExportJson();
-      console.log("**** ionViewWillEnter " + this.exConn);
+      console.log(`**** ionViewWillEnter ${this.exConn}`);
 
   }
   async ionViewDidEnter() {
@@ -26,7 +27,9 @@ export class HomePage {
     // by using an input form
     // here i used a constant
     const secretPhrase = 'abbey clammy gird night test';
+    console.log("**** ionViewDidEnter ");
     const isSet = await this.sqlite.isSecretStored()
+    console.log(`**** ionViewDidEnter ${isSet.result}`);
     if(!isSet.result) {
       await this.sqlite.setEncryptionSecret(secretPhrase);
     }

@@ -46,7 +46,7 @@ export class Testexportjson59Page implements AfterViewInit {
     try {
       let result: any = await this._sqlite.echo("Hello World");
       console.log(" from Echo " + result.value);
-
+/*
       // ************************************************
       // Import Json Object Issue#59
       // ************************************************
@@ -99,7 +99,7 @@ export class Testexportjson59Page implements AfterViewInit {
 
       // close the connection
       await this._sqlite.closeConnection("db-from-json59"); 
-
+*/
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

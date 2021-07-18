@@ -70,7 +70,7 @@ export class TestTypesPage implements AfterViewInit {
     try {
       let result: any = await this._sqlite.echo("Hello World");
       console.log(" from Echo " + result.value);
-
+/*
       var retDict: Map<string, any> = await this._sqlite.retrieveAllConnections();
       console.log(`number of connection: ${retDict.size}`)
       for (var conn in retDict) {
@@ -228,7 +228,8 @@ export class TestTypesPage implements AfterViewInit {
       if(result.result) {
         // close the connection testTypesImported
         await this._sqlite.closeConnection("testTypesImported");      
-      }    
+      }
+*/    
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

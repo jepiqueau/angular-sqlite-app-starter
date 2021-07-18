@@ -46,7 +46,7 @@ export class TestexportjsonPage implements AfterViewInit {
     try {
       let result: any = await this._sqlite.echo("Hello World");
       console.log(" from Echo " + result.value);
-
+/*
       // ************************************************
       // Export Json Object from an Existing Database
       // ************************************************
@@ -98,7 +98,7 @@ export class TestexportjsonPage implements AfterViewInit {
       // close the connection
       await this._sqlite.closeConnection("db-from-json"); 
       this._detailService.setExportJson(false);
-
+*/
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);
