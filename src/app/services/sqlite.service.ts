@@ -301,7 +301,7 @@ export class SQLiteService {
      * Import from a Json Object
      * @param jsonstring 
      */
-/*    async importFromJson(jsonstring:string): Promise<capSQLiteChanges> {
+    async importFromJson(jsonstring:string): Promise<capSQLiteChanges> {
         if(this.sqlite != null) {
             try {
                 return Promise.resolve(await this.sqlite.importFromJson(jsonstring));
@@ -313,12 +313,12 @@ export class SQLiteService {
         }
                     
     }
-*/
+
     /**
      * Is Json Object Valid
      * @param jsonstring Check the validity of a given Json Object
      */
-/*
+
     async isJsonValid(jsonstring:string): Promise<capSQLiteResult> {
         if(this.sqlite != null) {
             try {
@@ -331,7 +331,7 @@ export class SQLiteService {
         }
 
     }
-*/
+
     /**
      * Copy databases from public/assets/databases folder to application databases folder
      */

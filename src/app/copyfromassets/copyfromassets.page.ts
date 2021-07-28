@@ -44,6 +44,23 @@ export class CopyfromassetsPage implements AfterViewInit {
       console.log(" from Echo " + result.value);
       await this._sqlite.copyFromAssets();
       this.log  +="  > copyFromAssets successful\n";
+      // create a connection EncryptForCopy
+      let db1 = await this._sqlite
+      .createConnection("EncryptForCopy", true, "secret", 1);
+      if(db1 == null ) return Promise.reject(new Error("createConnection EncryptForCopy failed"));
+      this.log += "  > createConnection 'EncryptForCopy' successful\n";
+      await db1.open();
+      this.log += "  > open 'EncryptForCopy' successful\n";
+      // select contacts in db1
+      let ret = await db1.query("SELECT * FROM contacts;");
+      if(ret.values.length !== 4 
+              || ret.values[0].name !== "Simpson" 
+              || ret.values[1].name !== "Jones"
+              || ret.values[2].name !== "Whiteley"
+              || ret.values[3].name !== "Brown") {
+        return Promise.reject(new Error("Query contacts EncryptForCopy failed"));
+      }
+
       // create a connection for myDB
       let db = await this._sqlite
                   .createConnection("myDB", false, "no-encryption", 1);

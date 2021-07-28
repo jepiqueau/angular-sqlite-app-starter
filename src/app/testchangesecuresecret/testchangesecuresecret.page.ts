@@ -56,14 +56,16 @@ export class TestChangeSecureSecretPage implements AfterViewInit {
       for (var conn in retDict) {
         console.log(`connection: ${conn}`)
       }
+*/
+/*
       await this._sqlite.changeEncryptionSecret('how million space by locate',
                                                 'abbey clammy gird night test');
 */
-/*        await this._sqlite.changeEncryptionSecret('abbey clammy gird night test',
+        await this._sqlite.changeEncryptionSecret('abbey clammy gird night test',
                                                   'how million space by locate');
-*/
+
       // initialize the connection
-/*
+
       const db = await this._sqlite
                   .createConnection("testNew", false, "no-encryption", 1);
       console.log("db " + db)
@@ -146,7 +148,7 @@ export class TestChangeSecureSecretPage implements AfterViewInit {
       }
       // close all connections
       await this._sqlite.closeAllConnections();
-*/      
+      
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);
