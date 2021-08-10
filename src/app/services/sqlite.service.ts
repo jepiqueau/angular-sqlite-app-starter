@@ -12,6 +12,7 @@ export class SQLiteService {
     isService: boolean = false;
     platform: string;
     sqlitePlugin: any;
+    native: boolean = false;
 
     constructor() {
     }
@@ -21,11 +22,10 @@ export class SQLiteService {
     initializePlugin(): Promise<boolean> {
         return new Promise (resolve => {
             this.platform = Capacitor.getPlatform();
-            console.log("*** platform " + this.platform)
+            if(this.platform === 'ios' || this.platform === 'android') this.native = true;
+            console.log("*** native " + this.native)
             this.sqlitePlugin = CapacitorSQLite;
-            console.log(`in Service sqlitePlugin ${JSON.stringify(this.sqlitePlugin)}`)
             this.sqlite = new SQLiteConnection(this.sqlitePlugin);
-            console.log(`in Service sqlite ${JSON.stringify(this.sqlite)}`)
             this.isService = true;
             console.log("$$$ in service this.isService " + this.isService + " $$$")
             resolve(true);
@@ -36,20 +36,20 @@ export class SQLiteService {
      * @param value 
      */
     async echo(value: string): Promise<capEchoResult> {
-        console.log(`&&&& in echo this.sqlite ${JSON.stringify(this.sqlite)} &&&&`)
         if(this.sqlite != null) {
             try {
                 return await this.sqlite.echo(value);
             } catch (err) {
-                console.log(`Error ${err}`)
                 return Promise.reject(new Error(err));
             }
         } else {
-            console.log("this.sqlite is null")
             return Promise.reject(new Error("no connection open"));
         }
     }
     async isSecretStored(): Promise<capSQLiteResult> {
+        if(!this.native) {
+            return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
+        }
         if(this.sqlite != null) {
             try {
                 return Promise.resolve(await this.sqlite.isSecretStored());
@@ -61,6 +61,9 @@ export class SQLiteService {
         }
     }
     async setEncryptionSecret(passphrase: string): Promise<void> {
+        if(!this.native) {
+            return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
+        }
         if(this.sqlite != null) {
             try {
                 return Promise.resolve(await this.sqlite.setEncryptionSecret(passphrase));
@@ -74,6 +77,9 @@ export class SQLiteService {
     }
 
     async changeEncryptionSecret(passphrase: string, oldpassphrase: string): Promise<void> {
+        if(!this.native) {
+            return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
+        }
         if(this.sqlite != null) {
             try {
                 return Promise.resolve(await this.sqlite.changeEncryptionSecret(passphrase, oldpassphrase));
@@ -176,10 +182,11 @@ export class SQLiteService {
         if(this.sqlite != null) {
             try {
                 const myConns =  await this.sqlite.retrieveAllConnections();
-                let keys = [...myConns.keys()];
+/*                let keys = [...myConns.keys()];
                 keys.forEach( (value) => {
                     console.log("Connection: " + value);
                 }); 
+*/
                 return Promise.resolve(myConns);
             } catch (err) {
                 return Promise.reject(new Error(err));
@@ -224,9 +231,7 @@ export class SQLiteService {
     async checkConnectionsConsistency(): Promise<capSQLiteResult> {
         if(this.sqlite != null) {
             try {
-                console.log(`in Service checkConnectionsConsistency`)
                 const res = await this.sqlite.checkConnectionsConsistency();
-                console.log(`&&&& in service res.result ${res.result}`)
                 return Promise.resolve(res);
             } catch (err) {
                 return Promise.reject(new Error(err));
@@ -268,11 +273,13 @@ export class SQLiteService {
      * Add "SQLite" suffix to old database's names
      */    
     async addSQLiteSuffix(folderPath?: string): Promise<void>{
+        if(!this.native) {
+            return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
+        }
         if(this.sqlite != null) {
             try {
                 const path: string = folderPath ? folderPath : "default";
-                console.log(`in service path: ${path} `)
-                return Promise.resolve(await this.sqlite.addSQLiteSuffix(folderPath));
+                return Promise.resolve(await this.sqlite.addSQLiteSuffix(path));
             } catch (err) {
                 return Promise.reject(new Error(err));
             }
@@ -284,11 +291,13 @@ export class SQLiteService {
      * Delete old databases
      */    
     async deleteOldDatabases(folderPath?: string): Promise<void>{
+        if(!this.native) {
+            return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
+        }
         if(this.sqlite != null) {
             try {
                 const path: string = folderPath ? folderPath : "default";
-                console.log(`in service path: ${path} `)
-                return Promise.resolve(await this.sqlite.deleteOldDatabases(folderPath));
+                return Promise.resolve(await this.sqlite.deleteOldDatabases(path));
             } catch (err) {
                 return Promise.reject(new Error(err));
             }

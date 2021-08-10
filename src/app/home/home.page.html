@@ -17,17 +17,17 @@
     <ion-button routerLink='/test2dbs' routerDirection="forward" color='primary' expand="block">Test 2 Databases</ion-button> 
     <ion-button *ngIf="exConn" routerLink='/existingconnection' routerDirection="forward" color='primary' expand="block">Test Existing Connection</ion-button> 
     <ion-button routerLink='/upgradeversion' routerDirection="forward" color='primary' expand="block">Test Upgrade Versions</ion-button> 
-    <ion-button routerLink='/encryption' routerDirection="forward" color='primary' expand="block">Test Encryption</ion-button> 
+    <ion-button *ngIf="native" routerLink='/encryption' routerDirection="forward" color='primary' expand="block">Test Encryption</ion-button> 
     <ion-button routerLink='/importjson' routerDirection="forward" color='primary' expand="block">Test Import Json</ion-button> 
     <ion-button *ngIf="exJson" routerLink='/exportjson' routerDirection="forward" color='primary' expand="block">Test Export Json</ion-button> 
     <ion-button routerLink='/exportjson59' routerDirection="forward" color='primary' expand="block">Test Export Json #59</ion-button> 
     <ion-button routerLink='/copyfromassets' routerDirection="forward" color='primary' expand="block">Test Copy From Assets</ion-button> 
     <ion-button routerLink='/json71' routerDirection="forward" color='primary' expand="block">Test Json #71</ion-button> 
-    <ion-button routerLink='/copy' routerDirection="forward" color='primary' expand="block">Test Copy</ion-button> 
+    <ion-button *ngIf="native" routerLink='/copy' routerDirection="forward" color='primary' expand="block">Test Copy</ion-button> 
     <ion-button routerLink='/json94' routerDirection="forward" color='primary' expand="block">Test Json #94</ion-button> 
     <ion-button routerLink='/json97' routerDirection="forward" color='primary' expand="block">Test Json #97</ion-button> 
     <ion-button routerLink='/test111' routerDirection="forward" color='primary' expand="block">Test Issue #111</ion-button> 
     <ion-button routerLink='/testtypes' routerDirection="forward" color='primary' expand="block">Test Types</ion-button> 
-    <ion-button routerLink='/changesecuresecret' routerDirection="forward" color='primary' expand="block">Test Change Secure Secret</ion-button> 
+    <ion-button *ngIf="native" routerLink='/changesecuresecret' routerDirection="forward" color='primary' expand="block">Test Change Secure Secret</ion-button> 
   </div>
 </ion-content>

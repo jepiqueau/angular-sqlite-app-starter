@@ -30,7 +30,6 @@ export class Test2dbsPage implements AfterViewInit {
       message: message,
       });
     };
-    console.log("%%%% in Test2dbsPage this._sqlite " + this._sqlite)
     try {
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
@@ -48,7 +47,6 @@ export class Test2dbsPage implements AfterViewInit {
   async runTest(): Promise<void> {
     try {
       let result: any = await this._sqlite.echo("Hello World from Jeep");
-      console.log(" Test2dbs: from Echo " + result.value);
       // initialize the connection
       let db: SQLiteDBConnection;
       let db1: SQLiteDBConnection;
@@ -58,7 +56,6 @@ export class Test2dbsPage implements AfterViewInit {
         db = await this._sqlite
                   .createConnection("testNew", false, "no-encryption", 1);
       }
-      console.log("db " + db)
       if((await this._sqlite.isConnection("testSet")).result) {
         db1 = await this._sqlite.retrieveConnection("testSet");
       } else {
@@ -83,11 +80,15 @@ export class Test2dbsPage implements AfterViewInit {
 
       // create synchronization table 
       ret = await db.createSyncTable();
-      console.log('$$$ createSyncTable ret.changes.changes in db ' + ret.changes.changes)
       
       // set the synchronization date
       const syncDate: string = "2020-11-25T08:30:25.000Z";
       await db.setSyncDate(syncDate);
+
+      // delete users if any from previous run
+      let delUsers = `DELETE FROM users;`;
+      delUsers += `VACUUM;`;
+      ret = await db.execute(delUsers, false);
 
       // add two users in db
       ret = await db.execute(twoUsers);
@@ -96,10 +97,6 @@ export class Test2dbsPage implements AfterViewInit {
       }
       // select all users in db
       ret = await db.query("SELECT * FROM users;");
-      console.log(`values[0] name ${ret.values[0].name}`)
-      console.log(`values[0] company ${ret.values[0].company}`)
-      console.log(`values[0] size ${ret.values[0].size}`)
-      console.log(`values[0] age ${ret.values[0].age}`)
       if(ret.values.length !== 2 || ret.values[0].name !== "Whiteley" ||
                                     ret.values[1].name !== "Jones") {
         return Promise.reject(new Error("Query 2 users failed"));
@@ -110,11 +107,9 @@ export class Test2dbsPage implements AfterViewInit {
 
       // create tables in db1
       ret = await db1.execute(createSchemaContacts);
-      console.log('$$$ ret.changes.changes in db1 ' + ret.changes.changes)
 
       // load setContacts in db1
       ret = await db1.executeSet(setContacts);
-      console.log('$$$ ret.changes.changes in db1 ' + ret.changes.changes)
       if (ret.changes.changes !== 5) {
         return Promise.reject(new Error("ExecuteSet 5 contacts failed"));
       }
@@ -130,7 +125,6 @@ export class Test2dbsPage implements AfterViewInit {
                   "INSERT INTO users (name,email,age,size,company) VALUES (?,?,?,?,?)";
       let values: Array<any>  = ["Simpson","Simpson@example.com",69,1.82,null];
       ret = await db.run(sqlcmd,values);
-      console.log()
       if(ret.changes.lastId !== 3) {
         return Promise.reject(new Error("Run 1 users with statement & values failed"));
       }
@@ -141,6 +135,9 @@ export class Test2dbsPage implements AfterViewInit {
       if(ret.changes.lastId !== 4) {
         return Promise.reject(new Error("Run 1 users with statement failed"));
       }
+      let delTest56 = `DELETE FROM test56;`;
+      delTest56 += `VACUUM;`;
+      ret = await db.execute(delTest56, false);
       // add some tests issue#56
       ret = await db.execute(twoTests);
       if (ret.changes.changes !== 2) {
@@ -169,8 +166,6 @@ export class Test2dbsPage implements AfterViewInit {
       sqlcmd = "INSERT INTO test56 (name,name1) VALUES (?,?)";
       vals = [null, 'test2']
       ret = await db.run(sqlcmd,vals);
-      console.log("test [null,'test2' ]" + ret.changes.changes + " " +
-                  ret.changes.lastId);
       if (ret.changes.changes !== 1 || ret.changes.lastId !== 6) {
         return Promise.reject(new Error("Run [null, 'test2'] test issue#56 failed"));
       }

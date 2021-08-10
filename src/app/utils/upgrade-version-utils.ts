@@ -20,7 +20,6 @@ END;
 // Insert some Users
 const row: Array<Array<any>> = [["Whiteley","Whiteley.com",30.5],["Jones","Jones.com",44]];
 export const twoUsers: string = `
-DELETE FROM users;
 INSERT INTO users (name,email,age) VALUES ("${row[0][0]}","${row[0][1]}",${row[0][2]});
 INSERT INTO users (name,email,age) VALUES ("${row[1][0]}","${row[1][1]}",${row[1][2]});
 `;

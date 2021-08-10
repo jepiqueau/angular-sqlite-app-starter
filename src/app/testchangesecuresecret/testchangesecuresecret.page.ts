@@ -49,14 +49,6 @@ export class TestChangeSecureSecretPage implements AfterViewInit {
   async runTest(): Promise<void> {
     try {
       let result: any = await this._sqlite.echo("Hello World");
-      console.log(" from Echo " + result.value);
-/*
-      var retDict: Map<string, any> = await this._sqlite.retrieveAllConnections();
-      console.log(`$$$ number of connection before checkConnectionsConsistency: ${retDict.size}`)
-      for (var conn in retDict) {
-        console.log(`connection: ${conn}`)
-      }
-*/
 /*
       await this._sqlite.changeEncryptionSecret('how million space by locate',
                                                 'abbey clammy gird night test');
@@ -68,7 +60,6 @@ export class TestChangeSecureSecretPage implements AfterViewInit {
 
       const db = await this._sqlite
                   .createConnection("testNew", false, "no-encryption", 1);
-      console.log("db " + db)
       const db1 = await this._sqlite
                   .createConnection("testSet", true, "secret", 1);
 
@@ -107,14 +98,11 @@ export class TestChangeSecureSecretPage implements AfterViewInit {
       result = await this._sqlite
                             .isJsonValid(JSON.stringify(jsObj));                           
       if(!result.result) {
-        console.log(`isJsonValid: ${result.message}`);
         return Promise.reject(new Error("IsJson failed"));
       }
-      console.log("$$$ jsObj Json Object is valid $$$")
       // full import
       result = await this._sqlite
                           .importFromJson(JSON.stringify(jsObj));    
-      console.log(`full import result ${result.changes.changes}`);
       if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'full' failed"));
       // create the connection to the database
       const db3 = await this._sqlite
@@ -127,12 +115,10 @@ export class TestChangeSecureSecretPage implements AfterViewInit {
 
       // create synchronization table 
       result = await db3.createSyncTable();
-      console.log(`after createSyncTable ${JSON.stringify(result)}` )
       if (result.changes.changes < 0) return Promise.reject(new Error("CreateSyncTable failed"));
 
 
       const syncDate: string = await db3.getSyncDate();
-      console.log("$$ syncDate " + syncDate);
       if(syncDate.length === 0) return Promise.reject(new Error("GetSyncDate failed"));
 
       // select all reps in db
@@ -142,10 +128,10 @@ export class TestChangeSecureSecretPage implements AfterViewInit {
       }
       ret = await this._sqlite.checkConnectionsConsistency();
       var retDict: Map<string, any> = await this._sqlite.retrieveAllConnections();
-      console.log(`$$$ number of connection after checkConnectionsConsistency: ${retDict.size}`)
-      for (var conn in retDict) {
+/*      for (var conn in retDict) {
         console.log(`connection: ${conn}`)
       }
+*/
       // close all connections
       await this._sqlite.closeAllConnections();
       

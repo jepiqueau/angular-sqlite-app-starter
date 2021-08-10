@@ -28,8 +28,6 @@ export class TestCopyPage implements AfterViewInit {
       });
     };
     // Initialize the CapacitorSQLite plugin
-    console.log("%%%% in TestCopyPage this._sqlite " + 
-                                                  this._sqlite)
     try {
     await this.runTest();
       document.querySelector('.sql-allsuccess').classList
@@ -47,21 +45,20 @@ export class TestCopyPage implements AfterViewInit {
   async runTest(): Promise<void> {
     try {
       let result: any = await this._sqlite.echo("Hello World");
-      console.log(" from Echo " + result.value);
 
       // ************************************************
       // Test isConnection, isDatabase, isTable,
       //      getDatabaseList, addSQLiteSuffix
       // ************************************************
 
-/*      result = await this._sqlite.isConnection("testcopy");
+      result = await this._sqlite.isConnection("testcopy");
       if(result.result) {
         return Promise.reject(new Error("Connection 'testcopy' already exists"));
       }    
       // test get the Database List
       result = await this._sqlite.getDatabaseList();
       console.log(`test get Database List: ${JSON.stringify(result)}`)
-*/
+
       await this._sqlite.addSQLiteSuffix();
       result = await this._sqlite.isConnection("testfromfile");
       if(result.result) {
@@ -100,7 +97,6 @@ export class TestCopyPage implements AfterViewInit {
       // 
       // select all users in db
       result  = await db.query("SELECT * FROM users;");
-      console.log(`$$$ select users ${result.values.length}`)
       if(result .values.length !== 7 || result .values[0].name !== "Whiteley"
         || result .values[1].name !== "Jones"
         || result .values[2].name !== "Simpson"
@@ -114,28 +110,24 @@ export class TestCopyPage implements AfterViewInit {
 
       // check if the table "users" exists
       result = await db.isTable("users");
-      console.log(`$$$ isTable users ${result.result}`)
       if(!result.result) {
         return Promise.reject(new Error("Table 'users' does not exist"));
       }
 
       // check if the table "messages" exists
       result = await db.isTable("messages");
-      console.log(`$$$ isTable messages ${result.result}`)
       if(!result.result) {
         return Promise.reject(new Error("Table 'messages' does not exist"));
       }
 
       // check if the table "images" exists
       result = await db.isTable("images");
-      console.log(`$$$ isTable images ${result.result}`)
       if(!result.result) {
         return Promise.reject(new Error("Table 'images' does not exist"));
       }
 
       // check if the table "foo" exists
       result = await db.isTable("foo");
-      console.log(`$$$ isTable foo ${result.result}`)
       if(result.result) {
         return Promise.reject(new Error("Table 'foo' exists"));
       }
@@ -178,13 +170,11 @@ export class TestCopyPage implements AfterViewInit {
 
       // create tables in db2
       result = await db2.execute(createSchema82);
-      console.log('$$$ result.changes.changes in db ' + result.changes.changes)
       if (result.changes.changes < 0) {
         return Promise.reject(new Error("Execute in db2 failed"));
       }
       // select all users in db
       result = await db2.query("SELECT * FROM drawings WHERE congregationId = '494f7713-4dfe-4a92-b1a9-75aadcd71022';");
-      console.log(`$$$ issue82 ${JSON.stringify(result)}`)
       if(result.values.length !== 0) {     
         return Promise.reject(new Error("Query in db2 failed"));
       }

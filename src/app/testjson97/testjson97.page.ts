@@ -26,8 +26,6 @@ export class Testjson97Page implements AfterViewInit {
       message: message,
       });
     };
-    console.log("%%%% in Testjson97Page this._sqlite " + 
-                                                  this._sqlite)
     try {
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
@@ -45,8 +43,7 @@ export class Testjson97Page implements AfterViewInit {
   async runTest(): Promise<void> {
     try {
       let result: any = await this._sqlite.echo("Hello World");
-      console.log(" from Echo " + result.value);
-/*
+
       // ************************************************
       // Import Json Object Issue#97
       // ************************************************
@@ -56,15 +53,12 @@ export class Testjson97Page implements AfterViewInit {
       if(!result.result) {
         return Promise.reject(new Error("IsJson failed"));
       }
-      console.log("$$$ dataToImport Json Object is valid $$$")
       
       const dataToImport97 = JSON.parse(JSON.stringify(dataToImport59));
       dataToImport97.database = "db-from-json97";
-      console.log(JSON.stringify(dataToImport97));    
       // full import
       result = await this._sqlite
                           .importFromJson(JSON.stringify(dataToImport97));    
-      console.log(`full import result ${result.changes.changes}`);
       if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'full' failed"));
 
       // ************************************************
@@ -82,18 +76,15 @@ export class Testjson97Page implements AfterViewInit {
 
       // create synchronization table 
       result = await db.createSyncTable();
-      console.log(`after createSyncTable ${JSON.stringify(result)}` )
       if (result.changes.changes < 0) return Promise.reject(new Error("CreateSyncTable failed"));
 
 
       const syncDate: string = await db.getSyncDate();
-      console.log("$$ syncDate " + syncDate);
       if(syncDate.length === 0) return Promise.reject(new Error("GetSyncDate failed"));
 
       // export json
       this.jsonObj= await db.exportToJson('full');
     
-      console.log(JSON.stringify(this.jsonObj.export));    
       // test Json object validity
       result = await this._sqlite
                             .isJsonValid(JSON.stringify(this.jsonObj.export));
@@ -123,7 +114,6 @@ export class Testjson97Page implements AfterViewInit {
       // full import
       result = await this._sqlite
                           .importFromJson(JSON.stringify(this.jsonObj.export));    
-      console.log(`full import result ${result.changes.changes}`);
       if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'full' failed"));;
 
       // create the connection to the database
@@ -136,7 +126,6 @@ export class Testjson97Page implements AfterViewInit {
       await db.open();
       // create synchronization table 
       result = await db.createSyncTable();
-      console.log(`after createSyncTable ${JSON.stringify(result)}` )
       if (result.changes.changes < 0) return Promise.reject(new Error("CreateSyncTable failed"));
       // Set the Synchronization Date
       const d = new Date();    
@@ -151,7 +140,7 @@ export class Testjson97Page implements AfterViewInit {
 
       // close the connection
       await this._sqlite.closeConnection("db-from-json97"); 
-*/
+
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

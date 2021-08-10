@@ -41,10 +41,8 @@ export class ExistingconnectionPage implements AfterViewInit {
 
 
   async runTest(): Promise<void> {
-    console.log("%%%% in ExistingconnectionPage this._sqlite " + this._sqlite)
     try {
       let result: any = await this._sqlite.echo("Hello World");
-      console.log(" from Echo " + result.value);
       
       // retrieve the connections
       const db = await this._sqlite.retrieveConnection("testNew")
@@ -52,7 +50,6 @@ export class ExistingconnectionPage implements AfterViewInit {
 
       // load setUsers in db
       var ret: any = await db.executeSet(setUsers);
-      console.log('$$$ ret.changes.changes in db ' + ret.changes.changes)
       if (ret.changes.changes !== 3) {
         return Promise.reject(new Error("executeSet setUsers failed"));
       }
@@ -71,14 +68,12 @@ export class ExistingconnectionPage implements AfterViewInit {
     
       // create table messages in db1
       ret = await db1.execute(createSchemaMessages);
-      console.log('$$$ ret.changes.changes in db1 ' + ret.changes.changes)
       if (ret.changes.changes < 0) {
         return Promise.reject(new Error("execute createSchemaMessages failed"));
       }
 
       // load setMessages in db1
       ret = await db1.executeSet(setMessages);
-      console.log('$$$ ret.changes.changes in db1 ' + ret.changes.changes)
       if (ret.changes.changes !== 3) {
         return Promise.reject(new Error("executeSet setMessages failed"));
       }

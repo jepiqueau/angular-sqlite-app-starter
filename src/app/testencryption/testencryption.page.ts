@@ -18,7 +18,6 @@ export class TestencryptionPage implements AfterViewInit {
   constructor(private _sqlite: SQLiteService) {}
 
   async ngAfterViewInit() {
-    console.log("%%%% in TestencryptionPage this._sqlite " + this._sqlite)
     const showAlert = async (message: string) => {
       await Dialog.alert({
       title: 'Error Dialog',
@@ -42,7 +41,6 @@ export class TestencryptionPage implements AfterViewInit {
   async runTest(): Promise<void> {
     try {
       let result: any = await this._sqlite.echo("Hello World");
-      console.log(" from Echo " + result.value);
 
       // ************************************************
       // Create Database No Encryption
@@ -57,7 +55,6 @@ export class TestencryptionPage implements AfterViewInit {
 
       // create tables in db
       let ret: any = await db.execute(createSchema);
-      console.log('$$$ ret.changes.changes in db ' + ret.changes.changes)
       if (ret.changes.changes < 0) {
         return Promise.reject(new Error("Execute createSchema failed"));
       }
@@ -95,7 +92,6 @@ export class TestencryptionPage implements AfterViewInit {
                   "INSERT INTO users (name,email,age) VALUES (?,?,?)";
       let values: Array<any>  = ["Simpson","Simpson@example.com",69];
       ret = await db.run(sqlcmd,values);
-      console.log()
       if(ret.changes.lastId !== 3) {
         return Promise.reject(new Error("Run1 add 1 User failed"));
       }
@@ -121,7 +117,6 @@ export class TestencryptionPage implements AfterViewInit {
       await db.open();
       // close the connection
       await this._sqlite.closeConnection("testEncryption"); 
-      console.log("closeConnection encrypted ")
       // ************************************************
       // Work with the encrypted  database
       // ************************************************
@@ -144,7 +139,6 @@ export class TestencryptionPage implements AfterViewInit {
 
       // select all users in db
       ret = await db.query("SELECT * FROM users;");
-      console.log("query encrypted " + ret.values.length )
       if(ret.values.length !== 5 || ret.values[0].name !== "Whiteley" ||
                                     ret.values[1].name !== "Jones" ||
                                     ret.values[2].name !== "Simpson" ||

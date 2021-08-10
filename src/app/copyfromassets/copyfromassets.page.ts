@@ -13,7 +13,9 @@ export class CopyfromassetsPage implements AfterViewInit {
   handlerPermissions: any;
   initPlugin: boolean = false;
 
-  constructor(private _sqlite: SQLiteService) {}
+  constructor(private _sqlite: SQLiteService) {
+    this.platform = this._sqlite.platform;
+  }
 
   async ngAfterViewInit() {
     const showAlert = async (message: string) => {
@@ -38,29 +40,28 @@ export class CopyfromassetsPage implements AfterViewInit {
 
   async runTest(): Promise<void> {
     try {
-      console.log("%%%% in CopyfromassetsPage this._sqlite " + this._sqlite)
       this.log += "* Starting testDatabaseCopyFromAssets *\n";
       let result: any = await this._sqlite.echo("Hello World");
-      console.log(" from Echo " + result.value);
       await this._sqlite.copyFromAssets();
       this.log  +="  > copyFromAssets successful\n";
-      // create a connection EncryptForCopy
-      let db1 = await this._sqlite
-      .createConnection("EncryptForCopy", true, "secret", 1);
-      if(db1 == null ) return Promise.reject(new Error("createConnection EncryptForCopy failed"));
-      this.log += "  > createConnection 'EncryptForCopy' successful\n";
-      await db1.open();
-      this.log += "  > open 'EncryptForCopy' successful\n";
-      // select contacts in db1
-      let ret = await db1.query("SELECT * FROM contacts;");
-      if(ret.values.length !== 4 
-              || ret.values[0].name !== "Simpson" 
-              || ret.values[1].name !== "Jones"
-              || ret.values[2].name !== "Whiteley"
-              || ret.values[3].name !== "Brown") {
-        return Promise.reject(new Error("Query contacts EncryptForCopy failed"));
+      if(this.platform === 'ios' || this.platform === 'android') {
+        // create a connection EncryptForCopy
+        let db1 = await this._sqlite
+        .createConnection("EncryptForCopy", true, "secret", 1);
+        if(db1 == null ) return Promise.reject(new Error("createConnection EncryptForCopy failed"));
+        this.log += "  > createConnection 'EncryptForCopy' successful\n";
+        await db1.open();
+        this.log += "  > open 'EncryptForCopy' successful\n";
+        // select contacts in db1
+        let ret = await db1.query("SELECT * FROM contacts;");
+        if(ret.values.length !== 4 
+                || ret.values[0].name !== "Simpson" 
+                || ret.values[1].name !== "Jones"
+                || ret.values[2].name !== "Whiteley"
+                || ret.values[3].name !== "Brown") {
+          return Promise.reject(new Error("Query contacts EncryptForCopy failed"));
+        }
       }
-
       // create a connection for myDB
       let db = await this._sqlite
                   .createConnection("myDB", false, "no-encryption", 1);
@@ -70,7 +71,6 @@ export class CopyfromassetsPage implements AfterViewInit {
       this.log += "  > open 'myDb' successful\n";
       // Select all Users
       let res: any = await db.query("SELECT * FROM users");
-      console.log(`@@@ res.values.length ${res.values.length}`)
       if(res.values.length !== 7 ||
           res.values[0].name !== "Whiteley" ||
           res.values[1].name !== "Jones" ||

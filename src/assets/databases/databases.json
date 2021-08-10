@@ -1,0 +1,6 @@
+{
+  "databaseList" : [
+    "dbForCopy.db",
+    "myDBSQLite.db"
+  ]
+}

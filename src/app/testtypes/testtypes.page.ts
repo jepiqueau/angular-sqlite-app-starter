@@ -40,14 +40,11 @@ export class TestTypesPage implements AfterViewInit {
       });
     };
     this.importListener = this._sqlite.sqlitePlugin.addListener('sqliteImportProgressEvent', (info: any) => {
-      console.log(`info: ${JSON.stringify(info)}`)
       showProgessToast(info.progress)
     });
     this.exportListener = this._sqlite.sqlitePlugin.addListener('sqliteExportProgressEvent', (info: any) => {
-      console.log(`info: ${JSON.stringify(info)}`)
       showProgessToast(info.progress)
     });
-    console.log("%%%% in TestTypesPage this._sqlite " + this._sqlite)
     try {
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
@@ -69,14 +66,12 @@ export class TestTypesPage implements AfterViewInit {
   async runTest(): Promise<void> {
     try {
       let result: any = await this._sqlite.echo("Hello World");
-      console.log(" from Echo " + result.value);
-/*
+
       var retDict: Map<string, any> = await this._sqlite.retrieveAllConnections();
-      console.log(`number of connection: ${retDict.size}`)
-      for (var conn in retDict) {
+/*      for (var conn in retDict) {
         console.log(`connection: ${conn}`)
       }
-
+*/
       // initialize the connection
       let db: SQLiteDBConnection;
       if((await this._sqlite.isConnection("testTypes.db")).result) {
@@ -99,7 +94,6 @@ export class TestTypesPage implements AfterViewInit {
 
       // create synchronization table 
       ret = await db.createSyncTable();
-      console.log('$$$ createSyncTable ret.changes.changes in db ' + ret.changes.changes)
       
       // set the synchronization date
       const syncDate: string = "2020-11-25T08:30:25.000Z";
@@ -121,11 +115,11 @@ export class TestTypesPage implements AfterViewInit {
                   "UPDATE teachers SET age = ?, office = ? WHERE id = ?;";
       let values: Array<any>  = [41,"ABC",1];
       ret = await db.run(sqlcmd, values, false);
-      console.log(`xxxx changes ${ret.changes.changes}`)
       values = [23,"AEF",2];
       ret = await db.run(sqlcmd, values, false);
-      console.log(`xxxx changes ${ret.changes.changes}`)
 
+      // select all teachers in db
+      ret = await db.query("SELECT * FROM teachers;");
 
       // select teachers where age > 40 in db
       sqlcmd = "SELECT name,email,age FROM teachers WHERE age > ?";
@@ -139,7 +133,6 @@ export class TestTypesPage implements AfterViewInit {
       // partial import
       result = await this._sqlite
                         .importFromJson(JSON.stringify(partialImport));
-      console.log(`partial import result ${result.changes.changes}`);
       if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'partial' partialImport1 failed"));
       // create the connection to the database
       db = await this._sqlite
@@ -153,7 +146,6 @@ export class TestTypesPage implements AfterViewInit {
       // select teachers with "office" is null
       sqlcmd = "SELECT * FROM teachers where office IS NULL;";
       result = await db.query(sqlcmd);
-      console.log(`result.values ${JSON.stringify(result)}`)
       if(result.values.length !== 1 || 
                     result.values[0].name !== "MacLaren") {
         return Promise.reject(new Error("Query 3 Teachers failed"));
@@ -162,7 +154,6 @@ export class TestTypesPage implements AfterViewInit {
       // export full json
       let jsonObj: any = await db.exportToJson('full');
     
-      console.log(`After Export full ${JSON.stringify(jsonObj.export)}`);    
       // test Json object validity
       result = await this._sqlite
                             .isJsonValid(JSON.stringify(jsonObj.export));
@@ -179,7 +170,6 @@ export class TestTypesPage implements AfterViewInit {
       jsonObj.export.database = "testTypesImported";
       result = await this._sqlite
                         .importFromJson(JSON.stringify(jsonObj.export));
-      console.log(`full import result ${JSON.stringify(result)}`);
       if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'full' failed"));
       // create the connection to the database
       db = await this._sqlite
@@ -213,9 +203,8 @@ export class TestTypesPage implements AfterViewInit {
 
       // Check Connections Consistency
       ret= await this._sqlite.checkConnectionsConsistency();
-      console.log(`$$$ checkConnectionsConsistency ${ret.result}`)
       if(!ret.result) {
-        console.log("You must redefined your connections")
+        return Promise.reject(new Error("You must redefined your connections"));
       }
 
       result = await this._sqlite.isConnection("testTypes");
@@ -229,7 +218,7 @@ export class TestTypesPage implements AfterViewInit {
         // close the connection testTypesImported
         await this._sqlite.closeConnection("testTypesImported");      
       }
-*/    
+    
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

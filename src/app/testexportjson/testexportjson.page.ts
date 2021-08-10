@@ -24,10 +24,6 @@ export class TestexportjsonPage implements AfterViewInit {
       message: message,
       });
     };
-    // Initialize the CapacitorSQLite plugin
-    console.log("%%%% in TestexportjsonPage this._sqlite " + 
-                                                  this._sqlite)
-
     try {
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
@@ -45,8 +41,7 @@ export class TestexportjsonPage implements AfterViewInit {
   async runTest(): Promise<void> {
     try {
       let result: any = await this._sqlite.echo("Hello World");
-      console.log(" from Echo " + result.value);
-/*
+
       // ************************************************
       // Export Json Object from an Existing Database
       // ************************************************
@@ -65,7 +60,6 @@ export class TestexportjsonPage implements AfterViewInit {
       // ************************************************
       let jsonObj: any = await db.exportToJson('full');
       
-      console.log("$$$ jsonObj " + JSON.stringify(jsonObj))   
       // test Json object validity
       result = await this._sqlite
                             .isJsonValid(JSON.stringify(jsonObj.export));
@@ -77,17 +71,12 @@ export class TestexportjsonPage implements AfterViewInit {
       // ************************************************
       await db.setSyncDate("2020-05-20T18:40:00.000Z");
       jsonObj = await db.exportToJson('partial');
-      console.log("$$$ jsonObj " + JSON.stringify(jsonObj))   
       // test Json object validity
       result = await this._sqlite
                             .isJsonValid(JSON.stringify(jsonObj.export));
       if(!result.result) {
         return Promise.reject(new Error("IsJsonValid 'partial' export failed "));
       }
-      console.log(`table: ${jsonObj.export.tables[0].name} values: ${jsonObj.export.tables[0].values.length}`)
-      console.log(`table: ${jsonObj.export.tables[1].name} values: ${jsonObj.export.tables[1].values.length}`)
-      console.log(`table: ${jsonObj.export.tables[2].name} values: ${jsonObj.export.tables[2].values.length}`)
-      console.log(`table: ${jsonObj.export.tables[3].name} values: ${jsonObj.export.tables[3].values.length}`)
       if(jsonObj.export.tables.length != 4 || jsonObj.export.tables[0].name != 'users'
           || jsonObj.export.tables[1].name != 'messages' || jsonObj.export.tables[2].name != 'images' 
           || jsonObj.export.tables[3].name != 'test113'|| jsonObj.export.tables[0].values.length != 4
@@ -98,7 +87,7 @@ export class TestexportjsonPage implements AfterViewInit {
       // close the connection
       await this._sqlite.closeConnection("db-from-json"); 
       this._detailService.setExportJson(false);
-*/
+
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

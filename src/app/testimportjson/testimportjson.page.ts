@@ -25,10 +25,6 @@ export class TestimportjsonPage implements AfterViewInit {
       message: message,
       });
     };
-    // Initialize the CapacitorSQLite plugin
-    console.log("%%%% in TestimportjsonPage this._sqlite " + 
-                                                  this._sqlite)
-
     try {
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
@@ -46,8 +42,7 @@ export class TestimportjsonPage implements AfterViewInit {
   async runTest(): Promise<void> {
     try {
       let result: any = await this._sqlite.echo("Hello World");
-      console.log(" from Echo " + result.value);
-/*
+
       // ************************************************
       // Create Database from imported Json
       // ************************************************
@@ -58,11 +53,9 @@ export class TestimportjsonPage implements AfterViewInit {
       if(!result.result) {
         return Promise.reject(new Error("IsJsonValid failed"));
       }
-      console.log("$$$ dataToImport Json Object is valid $$$")
       // full import
       result = await this._sqlite
                           .importFromJson(JSON.stringify(dataToImport));    
-      console.log(`full import result ${result.changes.changes}`);
       if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'full' dataToImport failed"));
 
 
@@ -82,7 +75,6 @@ export class TestimportjsonPage implements AfterViewInit {
 
       result = await db.getSyncDate();
       if(result.length === 0) return Promise.reject(new Error("GetSyncDate failed"));
-      console.log("$$ syncDate " + result);
 
       // select all users in db
       result = await db.query("SELECT * FROM users;");
@@ -96,21 +88,17 @@ export class TestimportjsonPage implements AfterViewInit {
 
       // close the connection
       await this._sqlite.closeConnection("db-from-json"); 
-
       // partial import 1
       result = await this._sqlite
                         .importFromJson(JSON.stringify(partialImport1));
-      console.log(`partial import result ${result.changes.changes}`);
       if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'partial' partialImport1 failed"));
       // partial import 2
       result = await this._sqlite
                         .importFromJson(JSON.stringify(partialImport2));
-      console.log(`partial import result ${result.changes.changes}`);
       if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'partial' partialImport2 failed"));
       // partial import 3
       result = await this._sqlite
                         .importFromJson(JSON.stringify(partialImport3));
-      console.log(`partial import result ${result.changes.changes}`);
       if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'partial' partialImport2 failed"));
       // create the connection to the database
       db = await this._sqlite
@@ -123,11 +111,9 @@ export class TestimportjsonPage implements AfterViewInit {
 
       result = await db.getSyncDate();
       if(result.length === 0) return Promise.reject(new Error("GetSyncDate failed"));
-      console.log("$$ syncDate " + result);
 
       // select all users in db
       result = await db.query("SELECT * FROM users;");
-      console.log(`result.values ${JSON.stringify(result)}`)
       if(result.values.length !== 6 || 
                     result.values[0].name !== "Whiteley" ||
                     result.values[1].name !== "Jones" ||
@@ -139,7 +125,6 @@ export class TestimportjsonPage implements AfterViewInit {
       }
       // select all messages in db
       result = await db.query("SELECT * FROM messages;");
-      console.log(`result.values ${JSON.stringify(result)}`)
       if(result.values.length !== 4|| 
                     result.values[0].title !== "test post 1" ||
                     result.values[1].title !== "test post 2" ||
@@ -151,7 +136,6 @@ export class TestimportjsonPage implements AfterViewInit {
 
       // select all images in db
       result = await db.query("SELECT * FROM images;");
-      console.log(`result.values ${JSON.stringify(result)}`)
       if(result.values.length !== 2 || 
                     result.values[0].name !== "feather" ||
                     result.values[1].name !== "meowth" ) {
@@ -162,7 +146,7 @@ export class TestimportjsonPage implements AfterViewInit {
       await this._sqlite.closeConnection("db-from-json"); 
 
       this._detailService.setExportJson(true);
-*/
+
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

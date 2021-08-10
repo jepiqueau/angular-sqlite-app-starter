@@ -26,7 +26,6 @@ export class TestupgradeversionPage implements AfterViewInit {
       message: message,
       });
     };
-    console.log("%%%% in TestupgradeversionPage this._sqlite " + this._sqlite)
     try {
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
@@ -44,7 +43,6 @@ export class TestupgradeversionPage implements AfterViewInit {
   async runTest(): Promise<void> {
     try {
       let result: any = await this._sqlite.echo("Hello World");
-      console.log(" from Echo " + result.value);
 
       // ************************************************
       // Create Database Version 1
@@ -66,6 +64,10 @@ export class TestupgradeversionPage implements AfterViewInit {
       if (ret.changes.changes < 0) {
         return Promise.reject(new Error("Execute createSchemaVersion1 failed"));
       }
+      // delete users if any from previous run
+      let delUsers = `DELETE FROM users;`;
+      delUsers += `VACUUM;`;
+      ret = await db.execute(delUsers, false);
 
       // add two users in db
       ret = await db.execute(twoUsers);
@@ -103,7 +105,6 @@ export class TestupgradeversionPage implements AfterViewInit {
 
       await this._sqlite.addUpgradeStatement("test-updversion",
       1, 2, createSchemaVersion2, setArrayVersion2);     
-      console.log("*** addUpgradeStatement ret " + ret.result + " ***")
 
       // initialize the connection for Database Version 2
       db = await this._sqlite
