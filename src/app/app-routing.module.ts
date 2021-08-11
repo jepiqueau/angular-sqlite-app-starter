@@ -83,6 +83,12 @@ const routes: Routes = [
     loadChildren: () => import('./testchangesecuresecret/testchangesecuresecret.module')
                       .then( m => m.TestChangeSecureSecretPageModule)
   },
+  {
+    path: 'testjson1',
+    loadChildren: () => import('./testjson1extension/testjson1extension.module')
+                      .then( m => m.TestJson1ExtensionPageModule)
+  },
+
 
   {
     path: '',

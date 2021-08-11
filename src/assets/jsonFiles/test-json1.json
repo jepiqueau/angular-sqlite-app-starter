@@ -1,0 +1,223 @@
+{
+  "articles": [
+    {
+      "url": "http://charlesleifer.com/blog/my-list-of-python-and-sqlite-resources/", 
+      "metadata": {
+        "tags": [
+          "python", 
+          "sqlite"
+        ]
+      }, 
+      "title": "My List of Python and SQLite Resources"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/using-sqlite4-s-lsm-storage-engine-as-a-stand-alone-nosql-database-with-python/", 
+      "metadata": {
+        "tags": [
+          "nosql", 
+          "python", 
+          "sqlite", 
+          "cython"
+        ]
+      }, 
+      "title": "Using SQLite4's LSM Storage Engine as a Stand-alone NoSQL Database with Python"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/building-the-sqlite-fts5-search-extension/", 
+      "metadata": {
+        "tags": [
+          "sqlite", 
+          "search", 
+          "python", 
+          "peewee"
+        ]
+      }, 
+      "title": "Building the SQLite FTS5 Search Extension"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/introduction-to-the-fast-new-unqlite-python-bindings/", 
+      "metadata": {
+        "tags": [
+          "nosql", 
+          "python", 
+          "unqlite", 
+          "cython"
+        ]
+      }, 
+      "title": "Introduction to the fast new UnQLite Python Bindings"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/connor-thomas-leifer/", 
+      "metadata": {
+        "tags": [
+          "thoughts"
+        ]
+      }, 
+      "title": "Connor Thomas Leifer"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/alternative-redis-like-databases-with-python/", 
+      "metadata": {
+        "tags": [
+          "python", 
+          "walrus", 
+          "redis", 
+          "nosql"
+        ]
+      }, 
+      "title": "Alternative Redis-Like Databases with Python"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/why-i-won-t-be-switching-to-disque/", 
+      "metadata": {
+        "tags": [
+          "thoughts"
+        ]
+      }, 
+      "title": "Why I won't be switching to Disque"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/a-tour-of-tagging-schemas-many-to-many-bitmaps-and-more/", 
+      "metadata": {
+        "tags": [
+          "peewee", 
+          "sql", 
+          "python"
+        ]
+      }, 
+      "title": "A Tour of Tagging Schemas: Many-to-many, Bitmaps and More"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/meet-scout-a-search-server-powered-by-sqlite/", 
+      "metadata": {
+        "tags": [
+          "sqlite", 
+          "peewee", 
+          "python", 
+          "search", 
+          "scout"
+        ]
+      }, 
+      "title": "Meet Scout, a Search Server Powered by SQLite"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/how-to-make-a-flask-blog-in-one-hour-or-less/", 
+      "metadata": {
+        "tags": [
+          "python", 
+          "flask", 
+          "peewee"
+        ]
+      }, 
+      "title": "How to make a Flask blog in one hour or less"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/querying-the-top-n-objects-per-group-with-peewee-orm/", 
+      "metadata": {
+        "tags": [
+          "python", 
+          "peewee", 
+          "sql"
+        ]
+      }, 
+      "title": "Querying the top N objects per group with Peewee ORM"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/techniques-for-querying-lists-of-objects-and-determining-the-top-related-item/", 
+      "metadata": {
+        "tags": [
+          "python", 
+          "sql", 
+          "peewee"
+        ]
+      }, 
+      "title": "Querying the top item by group with peewee ORM"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/managing-database-connections-with-peewee/", 
+      "metadata": {
+        "tags": [
+          "peewee", 
+          "python"
+        ]
+      }, 
+      "title": "Managing Database Connections with Peewee"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/naive-bayes-classifier-using-python-and-kyoto-cabinet/", 
+      "metadata": {
+        "tags": [
+          "nosql", 
+          "python", 
+          "kyotocabinet"
+        ]
+      }, 
+      "title": "Naive Bayes Classifier using Python and Kyoto Cabinet"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/walrus-lightweight-python-utilities-for-working-with-redis/", 
+      "metadata": {
+        "tags": [
+          "python", 
+          "redis", 
+          "walrus", 
+          "nosql"
+        ]
+      }, 
+      "title": "Walrus: Lightweight Python utilities for working with Redis"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/setting-up-elasticsearch-with-basic-auth-and-ssl-for-use-with-python/", 
+      "metadata": {
+        "tags": [
+          "python", 
+          "elasticsearch"
+        ]
+      }, 
+      "title": "Setting up ElasticSearch with Basic Auth and SSL for use with Python"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/pollywog-fun-with-regular-expressions/", 
+      "metadata": {
+        "tags": [
+          "python", 
+          "regex", 
+          "pollywog"
+        ]
+      }, 
+      "title": "Pollywog: Fun with Regular Expressions"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/extending-sqlite-with-python/", 
+      "metadata": {
+        "tags": [
+          "peewee", 
+          "python", 
+          "sqlite"
+        ]
+      }, 
+      "title": "Extending SQLite with Python"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/querying-tree-structures-in-sqlite-using-python-and-the-transitive-closure-extension/", 
+      "metadata": {
+        "tags": [
+          "python", 
+          "sqlite", 
+          "peewee"
+        ]
+      }, 
+      "title": "Querying Tree Structures in SQLite using Python and the Transitive Closure Extension"
+    }, 
+    {
+      "url": "http://charlesleifer.com/blog/web-based-sqlite-database-browser-using-flask/", 
+      "metadata": {
+        "tags": [
+          "sqlite", 
+          "python"
+        ]
+      }, 
+      "title": "Web-based SQLite Database Browser, powered by Flask and Peewee"
+    }
+  ]
+}
