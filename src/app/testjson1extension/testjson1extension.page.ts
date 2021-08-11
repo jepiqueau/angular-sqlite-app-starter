@@ -141,6 +141,7 @@ export class TestJson1ExtensionPage implements AfterViewInit {
       } else 
         db1 = await this._sqlite
                   .createConnection("Articles", false, "no-encryption", 1);
+        console.log(`after create Connection Articles`)
       // check if the databases exist 
       // and delete it for multiple successive tests
       await deleteDatabase(db1);
@@ -148,21 +149,27 @@ export class TestJson1ExtensionPage implements AfterViewInit {
       // open db testNew
       await db1.open();
 
-      // create tables in db
+      // create tables in db1
       ret = await db1.execute(createSchemaArticles,false);
+      console.log(`createSchemaArticles ret.changes.changes ${ret.changes.changes}`)
       if (ret.changes.changes < 0) {
         return Promise.reject(new Error("Execute createSchemaArticles failed"));
       }
 
       // create synchronization table 
       ret = await db1.createSyncTable();
+      console.log(`createSyncTable JSON.stringify(ret) ${JSON.stringify(ret)}`)
       
       // set the synchronization date
       const syncDate1 = "2021-08-12T08:30:25.000Z";
       await db1.setSyncDate(syncDate1);
+      console.log(`after setSyncDate `)
+
       for (const data of this.dataArticles.articles) {
         let stmt1 = `INSERT INTO articles (data) VALUES (json('${JSON.stringify(data)}'));`;
+        console.log(`stmt1 ${stmt1}`)
         ret = await db1.run(stmt1,[]);
+        console.log(`run ret.changes.changes ${ret.changes.changes}`)
       }
       ret = await db1.query("SELECT json_extract(articles.data, '$.title') FROM articles;");
 
@@ -178,6 +185,11 @@ export class TestJson1ExtensionPage implements AfterViewInit {
 
       ) {
         return Promise.reject(new Error("Query User's cell phone failed"));
+      }
+      result = await this._sqlite.isConnection("Articles");
+      if(result.result) {
+        // close the connection tArticles
+        await this._sqlite.closeConnection("Articles");      
       }
     
       

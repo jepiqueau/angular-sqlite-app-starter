@@ -11,18 +11,6 @@
       "title": "My List of Python and SQLite Resources"
     }, 
     {
-      "url": "http://charlesleifer.com/blog/using-sqlite4-s-lsm-storage-engine-as-a-stand-alone-nosql-database-with-python/", 
-      "metadata": {
-        "tags": [
-          "nosql", 
-          "python", 
-          "sqlite", 
-          "cython"
-        ]
-      }, 
-      "title": "Using SQLite4's LSM Storage Engine as a Stand-alone NoSQL Database with Python"
-    }, 
-    {
       "url": "http://charlesleifer.com/blog/building-the-sqlite-fts5-search-extension/", 
       "metadata": {
         "tags": [
@@ -66,15 +54,6 @@
         ]
       }, 
       "title": "Alternative Redis-Like Databases with Python"
-    }, 
-    {
-      "url": "http://charlesleifer.com/blog/why-i-won-t-be-switching-to-disque/", 
-      "metadata": {
-        "tags": [
-          "thoughts"
-        ]
-      }, 
-      "title": "Why I won't be switching to Disque"
     }, 
     {
       "url": "http://charlesleifer.com/blog/a-tour-of-tagging-schemas-many-to-many-bitmaps-and-more/", 
