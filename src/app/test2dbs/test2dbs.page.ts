@@ -47,6 +47,7 @@ export class Test2dbsPage implements AfterViewInit {
   async runTest(): Promise<void> {
     try {
       let result: any = await this._sqlite.echo("Hello World from Jeep");
+      console.log(`from echo: ${result.value}`);
       // initialize the connection
       let db: SQLiteDBConnection;
       let db1: SQLiteDBConnection;
@@ -87,7 +88,6 @@ export class Test2dbsPage implements AfterViewInit {
 
       // delete users if any from previous run
       let delUsers = `DELETE FROM users;`;
-      delUsers += `VACUUM;`;
       ret = await db.execute(delUsers, false);
 
       // add two users in db
@@ -136,7 +136,6 @@ export class Test2dbsPage implements AfterViewInit {
         return Promise.reject(new Error("Run 1 users with statement failed"));
       }
       let delTest56 = `DELETE FROM test56;`;
-      delTest56 += `VACUUM;`;
       ret = await db.execute(delTest56, false);
       // add some tests issue#56
       ret = await db.execute(twoTests);

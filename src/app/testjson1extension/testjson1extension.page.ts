@@ -192,7 +192,6 @@ export class TestJson1ExtensionPage implements AfterViewInit {
         await this._sqlite.closeConnection("Articles");      
       }
     
-      
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

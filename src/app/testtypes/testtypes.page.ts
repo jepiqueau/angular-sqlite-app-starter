@@ -32,19 +32,22 @@ export class TestTypesPage implements AfterViewInit {
       message: message,
       });
     };
-    const showProgessToast = async (message: string) => {
-      await Toast.show({
-        text: message,
-        duration: 'short',
-        position: 'top'
+    this.platform = this._sqlite.platform;
+    if( this.platform !== 'electron') {
+      const showProgessToast = async (message: string) => {
+        await Toast.show({
+          text: message,
+          duration: 'short',
+          position: 'top'
+        });
+      };
+      this.importListener = this._sqlite.sqlitePlugin.addListener('sqliteImportProgressEvent', (info: any) => {
+        showProgessToast(info.progress)
       });
-    };
-    this.importListener = this._sqlite.sqlitePlugin.addListener('sqliteImportProgressEvent', (info: any) => {
-      showProgessToast(info.progress)
-    });
-    this.exportListener = this._sqlite.sqlitePlugin.addListener('sqliteExportProgressEvent', (info: any) => {
-      showProgessToast(info.progress)
-    });
+      this.exportListener = this._sqlite.sqlitePlugin.addListener('sqliteExportProgressEvent', (info: any) => {
+        showProgessToast(info.progress)
+      });
+    }
     try {
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
@@ -59,8 +62,10 @@ export class TestTypesPage implements AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.importListener.remove();
-    this.exportListener.remove();
+    if( this.platform !== 'electron') {
+      this.importListener.remove();
+      this.exportListener.remove();
+    }
   }
 
   async runTest(): Promise<void> {

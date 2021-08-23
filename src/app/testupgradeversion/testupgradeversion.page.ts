@@ -66,7 +66,6 @@ export class TestupgradeversionPage implements AfterViewInit {
       }
       // delete users if any from previous run
       let delUsers = `DELETE FROM users;`;
-      delUsers += `VACUUM;`;
       ret = await db.execute(delUsers, false);
 
       // add two users in db

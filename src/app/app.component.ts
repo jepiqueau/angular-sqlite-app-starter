@@ -11,10 +11,11 @@ import { DetailService } from './services/detail.service';
 })
 export class AppComponent {
   private initPlugin: boolean;
+  public isWeb: boolean = false;
   constructor(
     private platform: Platform,
     private sqlite: SQLiteService,
-    private detail: DetailService
+    private detail: DetailService 
   ) {
     this.initializeApp();
   }
@@ -29,5 +30,12 @@ export class AppComponent {
         console.log(">>>> in App  this.initPlugin " + this.initPlugin)
       });
     });
+  }
+  ionViewDidLoad() {
+    const p: string = this.sqlite.platform;
+    console.log(`plaform ${p}`);
+    if( p === "web") {
+      this.isWeb = true;
+    }
   }
 }

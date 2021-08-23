@@ -23,11 +23,9 @@ export class SQLiteService {
         return new Promise (resolve => {
             this.platform = Capacitor.getPlatform();
             if(this.platform === 'ios' || this.platform === 'android') this.native = true;
-            console.log("*** native " + this.native)
             this.sqlitePlugin = CapacitorSQLite;
             this.sqlite = new SQLiteConnection(this.sqlitePlugin);
             this.isService = true;
-            console.log("$$$ in service this.isService " + this.isService + " $$$")
             resolve(true);
         });
     }
@@ -38,7 +36,8 @@ export class SQLiteService {
     async echo(value: string): Promise<capEchoResult> {
         if(this.sqlite != null) {
             try {
-                return await this.sqlite.echo(value);
+                const ret = await this.sqlite.echo(value);
+                return Promise.resolve(ret);
             } catch (err) {
                 return Promise.reject(new Error(err));
             }
