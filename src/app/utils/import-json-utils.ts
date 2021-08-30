@@ -110,8 +110,8 @@ export const partialImport3: any = {
           {column:"name", value:"TEXT UNIQUE NOT NULL"},
           {column:"code", value:"TEXT"},
           {column:"last_modified", value:"INTEGER"}
-      ],
-    indexes: [
+        ],
+        indexes: [
           {name: "index_test113_on_title",value: "name"},
           {name: "index_test113_on_last_modified",value: "last_modified DESC"}
 
@@ -265,3 +265,176 @@ export const dataToImport94: any = {
         },
     ]
 };
+export const schemaToImport164: any = {
+  "database": "test_study_db",
+  "version": 1,
+  "encrypted": false,
+  "mode": "full",
+  "tables": [
+      {
+          "name": "modules",
+          "schema": [
+              {"column": "id", "value": "INTEGER PRIMARY KEY NOT NULL"},
+              {"column": "name", "value": "TEXT NOT NULL"},
+              {"column": "color", "value": "TEXT NOT NULL"},
+              {"column": "room", "value": "TEXT"},
+              {"column": "tag", "value": "TEXT"},
+              {"column": "event", "value": "TEXT"},
+              {"column": "home_work", "value": "TEXT"},
+              {"column": "last_modified", "value": "INTEGER DEFAULT (strftime('%s', 'now'))"}
+          ],
+      },
+      {
+          "name": "module_date",
+          "schema": [
+              {"column": "id", "value": "INTEGER PRIMARY KEY NOT NULL"},
+              {"column": "date_time", "value": "TEXT NOT NULL"},
+              {"column": "last_modified", "value": "INTEGER DEFAULT (strftime('%s', 'now'))"},
+              {
+                  "foreignkey": "module_id",
+                  "value": "REFERENCES modules(id)"
+              }
+          ],
+      }
+  ]
+}
+export const schemaVersion1: any = {
+  database : "db-issue164",
+  version : 1,
+  encrypted : false,
+  mode : "full",
+  tables :[
+      {
+          name: "users",
+          schema: [
+              {column:"id", value: "INTEGER PRIMARY KEY NOT NULL"},
+              {column:"email", value:"TEXT UNIQUE NOT NULL"},
+              {column:"name", value:"TEXT"},
+              {column:"age", value:"REAL"},
+              {column:"last_modified", value:"INTEGER"}
+          ],
+          indexes: [
+              {name: "index_user_on_name",value: "name"},
+              {name: "index_user_on_last_modified",value: "last_modified DESC"},
+              {name: "index_user_on_email_name", value: "email ASC, name", mode: "UNIQUE"}
+          ],
+      },
+      {
+        name: "messages",
+        schema: [
+          {column:"id", value: "INTEGER PRIMARY KEY NOT NULL"},
+          {column:"title", value:"TEXT NOT NULL"},
+          {column:"body", value:"TEXT NOT NULL"},
+          {column:"last_modified", value:"INTEGER"}
+        ],
+      },
+      {
+        name: "images",
+        schema: [
+          {column:"id", value: "INTEGER PRIMARY KEY NOT NULL"},
+          {column:"name", value:"TEXT UNIQUE NOT NULL"},
+          {column:"type", value:"TEXT NOT NULL"},
+          {column:"size", value:"INTEGER"},
+          {column:"img", value:"BLOB"},
+          {column:"last_modified", value:"INTEGER"}
+        ],
+      }
+
+  ]
+
+}
+
+export const dataVersion1: any = {
+  database : "db-issue164",
+  version : 1,
+  encrypted : false,
+  mode : "partial",
+  tables :[
+      {
+          name: "users",
+          values: [
+              [1,"Whiteley.com","Whiteley",30.5,1582536810],
+              [2,"Jones.com","Jones",44.2,1582812800],
+              [3,"Simpson@example.com","Simpson",69,1583570630],
+              [4,"Brown@example.com","Brown",15,1590383895]
+          ]
+      },
+      {
+        name: "messages",
+        values: [
+            [1,"test post 1","content test post 1",1587310030],
+            [2,"test post 2","content test post 2",1590388125]
+        ]
+      },
+      {
+        name: "images",
+        values: [
+          [1,"feather","png",null,Images[1],1582536810],
+          [2,"meowth","png",null,Images[0],1590151132]
+        ]
+      }
+
+  ]
+
+}
+export const schemaVersion2: any = {
+  database : "db-issue164",
+  version : 2,
+  encrypted : false,
+  mode : "full",
+  tables :[
+      {
+          name: "users",
+          schema: [
+              {column:"id", value: "INTEGER PRIMARY KEY NOT NULL"},
+              {column:"email", value:"TEXT UNIQUE NOT NULL"},
+              {column:"name", value:"TEXT"},
+              {column:"age", value:"REAL"},
+              {column:"country", value:"TEXT"},
+              {column:"last_modified", value:"INTEGER"}
+          ],
+          indexes: [
+              {name: "index_user_on_name",value: "name"},
+              {name: "index_user_on_last_modified",value: "last_modified DESC"},
+              {name: "index_user_on_email_name", value: "email ASC, name", mode: "UNIQUE"}
+          ],
+      },
+      {
+        name: "messages",
+        schema: [
+          {column:"id", value: "INTEGER PRIMARY KEY NOT NULL"},
+          {column:"title", value:"TEXT NOT NULL"},
+          {column:"body", value:"TEXT NOT NULL"},
+          {column:"last_modified", value:"INTEGER"}
+        ],
+      },
+  ]
+
+}
+export const dataVersion2: any = {
+  database : "db-issue164",
+  version : 2,
+  encrypted : false,
+  mode : "partial",
+  tables :[
+      {
+          name: "users",
+          values: [
+              [1,"Whiteley.com","Whiteley",30.5,"United of Kingdom",1582536810],
+              [2,"Jones.com","Jones",44.2,"Australia",1582812800],
+              [3,"Simpson@example.com","Simpson",69,"South Africa",1583570630],
+              [4,"Brown@example.com","Brown",15,"United States", 1590383895],
+              [5,"Jeep@example.com","Jeep",70,"France", 1590383980]
+          ]
+      },
+      {
+        name: "messages",
+        values: [
+            [1,"test post 1","content test post 1",1587310030],
+            [2,"test post 2","content test post 2",1590388125],
+            [3,"test post 3","content test post 3",1590389355],
+        ]
+      },
+  ]
+
+}

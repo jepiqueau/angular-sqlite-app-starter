@@ -88,6 +88,11 @@ const routes: Routes = [
     loadChildren: () => import('./testjson1extension/testjson1extension.module')
                       .then( m => m.TestJson1ExtensionPageModule)
   },
+  {
+    path: 'json164',
+    loadChildren: () => import('./testjson164/testjson164.module')
+                      .then( m => m.Testjson164PageModule)
+  },
 
 
   {
