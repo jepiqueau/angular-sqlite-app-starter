@@ -168,7 +168,9 @@ export class Test2dbsPage implements AfterViewInit {
       if (ret.changes.changes !== 1 || ret.changes.lastId !== 6) {
         return Promise.reject(new Error("Run [null, 'test2'] test issue#56 failed"));
       }
-
+      // get the database version
+      ret = await db.getVersion();
+      console.log(`$$$$$ version: ${ret.version} $$$$$`);
       this._detailService.setExistingConnection(true);
       return Promise.resolve();
     } catch (err) {

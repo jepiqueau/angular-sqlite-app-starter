@@ -75,6 +75,27 @@ ionic serve
 ```
 Not implemented on Web
 ```
+### Building Electron project
+
+```bash
+cd electron
+npm install
+npm run build
+cd ..
+npx cap sync @capacitor-community/electron
+npm run build
+npx cap copy @capacitor-community/electron
+npx cap open @capacitor-community/electron
+```
+
+When your Electron app is tested and you would like to create an executable
+either for Mac or for Windows
+
+```bash
+cd electron
+npm run electron:make
+``` 
+
 
 ### Building Native Project
 

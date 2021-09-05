@@ -59,7 +59,8 @@ export class TestexportjsonPage implements AfterViewInit {
       // Full Export json
       // ************************************************
       let jsonObj: any = await db.exportToJson('full');
-      
+      console.log(`jsonObj ${JSON.stringify(jsonObj.export)}`)
+      console.log(`jsonObj.export.database: ${jsonObj.export.database} `)      
       // test Json object validity
       result = await this._sqlite
                             .isJsonValid(JSON.stringify(jsonObj.export));
