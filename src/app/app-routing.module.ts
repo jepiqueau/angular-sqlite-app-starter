@@ -93,6 +93,11 @@ const routes: Routes = [
     loadChildren: () => import('./testjson164/testjson164.module')
                       .then( m => m.Testjson164PageModule)
   },
+  {
+    path: 'json167',
+    loadChildren: () => import('./testjson167/testjson167.module')
+                      .then( m => m.Testjson167PageModule)
+  },
 
 
   {

@@ -438,3 +438,70 @@ export const dataVersion2: any = {
   ]
 
 }
+export const dataToImport167: any = {
+  database: "db-issue167",
+  version: 1,
+  encrypted: false,
+  mode: "full",
+  tables: [
+    {
+      name: "departments",
+      schema: [
+        {column: "id", value: "INTEGER PRIMARY KEY AUTOINCREMENT" },
+        {column: "name", value: "TEXT NOT NULL" },
+        {column:"last_modified", value:"INTEGER"}
+      ],
+      indexes: [
+        {name: "index_departments_on_last_modified",value: "last_modified DESC"}
+      ],
+      values: [
+        [1,"Admin",1608216034],
+        [2,"Sales",1608216034],
+        [3,"Quality Control",1608216034],
+        [4,"Marketing",1608216034],
+      ]
+    },
+    {
+      name: "employees",
+      schema: [
+        {column: "id", value: "INTEGER PRIMARY KEY AUTOINCREMENT" },
+        {column: "first_name", value: "TEXT" },
+        {column: "last_name", value: "TEXT" },
+        {column: "salary", value: "NUMERIC" },
+        {column: "dept_id", value: "INTEGER" },
+        {column: "last_modified", value: "INTEGER"}
+      ],
+      indexes: [
+        {name: "index_departments_on_last_modified",value: "last_modified DESC"}
+      ],
+      values: [
+        [1,"John","Brown",27500,1,1608216034],
+        [2,"Sally","Brown",37500,2,1608216034],
+        [3,'Vinay','Jariwala', 35100,3,1608216034],
+        [4,'Jagruti','Viras', 9500,2,1608216034],
+        [5,'Shweta','Rana',12000,3,1608216034],
+        [6,'sonal','Menpara', 13000,1,1608216034],
+        [7,'Yamini','Patel', 10000,2,1608216034],
+        [8,'Khyati','Shah', 50000,3,1608216034],
+        [9,'Shwets','Jariwala',19400,2,1608216034],
+        [10,'Kirk','Douglas',36400,4,1608216034],
+        [11,'Leo','White',45000,4,1608216034],
+      ],
+    }
+  ],
+  views: [
+    {name: "SalesTeam", value: "SELECT id,first_name,last_name from employees WHERE dept_id IN (SELECT id FROM departments where name='Sales')"},
+    {name: "AdminTeam", value: "SELECT id,first_name,last_name from employees WHERE dept_id IN (SELECT id FROM departments where name='Admin')"},
+  ]
+}
+export const viewsToImport167: any = {
+  database: "db-issue167",
+  version: 1,
+  encrypted: false,
+  mode: "partial",
+  tables: [],
+  views: [
+    {name: "QualityControlTeam", value: "SELECT id,first_name,last_name from employees WHERE dept_id IN (SELECT id FROM departments where name='Quality Control')"},
+    {name: "MarketingTeam", value: "SELECT id,first_name,last_name from employees WHERE dept_id IN (SELECT id FROM departments where name='Marketing')"},
+  ]
+}
