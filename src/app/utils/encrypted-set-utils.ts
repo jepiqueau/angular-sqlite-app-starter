@@ -50,4 +50,9 @@ export const setMessages: Array<capSQLiteSet>  = [
     ]
   },
 ]
+export const setIssue170: Array<capSQLiteSet>  = [
+  { statement: "DROP TABLE IF EXISTS issue170", values: [] },
+  { statement: "CREATE TABLE issue170 (src VARCHAR(255))", values: [] },
+  { statement: "INSERT INTO issue170 (src) values (?)", values: ["google.com"] },
+]
 

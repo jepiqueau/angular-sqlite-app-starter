@@ -3,7 +3,7 @@ import { SQLiteService } from '../services/sqlite.service';
 import { DetailService } from '../services/detail.service';
 
 import { createSchema, twoUsers, twoTests } from '../utils/no-encryption-utils';
-import { createSchemaContacts, setContacts } from '../utils/encrypted-set-utils';
+import { createSchemaContacts, setContacts, setIssue170 } from '../utils/encrypted-set-utils';
 import { deleteDatabase } from '../utils/db-utils';
 import { Dialog } from '@capacitor/dialog';
 import { SQLiteDBConnection } from '@capacitor-community/sqlite';
@@ -114,6 +114,12 @@ export class Test2dbsPage implements AfterViewInit {
         return Promise.reject(new Error("ExecuteSet 5 contacts failed"));
       }
 
+      // test issue170
+      ret = await db1.executeSet(setIssue170);
+      if (ret.changes.changes !== 1) {
+        return Promise.reject(new Error("ExecuteSet 6 issue170 failed"));
+      }
+
       // select users where company is NULL in db
       ret = await db.query("SELECT * FROM users WHERE company IS NULL;");
       if(ret.values.length !== 2 || ret.values[0].name !== "Whiteley" ||
@@ -170,7 +176,9 @@ export class Test2dbsPage implements AfterViewInit {
       }
       // get the database version
       ret = await db.getVersion();
-      console.log(`$$$$$ version: ${ret.version} $$$$$`);
+      if (ret.version !== 1) {
+        return Promise.reject(new Error("GetVersion: version failed"));
+      }
       this._detailService.setExistingConnection(true);
       return Promise.resolve();
     } catch (err) {
