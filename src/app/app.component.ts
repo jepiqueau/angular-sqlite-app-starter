@@ -34,6 +34,8 @@ export class AppComponent {
           await customElements.whenDefined('jeep-sqlite');
           const jeepSqliteEl = document.querySelector('jeep-sqlite');
           if(jeepSqliteEl != null) {
+            await this.sqlite.initWebStore();
+
             console.log(`isStoreOpen ${await jeepSqliteEl.isStoreOpen()}`)
             console.log(`$$ jeepSqliteEl is defined}`);
           } else {

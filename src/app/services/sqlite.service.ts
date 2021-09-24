@@ -354,5 +354,43 @@ export class SQLiteService {
             return Promise.reject(new Error(`no connection open`));
         }
       }
+    /**
+     * Initialize the Web store
+     * @param database 
+     */
+     async initWebStore(): Promise<void> {
+        if(this.platform !== 'web')  {
+            return Promise.reject(new Error(`not implemented for this platform: ${this.platform}`));
+        }
+        if(this.sqlite != null) {
+            try {
+                await this.sqlite.initWebStore();
+                return Promise.resolve();
+            } catch (err) {
+                return Promise.reject(new Error(err));
+            }
+        } else {
+            return Promise.reject(new Error(`no connection open`));
+        }
+    }
+    /**
+     * Save a database to store
+     * @param database 
+     */
+     async saveToStore(database:string): Promise<void> {
+        if(this.platform !== 'web')  {
+            return Promise.reject(new Error(`not implemented for this platform: ${this.platform}`));
+        }
+        if(this.sqlite != null) {
+            try {
+                await this.sqlite.saveToStore(database);
+                return Promise.resolve();
+            } catch (err) {
+                return Promise.reject(new Error(err));
+            }
+        } else {
+            return Promise.reject(new Error(`no connection open for ${database}`));
+        }
+    }
     
 }
