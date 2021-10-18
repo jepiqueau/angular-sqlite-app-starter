@@ -269,16 +269,38 @@ export class SQLiteService {
         }
     }
     /**
+     * Delete old databases
+     */    
+    async getMigratableDbList(folderPath?: string): Promise<capSQLiteValues>{
+        if(!this.native) {
+            return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
+        }
+        if(this.sqlite != null) {
+            try {
+                if(!folderPath || folderPath.length === 0) {
+                    return Promise.reject(new Error(`You must provide a folder path`));
+                }
+                return Promise.resolve(await this.sqlite.getMigratableDbList(folderPath));
+            } catch (err) {
+                return Promise.reject(new Error(err));
+            }
+        } else {
+            return Promise.reject(new Error(`no connection open`));
+        }
+    }
+    
+    /**
      * Add "SQLite" suffix to old database's names
      */    
-    async addSQLiteSuffix(folderPath?: string): Promise<void>{
+    async addSQLiteSuffix(folderPath?: string, dbNameList?: string[]): Promise<void>{
         if(!this.native) {
             return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
         }
         if(this.sqlite != null) {
             try {
                 const path: string = folderPath ? folderPath : "default";
-                return Promise.resolve(await this.sqlite.addSQLiteSuffix(path));
+                const dbList: string[] = dbNameList ? dbNameList : [];
+                return Promise.resolve(await this.sqlite.addSQLiteSuffix(path, dbList));
             } catch (err) {
                 return Promise.reject(new Error(err));
             }
@@ -289,14 +311,15 @@ export class SQLiteService {
     /**
      * Delete old databases
      */    
-    async deleteOldDatabases(folderPath?: string): Promise<void>{
+    async deleteOldDatabases(folderPath?: string, dbNameList?: string[]): Promise<void>{
         if(!this.native) {
             return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
         }
         if(this.sqlite != null) {
             try {
                 const path: string = folderPath ? folderPath : "default";
-                return Promise.resolve(await this.sqlite.deleteOldDatabases(path));
+                const dbList: string[] = dbNameList ? dbNameList : [];
+                return Promise.resolve(await this.sqlite.deleteOldDatabases(path, dbList));
             } catch (err) {
                 return Promise.reject(new Error(err));
             }

@@ -59,17 +59,24 @@ export class TestCopyPage implements AfterViewInit {
       result = await this._sqlite.getDatabaseList();
       console.log(`test get Database List: ${JSON.stringify(result)}`)
 
-      await this._sqlite.addSQLiteSuffix();
       result = await this._sqlite.isConnection("testfromfile");
       if(result.result) {
         return Promise.reject(new Error("Connection 'testfromfile' already exists"));
       }    
       // test if the cordova databases where not at the "default" directory
       // here we assume that they were stored at "Files/Databases"
-      let directory: string =  "Files/Databases"
+      let directory: string =  "Files/Databases";
+      let dbList: string[] = ["testcopy.db","testfromfile.db"];
       if(this.platform === "ios") directory = "Applications/Files/Databases"
       if(this.platform === "android" ) directory = "files/databases";  
-      await this._sqlite.addSQLiteSuffix(directory);
+      if(this.platform === 'ios' || this.platform === 'android') {
+        const dbList = await this._sqlite.getMigratableDbList(directory);
+        console.log(`dbList ${JSON.stringify(dbList)}`)
+        if(dbList.values.length != 4) {
+          return Promise.reject(new Error("GetMigratableDbList failed"));
+        }
+      }
+      await this._sqlite.addSQLiteSuffix(directory, dbList);
 
       // check if database "testcopy" exists
       result = await this._sqlite.isDatabase("testcopy");
@@ -132,9 +139,6 @@ export class TestCopyPage implements AfterViewInit {
         return Promise.reject(new Error("Table 'foo' exists"));
       }
 
-      // delete old databases
-      await this._sqlite.deleteOldDatabases();
-
       // create the connection to the database "testfromfile"
       const db1 = await this._sqlite
                         .createConnection("testfromfile", false,
@@ -160,7 +164,13 @@ export class TestCopyPage implements AfterViewInit {
           return Promise.reject(new Error("Query2 Users failed"));
       }
       // delete old databases
-      await this._sqlite.deleteOldDatabases(directory);
+      await this._sqlite.deleteOldDatabases(directory, dbList);
+      if(this.platform === 'ios' || this.platform === 'android') {
+        const dbList = await this._sqlite.getMigratableDbList(directory);
+        if(dbList.values.length != 2) {
+          return Promise.reject(new Error("GetMigratableDbList failed"));
+        }
+      }
 
       // initialize the connection for issue#82
       const db2 = await this._sqlite
