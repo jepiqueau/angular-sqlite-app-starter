@@ -71,7 +71,7 @@ export class Testjson192Page implements AfterViewInit {
               { column: 'longitude', value: 'REAL' }, 
               { column: 'speed', value: 'REAL' }, 
               { column: 'TIMESTAMP', value: 'INTEGER' }, 
-              { foreignkey: 'route_id', value: 'REFERENCES routes ON DELETE CASCADE', }, 
+              { foreignkey: 'route_id', value: 'REFERENCES routes(id) ON DELETE CASCADE', }, 
             ], 
             indexes: [ 
               { name: 'route_points_id_uindex', value: 'id' }, 
