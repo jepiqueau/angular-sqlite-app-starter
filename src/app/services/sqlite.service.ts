@@ -366,10 +366,12 @@ export class SQLiteService {
     /**
      * Copy databases from public/assets/databases folder to application databases folder
      */
-    async copyFromAssets(): Promise<void> { 
+    async copyFromAssets(overwrite?: boolean): Promise<void> { 
+        const mOverwrite: boolean = overwrite != null ? overwrite : true;
+        console.log(`&&&& mOverwrite ${mOverwrite}`);
         if (this.sqlite != null) {
             try {
-                return Promise.resolve(await this.sqlite.copyFromAssets());
+                return Promise.resolve(await this.sqlite.copyFromAssets(mOverwrite));
             } catch (err) {
                 return Promise.reject(new Error(err));
             }

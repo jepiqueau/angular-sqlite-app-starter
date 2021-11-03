@@ -1,6 +1,7 @@
 {
   "databaseList" : [
     "dbForCopy.db",
-    "myDBSQLite.db"
+    "myDBSQLite.db",
+    "Archive.zip"
   ]
 }
