@@ -69,6 +69,11 @@ const routes: Routes = [
                       .then( m => m.TestCopyPageModule)
   },
   {
+    path: 'ncdatabase',
+    loadChildren: () => import('./testncdbs/testncdbs.module')
+                      .then( m => m.TestNCDbsPageModule)
+  },
+  {
     path: 'test111',
     loadChildren: () => import('./testissue111/testissue111.module')
                       .then( m => m.TestIssue111PageModule)

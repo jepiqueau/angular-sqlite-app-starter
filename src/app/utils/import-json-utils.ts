@@ -18,7 +18,7 @@ export const dataToImport: any = {
             indexes: [
                 {name: "index_user_on_name",value: "name"},
                 {name: "index_user_on_last_modified",value: "last_modified DESC"},
-                {name: "index_user_on_email_name", value: "email ASC, name", mode: "UNIQUE"}
+                {name: "index_user_on_email_name", value: "email ASC, name", mode: "unique"}
             ],
             values: [
                 [1,"Whiteley.com","Whiteley",30.5,1582536810],

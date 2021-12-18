@@ -63,20 +63,24 @@ export class TestCopyPage implements AfterViewInit {
       if(result.result) {
         return Promise.reject(new Error("Connection 'testfromfile' already exists"));
       }    
+      result = await this._sqlite.isConnection("keep1");
+      if(result.result) {
+        return Promise.reject(new Error("Connection 'keep1' already exists"));
+      }    
       // test if the cordova databases where not at the "default" directory
       // here we assume that they were stored at "Files/Databases"
       let directory: string =  "Files/Databases";
-      let dbList: string[] = ["testcopy.db","testfromfile.db"];
+      let dbList: string[] = ["testcopy.db","testfromfile.db","keep1"];
       if(this.platform === "ios") directory = "Applications/Files/Databases"
       if(this.platform === "android" ) directory = "files/databases";  
       if(this.platform === 'ios' || this.platform === 'android') {
-        const dbList = await this._sqlite.getMigratableDbList(directory);
-        console.log(`dbList ${JSON.stringify(dbList)}`)
-        if(dbList.values.length != 4) {
+        const dbMigratableList = await this._sqlite.getMigratableDbList(directory);
+        console.log(`dbMigratableList ${JSON.stringify(dbMigratableList)}`)
+        if(dbMigratableList.values.length != 4) {
           return Promise.reject(new Error("GetMigratableDbList failed"));
         }
+        await this._sqlite.addSQLiteSuffix(directory, dbList);
       }
-      await this._sqlite.addSQLiteSuffix(directory, dbList);
 
       // check if database "testcopy" exists
       result = await this._sqlite.isDatabase("testcopy");
@@ -87,6 +91,11 @@ export class TestCopyPage implements AfterViewInit {
       result = await this._sqlite.isDatabase("testfromfile");
       if(!result.result) {
         return Promise.reject(new Error("Database 'testfromfile' does not exist"));
+      }
+      // check if database "keep1" exists
+      result = await this._sqlite.isDatabase("keep1");
+      if(!result.result) {
+        return Promise.reject(new Error("Database 'keep1' does not exist"));
       }
 
       // ************************************************
@@ -163,28 +172,49 @@ export class TestCopyPage implements AfterViewInit {
         ) {
           return Promise.reject(new Error("Query2 Users failed"));
       }
+      // create the connection to the database
+      const db2 = await this._sqlite
+      .createConnection("keep1", false,
+                        "no-encryption", 1);
+      if(db2 === null) return Promise.reject(new Error("CreateConnection 'keep1' failed"));
+
+      // open db testcopy
+      await db2.open();
+      // 
+      // select all users in db2
+      result  = await db2.query("SELECT * FROM users;");
+      if(result .values.length !== 7 || result .values[0].name !== "Whiteley"
+      || result .values[1].name !== "Jones"
+      || result .values[2].name !== "Simpson"
+      || result .values[3].name !== "Brown"
+      || result .values[4].name !== "Jackson"
+      || result .values[5].name !== "Kennedy"
+      || result .values[6].name !== "Bush"
+      ) {
+      return Promise.reject(new Error("Query db2 Users failed"));
+      }
       // delete old databases
       await this._sqlite.deleteOldDatabases(directory, dbList);
       if(this.platform === 'ios' || this.platform === 'android') {
-        const dbList = await this._sqlite.getMigratableDbList(directory);
-        if(dbList.values.length != 2) {
+        const dbMigratableList = await this._sqlite.getMigratableDbList(directory);
+        if(dbMigratableList.values.length != 1) {
           return Promise.reject(new Error("GetMigratableDbList failed"));
         }
       }
 
       // initialize the connection for issue#82
-      const db2 = await this._sqlite
+      const db3 = await this._sqlite
                   .createConnection("test-issue82", false, "no-encryption", 1);
-      // open db2 test-issue82
-      await db2.open();
+      // open db3 test-issue82
+      await db3.open();
 
       // create tables in db2
-      result = await db2.execute(createSchema82);
+      result = await db3.execute(createSchema82);
       if (result.changes.changes < 0) {
         return Promise.reject(new Error("Execute in db2 failed"));
       }
       // select all users in db
-      result = await db2.query("SELECT * FROM drawings WHERE congregationId = '494f7713-4dfe-4a92-b1a9-75aadcd71022';");
+      result = await db3.query("SELECT * FROM drawings WHERE congregationId = '494f7713-4dfe-4a92-b1a9-75aadcd71022';");
       if(result.values.length !== 0) {     
         return Promise.reject(new Error("Query in db2 failed"));
       }
@@ -194,6 +224,8 @@ export class TestCopyPage implements AfterViewInit {
       this._detailService.setExportJson(false);
       // close the connection "testfromfile"
       await this._sqlite.closeConnection("testfromfile"); 
+      // close the connection "keep1"
+      await this._sqlite.closeConnection("keep1"); 
 
       // close the connection "test-issue82"
       await this._sqlite.closeConnection("test-issue82"); 
