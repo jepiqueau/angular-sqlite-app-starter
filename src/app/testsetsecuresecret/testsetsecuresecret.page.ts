@@ -4,18 +4,19 @@ import { SQLiteService } from '../services/sqlite.service';
 import { Dialog } from '@capacitor/dialog';
 
 @Component({
-  selector: 'app-testchangesecuresecret',
-  templateUrl: 'testchangesecuresecret.page.html',
-  styleUrls: ['testchangesecuresecret.page.scss']
+  selector: 'app-testsetsecuresecret',
+  templateUrl: 'testsetsecuresecret.page.html',
+  styleUrls: ['testsetsecuresecret.page.scss']
 })
-export class TestChangeSecureSecretPage implements AfterViewInit {
+export class TestSetSecureSecretPage implements AfterViewInit {
   detail: boolean = false;
   platform: string;
   handlerPermissions: any;
   initPlugin: boolean = false;
   showAlert: any;
 
-  constructor(private _sqlite: SQLiteService) {}
+  constructor(private _sqlite: SQLiteService) {
+  }
 
   async ngAfterViewInit() {
     this.showAlert = async (message: string) => {
@@ -24,7 +25,7 @@ export class TestChangeSecureSecretPage implements AfterViewInit {
       message: message,
       });
     };
-    console.log("%%%% in TestChangeSecureSecretPage this._sqlite " + this._sqlite)
+    console.log("%%%% in TestSetSecureSecretPage this._sqlite " + this._sqlite)
     try {
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
@@ -41,17 +42,16 @@ export class TestChangeSecureSecretPage implements AfterViewInit {
 
   async runTest(): Promise<void> {
     try {
-
-      await this._sqlite.changeEncryptionSecret('how million space by locate',
-                                                'abbey clammy gird night test');
-/*      
-      await this._sqlite.changeEncryptionSecret('abbey clammy gird night test',
-                                                  'how million space by locate');
-
-*/
-
-
-
+      // Deal with the secure secret if you need it
+      // by using an input form
+      // here i used a constant
+        const secretPhrase = 'abbey clammy gird night test';
+        const isSet = await this._sqlite.isSecretStored()
+        if(!isSet.result) {
+            await this._sqlite.setEncryptionSecret(secretPhrase);
+        } else {
+          return Promise.reject(new Error("the secret is already stored"));
+        }
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

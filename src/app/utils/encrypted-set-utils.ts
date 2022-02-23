@@ -55,4 +55,33 @@ export const setIssue170: Array<capSQLiteSet>  = [
   { statement: "CREATE TABLE issue170 (src VARCHAR(255))", values: [] },
   { statement: "INSERT INTO issue170 (src) values (?)", values: ["google.com"] },
 ]
-
+export const createSchemaIssues220221: string = `
+CREATE TABLE IF NOT EXISTS issues220221 (
+  id INTEGER PRIMARY KEY NOT NULL,
+  title TEXT UNIQUE NOT NULL,
+  body TEXT NOT NULL,
+  last_modified INTEGER DEFAULT (strftime('%s', 'now'))
+);
+CREATE INDEX IF NOT EXISTS issues220221_index_title ON issues220221 (title);
+CREATE INDEX IF NOT EXISTS issues220221_index_last_modified ON issues220221 (last_modified);
+CREATE TRIGGER IF NOT EXISTS issues220221_trigger_last_modified
+AFTER UPDATE ON issues220221
+FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
+BEGIN
+    UPDATE issues220221 SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+END;
+`
+export const setIssues220221: Array<capSQLiteSet>  = [
+  { statement:"INSERT INTO issues220221 (title,body) VALUES (?,?);",
+    values:[
+      ["message 1","body message1"],
+      ["message 2","body message2"],
+      ["message 3","body message3"]
+    ]
+  },
+]
+export const updIssues220221: Array<capSQLiteSet>  = [
+  { statement:"UPDATE issues220221 SET body = ?  WHERE title = ?;",
+  values:["body change message1","Message 1"]
+  },
+]

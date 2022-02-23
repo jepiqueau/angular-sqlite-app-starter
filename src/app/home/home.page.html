@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      SQLite Refactor Tests
+      SQLite Tests
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,11 +9,13 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">SQLite Refactor Tests</ion-title>
+      <ion-title size="large">SQLite Tests</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
+  <div *ngIf="isDisplay" id="container">
+    <ion-button *ngIf="native" routerLink='/setsecuresecret' routerDirection="forward" color='primary' expand="block">Test Set Secure Secret</ion-button> 
+    <ion-button *ngIf="native" routerLink='/changesecuresecret' routerDirection="forward" color='primary' expand="block">Test Change Secure Secret</ion-button> 
     <ion-button routerLink='/test2dbs' routerDirection="forward" color='primary' expand="block">Test 2 Databases</ion-button> 
     <ion-button *ngIf="exConn" routerLink='/existingconnection' routerDirection="forward" color='primary' expand="block">Test Existing Connection</ion-button> 
     <ion-button routerLink='/upgradeversion' routerDirection="forward" color='primary' expand="block">Test Upgrade Versions</ion-button> 
@@ -29,7 +31,6 @@
     <ion-button routerLink='/json97' routerDirection="forward" color='primary' expand="block">Test Json #97</ion-button> 
     <ion-button routerLink='/test111' routerDirection="forward" color='primary' expand="block">Test Issue #111</ion-button> 
     <ion-button routerLink='/testtypes' routerDirection="forward" color='primary' expand="block">Test Types</ion-button> 
-    <ion-button *ngIf="native" routerLink='/changesecuresecret' routerDirection="forward" color='primary' expand="block">Test Change Secure Secret</ion-button> 
     <ion-button routerLink='/testjson1' routerDirection="forward" color='primary' expand="block">Test JSON1 Extension</ion-button> 
     <ion-button routerLink='/json164' routerDirection="forward" color='primary' expand="block">Test Json #164</ion-button> 
     <ion-button routerLink='/json167' routerDirection="forward" color='primary' expand="block">Test Json #167</ion-button> 

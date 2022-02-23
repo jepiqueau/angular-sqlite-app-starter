@@ -3,7 +3,8 @@ import { SQLiteService } from '../services/sqlite.service';
 import { DetailService } from '../services/detail.service';
 
 import { createSchema, twoUsers, twoTests } from '../utils/no-encryption-utils';
-import { createSchemaContacts, setContacts, setIssue170 } from '../utils/encrypted-set-utils';
+import { createSchemaContacts, setContacts, setIssue170,
+  createSchemaIssues220221, setIssues220221, updIssues220221 } from '../utils/encrypted-set-utils';
 import { deleteDatabase } from '../utils/db-utils';
 import { Dialog } from '@capacitor/dialog';
 import { SQLiteDBConnection } from '@capacitor-community/sqlite';
@@ -15,13 +16,14 @@ import { SQLiteDBConnection } from '@capacitor-community/sqlite';
 })
 export class Test2dbsPage implements AfterViewInit {
   detail: boolean = false;
-  sqlite: any;
-  platform: string;
+  isNative: boolean;
   handlerPermissions: any;
   initPlugin: boolean = false;
 
   constructor(private _sqlite: SQLiteService,
-              private _detailService: DetailService) {}
+              private _detailService: DetailService) {
+                this.isNative = this._sqlite.native
+              }
 
   async ngAfterViewInit() {
     const showAlert = async (message: string) => {
@@ -59,8 +61,7 @@ export class Test2dbsPage implements AfterViewInit {
       }
       if((await this._sqlite.isConnection("testSet")).result) {
         db1 = await this._sqlite.retrieveConnection("testSet");
-      } else {
-        
+      } else {                          
         db1 = await this._sqlite
                   .createConnection("testSet", true, "secret", 1);
       }
@@ -174,6 +175,24 @@ export class Test2dbsPage implements AfterViewInit {
       if (ret.changes.changes !== 1 || ret.changes.lastId !== 6) {
         return Promise.reject(new Error("Run [null, 'test2'] test issue#56 failed"));
       }
+      // Test issues 220 && 221
+      // create tables in db1
+      ret = await db1.execute(createSchemaIssues220221);
+
+      // load setIssues220221 in db1
+      ret = await db1.executeSet(setIssues220221);
+      console.log(`setIssues220221 ret ${JSON.stringify(ret)}`)
+      if (ret.changes.changes !== 3) {
+        return Promise.reject(new Error("ExecuteSet 3 issues220221 failed"));
+      }
+
+      // update updIssues220221 in db1
+      ret = await db1.executeSet(updIssues220221);
+      console.log(`updIssues220221 ret ${JSON.stringify(ret)}`)
+      // update twice updIssues220221 in db1
+      ret = await db1.executeSet(updIssues220221);
+      console.log(`twice updIssues220221 ret ${JSON.stringify(ret)}`)
+      
       // get the database version
       ret = await db.getVersion();
       if (ret.version !== 1) {

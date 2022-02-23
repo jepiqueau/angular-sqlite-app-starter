@@ -243,7 +243,15 @@ export class SQLiteService {
                            ): Promise<SQLiteDBConnection> {
         if(this.sqlite != null) {
             try {
-                const db: SQLiteDBConnection = await this.sqlite.createConnection(
+                if(encrypted) {
+                    if(this.native) {
+                        const isSet = await this.sqlite.isSecretStored()
+                        if(!isSet.result) {
+                            return Promise.reject(new Error(`no secret phrase registered`));
+                        }
+                    }
+                }
+               const db: SQLiteDBConnection = await this.sqlite.createConnection(
                                 database, encrypted, mode, version);
                 if (db != null) {
                     return Promise.resolve(db);

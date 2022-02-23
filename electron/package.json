@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@capacitor-community/electron": "^4.0.3",
-    "@capacitor-community/sqlite": "^3.3.3-1",
+    "@capacitor-community/sqlite": "^3.4.0-2",
     "chokidar": "~3.5.2",
     "electron-is-dev": "~2.0.0",
     "electron-serve": "~1.1.0",
@@ -29,6 +29,7 @@
     "electron-updater": "~4.3.9",
     "electron-window-state": "~5.0.3",
     "jszip": "^3.7.1",
+    "node-notifier": "^10.0.0",
     "sqlite3": "^5.0.2"
   },
   "devDependencies": {

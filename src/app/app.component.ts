@@ -4,6 +4,7 @@ import { Platform } from '@ionic/angular';
 import { SQLiteService } from './services/sqlite.service';
 import { DetailService } from './services/detail.service';
 import { Capacitor } from '@capacitor/core';
+import { App } from '@capacitor/app';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,11 @@ export class AppComponent {
     this.platform.ready().then(async () => {
       this.detail.setExistingConnection(false);
       this.detail.setExportJson(false);
+      this.platform.backButton.subscribeWithPriority(
+                                      666666, () => {
+          App.exitApp();
+      });
+
       this.sqlite.initializePlugin().then(async (ret) => {
         this.initPlugin = ret;
         const p: string = this.sqlite.platform;
@@ -58,8 +64,8 @@ export class AppComponent {
 
           const res: any = await db.execute(query);
           console.log(`res: ${JSON.stringify(res)}`)
-          await db.close();
-          console.log(`after db.close`)
+          await this.sqlite.closeConnection("db_issue9"); 
+          console.log(`after closeConnection`)
         } catch (err) {
           console.log(`Error: ${err}`);
           this.initPlugin = false;

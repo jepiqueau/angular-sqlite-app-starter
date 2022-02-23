@@ -1,13 +1,22 @@
 {
 	"appId": "com.jeep.app.ionic.angular",
 	"appName": "angular-sqlite-app-starter",
-	"bundledWebRuntime": false,
-	"npmClient": "npm",
 	"webDir": "www",
+	"bundledWebRuntime": false,
 	"plugins": {
-		"SplashScreen": {
-			"launchShowDuration": 0
+		"CapacitorSQLite": {
+			"iosKeychainPrefix": "angular-sqlite-app-starter",
+			"iosDatabaseLocation": "Library/CapacitorDatabase",
+			"electronDatabaseLocation": "./CapacitorDatabase",
+			"iosBiometric": {
+				"biometricAuth": true,
+				"biometricTitle": "Biometric login for capacitor sqlite"
+			},
+			"androidBiometric": {
+				"biometricAuth": true,
+				"biometricTitle": "Biometric login for capacitor sqlite",
+				"biometricSubTitle": "Log in using your biometric"
+			}
 		}
-	},
-	"cordova": {}
+	}
 }
