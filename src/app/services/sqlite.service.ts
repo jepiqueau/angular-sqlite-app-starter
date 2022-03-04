@@ -243,7 +243,7 @@ export class SQLiteService {
                            ): Promise<SQLiteDBConnection> {
         if(this.sqlite != null) {
             try {
-                if(encrypted) {
+/*                if(encrypted) {
                     if(this.native) {
                         const isSet = await this.sqlite.isSecretStored()
                         if(!isSet.result) {
@@ -251,6 +251,7 @@ export class SQLiteService {
                         }
                     }
                 }
+*/
                const db: SQLiteDBConnection = await this.sqlite.createConnection(
                                 database, encrypted, mode, version);
                 if (db != null) {
@@ -502,7 +503,26 @@ export class SQLiteService {
         } else {
             return Promise.reject(new Error(`no connection open`));
         }
-      }
+    }
+    /**
+     * Copy databases from downloads folder to application databases folder
+     */
+/*    async copyFromDownloads(dbNameList: string[]): Promise<void> { 
+        if (this.sqlite != null) {
+            try {
+                if( dbNameList.length > 0) {
+                    return Promise.resolve(await this.sqlite.copyFromDownloads(dbNameList));
+                } else {
+                    return Promise.reject(new Error(`you must provide a non-empty database name list`));
+                }
+            } catch (err) {
+                return Promise.reject(new Error(err));
+            }
+        } else {
+            return Promise.reject(new Error(`no connection open`));
+        }
+    }
+*/
     /**
      * Initialize the Web store
      * @param database 

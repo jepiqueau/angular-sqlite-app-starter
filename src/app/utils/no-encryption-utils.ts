@@ -91,4 +91,5 @@ CREATE TABLE IF NOT EXISTS drawings (
 );
 PRAGMA drawings_version = 1;
 `
+export const createSchemaIssue230: string = `CREATE TABLE IF NOT EXISTS DemoTable (name TEXT,score INTEGER);`
 

@@ -1,1 +1,0 @@
-{"ast":null,"code":"const globalScripts = () => {};\n\nexport { globalScripts as g };","map":null,"metadata":{},"sourceType":"module"}

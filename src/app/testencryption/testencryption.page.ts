@@ -49,6 +49,8 @@ export class TestencryptionPage implements AfterViewInit {
       // initialize the connection
       let db = await this._sqlite
                   .createConnection("testEncryption", false, "no-encryption", 1);
+      // delete "testEncryption" if exists
+      await deleteDatabase(db);
 
       // open db testEncryption
       await db.open();
@@ -108,7 +110,8 @@ export class TestencryptionPage implements AfterViewInit {
       // ************************************************
       // Encrypt the existing database
       // ************************************************
-
+      console.log(`&&&&                                               &&&&`)
+      console.log(`&&&& Going to create the connection for Encryption &&&&`)
       // initialize the connection
       db = await this._sqlite
                   .createConnection("testEncryption", true, "encryption", 1);

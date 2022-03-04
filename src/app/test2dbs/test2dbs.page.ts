@@ -53,13 +53,16 @@ export class Test2dbsPage implements AfterViewInit {
       // initialize the connection
       let db: SQLiteDBConnection;
       let db1: SQLiteDBConnection;
-      if((await this._sqlite.isConnection("testNew")).result) {
+      const retCC = (await this._sqlite.checkConnectionsConsistency()).result;
+      let isConn = (await this._sqlite.isConnection("testNew")).result;
+      if(retCC && isConn) {
         db = await this._sqlite.retrieveConnection("testNew");
       } else {
         db = await this._sqlite
                   .createConnection("testNew", false, "no-encryption", 1);
       }
-      if((await this._sqlite.isConnection("testSet")).result) {
+      isConn = (await this._sqlite.isConnection("testSet")).result
+      if(retCC && isConn) {
         db1 = await this._sqlite.retrieveConnection("testSet");
       } else {                          
         db1 = await this._sqlite

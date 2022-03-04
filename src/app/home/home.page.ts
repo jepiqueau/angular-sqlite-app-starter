@@ -24,8 +24,16 @@ export class HomePage {
               private _detailService: DetailService,
               private _ref: ChangeDetectorRef) {
     this.platform = Capacitor.getPlatform();
-    if(this.platform === "android" && config.plugins) this.isBiometric = config.plugins.CapacitorSQLite.androidBiometric.biometricAuth;
-    if(this.platform === "ios" && config.plugins) this.isBiometric = config.plugins.CapacitorSQLite.iosBiometric.biometricAuth;
+    const mConfig = config.plugins && config.plugins.CapacitorSQLite ? config.plugins.CapacitorSQLite : null;
+
+    if(this.platform === "android" && mConfig != null) {
+      this.isBiometric = mConfig.androidBiometric && mConfig.androidBiometric.biometricAuth 
+                          ? mConfig.androidBiometric.biometricAuth : false;
+    }
+    if(this.platform === "ios" && mConfig != null) {
+       this.isBiometric = mConfig.iosBiometric && mConfig.iosBiometric.biometricAuth
+                          ? mConfig.iosBiometric.biometricAuth : false;
+    } 
     console.log(`>>>>> in Home constructor ${this.isBiometric }`)
   }
   ionViewWillEnter() {

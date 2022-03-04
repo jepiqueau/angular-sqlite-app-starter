@@ -13,6 +13,11 @@ const routes: Routes = [
                       .then( m => m.Test2dbsPageModule)
   },
   {
+    path: 'testIssue230',
+    loadChildren: () => import('./testIssue230/testIssue230.module')
+                      .then( m => m.TestIssue230PageModule)
+  },
+  {
     path: 'existingconnection',
     loadChildren: () => import('./existingconnection/existingconnection.module')
                       .then( m => m.ExistingconnectionPageModule)

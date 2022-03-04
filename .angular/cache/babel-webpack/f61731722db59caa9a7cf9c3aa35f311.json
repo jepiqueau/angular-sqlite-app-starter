@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { registerPlugin } from '@capacitor/core';\nconst Dialog = registerPlugin('Dialog', {\n  web: () => import('./web').then(m => new m.DialogWeb())\n});\nexport * from './definitions';\nexport { Dialog }; //# sourceMappingURL=index.js.map","map":null,"metadata":{},"sourceType":"module"}

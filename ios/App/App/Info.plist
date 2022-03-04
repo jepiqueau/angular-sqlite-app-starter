@@ -52,5 +52,9 @@
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Authentication for capacitor/sqlite</string>
+	<key>com.apple.security.files.downloads.read-write</key>
+	<true/>
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>allow to read file from downloads folder</string>
 </dict>
 </plist>
