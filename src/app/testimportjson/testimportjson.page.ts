@@ -149,6 +149,8 @@ export class TestimportjsonPage implements AfterViewInit {
 
       return Promise.resolve();
     } catch (err) {
+      await this._sqlite.closeConnection("db-from-json"); 
+      this._detailService.setExportJson(false);
       return Promise.reject(err);
     }
   }

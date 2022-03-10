@@ -70,14 +70,6 @@ export class Testjson71Page implements AfterViewInit {
       // open db testNew
       await db.open();
 
-      // create synchronization table 
-      result = await db.createSyncTable();
-      if (result.changes.changes < 0) return Promise.reject(new Error("CreateSyncTable failed"));
-
-
-      const syncDate: string = await db.getSyncDate();
-      if(syncDate.length === 0) return Promise.reject(new Error("GetSyncDate failed"));
-
       // export json
       let jsonObj: any = await db.exportToJson('full');
     
@@ -94,6 +86,8 @@ export class Testjson71Page implements AfterViewInit {
 
       return Promise.resolve();
     } catch (err) {
+      // close the connection
+      await this._sqlite.closeConnection("db-from-json71"); 
       return Promise.reject(err);
     }
   

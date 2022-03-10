@@ -94,6 +94,8 @@ export class Testexportjson59Page implements AfterViewInit {
 
       return Promise.resolve();
     } catch (err) {
+      // close the connection
+      await this._sqlite.closeConnection("db-from-json59"); 
       return Promise.reject(err);
     }
   }

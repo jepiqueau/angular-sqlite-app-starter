@@ -64,7 +64,6 @@ export class Testjson164Page implements AfterViewInit {
       // ************************************************
 
       // create the connection to the database
-      console.log("create SYNC Table and Date")
       let db = await this._sqlite
                         .createConnection("db-issue164", false,
                                           "no-encryption", 1);
@@ -72,13 +71,17 @@ export class Testjson164Page implements AfterViewInit {
 
       // open db testNew
       await db.open();
+      console.log(">>>> create SYNC Table and Date")
 
       // create synchronization table 
       result = await db.createSyncTable();
+      console.log(`>>>> createSyncTable result ${JSON.stringify(result)}`);
       if (result.changes.changes < 0) return Promise.reject(new Error("CreateSyncTable failed"));
 
 
       let syncDate: string = await db.getSyncDate();
+      console.log(`>>>> getSyncTable syncDate ${syncDate}`);
+
       if(syncDate.length === 0) return Promise.reject(new Error("GetSyncDate failed"));
 
       // close the connection
@@ -201,6 +204,7 @@ export class Testjson164Page implements AfterViewInit {
 
 
     } catch (err) {
+      await this._sqlite.closeConnection("db-issue164"); 
       return Promise.reject(err);
     }
   

@@ -505,3 +505,78 @@ export const viewsToImport167: any = {
     {name: "MarketingTeam", value: "SELECT id,first_name,last_name from employees WHERE dept_id IN (SELECT id FROM departments where name='Marketing')"},
   ]
 }
+export const dataToImport231: any = {
+ database : "db-from-json231",
+  version : 1,
+  encrypted : false,
+  mode : "full",
+  tables :[
+      {
+          name: "countries",
+          schema: [
+              {column:"id", value: "TEXT PRIMARY KEY NOT NULL"},
+              {column:"name", value:"TEXT UNIQUE NOT NULL"},
+              {column:"code", value:"TEXT"},
+              {column:"language", value:"TEXT"},
+              {column:"phone_code", value:"TEXT"},
+          ],
+          indexes: [
+              {name: "index_country_on_name",value: "name", mode: "UNIQUE"},
+          ],
+      },
+      {
+        name: "customers",
+        schema: [
+          {column:"id", value: "TEXT PRIMARY KEY NOT NULL"},
+          {column:"first_name", value:"TEXT NOT NULL"},
+          {column:"last_name", value:"TEXT NOT NULL"},
+          {column:"gender", value:"TEXT NOT NULL"},
+          {column:"email", value:"TEXT NOT NULL"},
+          {column:"phone", value:"TEXT"},
+          {column:"national_id", value:"TEXT NOT NULL"},
+          {column:"date_of_birth", value:"TEXT"},
+          {column:"created_at", value:"TEXT"},
+          {column:"created_by", value:"TEXT"},
+          {column:"last_edited", value:"TEXT"},
+          {column:"organization", value:"TEXT"},
+          {column:"comment_id", value:"TEXT"},
+          {column:"country_id", value:"TEXT NOT NULL"},
+          {foreignkey: "country_id", value:"REFERENCES countries(id) ON DELETE CASCADE"}
+        ],
+        indexes: [
+          {name: "index_customers_on_email",value: "email", mode: "UNIQUE"},
+        ],
+        triggers: [
+          {
+            name: "validate_email_before_insert_customers",
+            timeevent: "BEFORE INSERT",
+            logic: "BEGIN SELECT CASE WHEN NEW.email NOT LIKE '%_@__%.__%' THEN RAISE (ABORT,'Invalid email address') END; END"
+          }
+        ],
+      }
+  ]
+ 
+};
+export const dataToImportPartial231: any = {
+  database : "db-from-json231",
+  version : 1,
+  encrypted : false,
+  mode : "partial",
+  tables :[
+    {
+      name: "countries",
+      values: [
+        ["3","Afghanistan","AF","fa","93"],
+        ["6","Albania","AL","sq","355"],
+        ["56","Algeria","DZ","ar","213"],
+      ]
+    },
+    {
+      name: "customers",
+      values: [
+        ["ef5c57d5-b885-49a9-9c4d-8b340e4abdbc","William","Jones","1","peterjones@mail.com<peterjones@mail.com>","420305202","1234567","1983-01-04","2020-11-1212:39:02","3","2020-11-19 05:10:10","1",null,"3"],
+        ["bced3262-5d42-470a-9585-d3fd12c45452","Alexander","Brown","1","alexanderbrown@mail.com<alexanderbrown@mail.com>","420305203","1234572","1990-02-07","2020-12-1210:35:15","1","2020-11-19 05:10:10","2",null,"6"]
+      ]
+    },
+  ]
+};

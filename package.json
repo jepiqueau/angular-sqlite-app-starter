@@ -1,6 +1,6 @@
 {
   "name": "angular-sqlite-app-starter",
-  "version": "3.4.1-1",
+  "version": "3.4.1-3",
   "description": "Ionic/Angular SQLite Application Starter",
   "author": "Jean Pierre Quéau",
   "license": "MIT",
@@ -32,7 +32,7 @@
     "@capacitor/toast": "^1.0.8",
     "@ionic/angular": "^6.0.9",
     "@ionic/pwa-elements": "^3.1.1",
-    "jeep-sqlite": "^1.3.6",
+    "jeep-sqlite": "^1.3.7",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
@@ -48,7 +48,7 @@
     "@angular/compiler-cli": "~13.2.4",
     "@angular/language-service": "~13.2.4",
     "@capacitor-community/electron": "^4.1.0",
-    "@capacitor-community/sqlite": "^3.4.1-1",
+    "@capacitor-community/sqlite": "^3.4.1-3",
     "@capacitor/cli": "^3.4.1",
     "@ionic/angular-toolkit": "^6.0.0",
     "@types/jasmine": "^3.6.0",
