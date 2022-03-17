@@ -20,6 +20,9 @@ const config: CapacitorConfig = {
         biometricTitle : "Biometric login for capacitor sqlite",
         biometricSubTitle : "Log in using your biometric"
       },
+      electronWindowsLocation: "Databases",
+      electronMacLocation: "/Volumes/Development_Lacie/Development/CapacitorDatabases",
+      electronLinuxLocation: "Databases"
     }
   }
 };
