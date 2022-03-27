@@ -504,28 +504,9 @@ export class SQLiteService {
             return Promise.reject(new Error(`no connection open`));
         }
     }
-    /**
-     * Copy databases from downloads folder to application databases folder
-     */
-/*    async copyFromDownloads(dbNameList: string[]): Promise<void> { 
-        if (this.sqlite != null) {
-            try {
-                if( dbNameList.length > 0) {
-                    return Promise.resolve(await this.sqlite.copyFromDownloads(dbNameList));
-                } else {
-                    return Promise.reject(new Error(`you must provide a non-empty database name list`));
-                }
-            } catch (err) {
-                return Promise.reject(new Error(err));
-            }
-        } else {
-            return Promise.reject(new Error(`no connection open`));
-        }
-    }
-*/
+
     /**
      * Initialize the Web store
-     * @param database 
      */
      async initWebStore(): Promise<void> {
         if(this.platform !== 'web')  {

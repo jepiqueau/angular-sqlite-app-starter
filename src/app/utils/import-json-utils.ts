@@ -265,37 +265,71 @@ export const dataToImport94: any = {
         },
     ]
 };
-export const schemaToImport164: any = {
-  "database": "test_study_db",
-  "version": 1,
-  "encrypted": false,
-  "mode": "full",
-  "tables": [
+export const schemaToImport237: any = {
+  database: "test_issue237",
+  version: 1,
+  encrypted: false,
+  mode: "full",
+  tables: [
       {
-          "name": "modules",
-          "schema": [
-              {"column": "id", "value": "INTEGER PRIMARY KEY NOT NULL"},
-              {"column": "name", "value": "TEXT NOT NULL"},
-              {"column": "color", "value": "TEXT NOT NULL"},
-              {"column": "room", "value": "TEXT"},
-              {"column": "tag", "value": "TEXT"},
-              {"column": "event", "value": "TEXT"},
-              {"column": "home_work", "value": "TEXT"},
-              {"column": "last_modified", "value": "INTEGER DEFAULT (strftime('%s', 'now'))"}
+          name: "contacts",
+          schema: [
+            {column:"id", value: "TEXT PRIMARY KEY NOT NULL"},
+            {column:"email", value:"TEXT UNIQUE NOT NULL"},
+            {column:"name", value:"TEXT"},
+            {column:"age", value:"REAL"},
+      //      {column: "row_deleted", value: 'INTEGER NOT NULL DEFAULT 0 CHECK("row_deleted" IN (0,1))'},
+            {column: "last_modified", value: "INTEGER DEFAULT (strftime('%s', 'now'))"}
           ],
-      },
+          indexes: [
+            {name: "index_contact_on_last_modified",value: "last_modified DESC"},
+            {name: "index_contact_on_email_name", value: "email ASC, name", mode: "UNIQUE"}
+        ],
+    },
       {
-          "name": "module_date",
-          "schema": [
-              {"column": "id", "value": "INTEGER PRIMARY KEY NOT NULL"},
-              {"column": "date_time", "value": "TEXT NOT NULL"},
-              {"column": "last_modified", "value": "INTEGER DEFAULT (strftime('%s', 'now'))"},
-              {
-                  "foreignkey": "module_id",
-                  "value": "REFERENCES modules(id)"
-              }
+          name: "messages",
+          schema: [
+            {column:"id", value: "TEXT PRIMARY KEY NOT NULL"},
+            {column:"contactid", value: "TEXT"},
+            {column:"title", value:"TEXT NOT NULL"},
+            {column:"body", value:"TEXT NOT NULL"},
+    //        {column: "row_deleted", value: 'INTEGER NOT NULL DEFAULT 0 CHECK("row_deleted" IN (0,1))'},
+            {column: "last_modified", value: "INTEGER DEFAULT (strftime('%s', 'now'))"},
+            {foreignkey: "contactid", value: "REFERENCES contacts(id) ON DELETE SET DEFAULT"}
           ],
       }
+  ]
+}
+export const contactsToImportPartial237: any = {
+  database : "test_issue237",
+  version : 1,
+  encrypted : false,
+  mode : "partial",
+  tables :[
+      {
+          name: "contacts",
+          values: [
+              ["ef5c57d5-b885-49a9-9c4d-8b340e4abdbc","Whiteley.com","Whiteley",0.5,,],
+              ["bced3262-5d42-470a-9585-d3fd12c45452","Jones.com","Jones",44.2,,],
+              ["a401c18d-053b-46e8-84ee-83da561c88c9","Simpson@example.com","Simpson",69,,],
+              ["deaafccf-5b66-433d-a93f-495b0e141e74","Brown@example.com","Brown",15,,]
+          ]
+      },
+    ]
+}
+export const messagesToImportPartial237: any = {
+  database : "test_issue237",
+  version : 1,
+  encrypted : false,
+  mode : "partial",
+  tables :[
+    {
+      name: "messages",
+      values: [
+          ["07aec950-68ee-4c2b-a092-44abdfffbb6b","ef5c57d5-b885-49a9-9c4d-8b340e4abdbc","test post 1","content test post 1",,],
+          ["b08e941e-3ead-4ce0-8833-2e14400d1b39","bced3262-5d42-470a-9585-d3fd12c45452","test post 2","content test post 2",,]
+      ]
+    },
   ]
 }
 export const schemaVersion1: any = {
@@ -580,3 +614,47 @@ export const dataToImportPartial231: any = {
     },
   ]
 };
+export const schemaToImport240: any = {
+  database: "test_issue240",
+  version: 1,
+  encrypted: false,
+  mode: "full",
+  tables: [
+    {
+      name: "task_list",
+      schema: [
+        { column: "id", value: "INTEGER PRIMARY KEY AUTOINCREMENT" },
+        { column: "_id", value: "TEXT UNIQUE NOT NULL" },
+        { column: "assignee", value: "INTEGER" },
+        { column: "approved", value: "INTEGER" },
+        { column: "cid", value: "TEXT" },
+        { column: "createAt", value: "TEXT" },
+        { column: "updateAt", value: "TEXT" },
+        { column: "desc", value: "TEXT" },
+        { column: "oid", value: "INTEGER" },
+        { column: "files", value: "TEXT" },
+        { column: "status", value: "TEXT NOT NULL" },
+        { column: "title", value: "TEXT" },
+        { column: "type", value: "TEXT" },
+        { column: "isBusiness", value: "INTEGER" },
+        { column: "unreadCount", value: "INTEGER" },
+        { column: "category", value: "TEXT" },
+        { column: "aCustomer", value: "TEXT" },
+        { column: "fCustomer", value: "TEXT" },
+        { column: "du", value: "TEXT" },
+        { column: "aWorkType", value: "TEXT" },
+        { column: "fWorkType", value: "TEXT" },
+        { column: "last", value: "TEXT" },
+        { column: "delivers", value: "TEXT" },
+        { column: "reads", value: "TEXT" },
+        { column: "cInfo", value: "TEXT" },
+        { column: "last_modified",value: "INTEGER DEFAULT (strftime('%s', 'now'))" }     
+      ],
+      indexes: [
+        { name: "index_id", value: "cid,oid" },
+        { name: "index_last_modified", value: "updateAt DESC" },
+        { name: "index_cust", value: "aCustomer,fCustomer" }
+      ],
+    },    
+  ]
+}

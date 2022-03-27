@@ -5,13 +5,14 @@ const config: CapacitorConfig = {
   appName: 'angular-sqlite-app-starter',
   webDir: 'www',
   bundledWebRuntime: false,
+//  hideLogs: true,
   plugins: {
     CapacitorSQLite: {
       iosDatabaseLocation: 'Library/CapacitorDatabase',
       iosIsEncryption: true,
       iosKeychainPrefix: 'angular-sqlite-app-starter',
       iosBiometric: {
-        biometricAuth: true,
+        biometricAuth: false,
         biometricTitle : "Biometric login for capacitor sqlite"
       },
       androidIsEncryption: true,
@@ -20,7 +21,7 @@ const config: CapacitorConfig = {
         biometricTitle : "Biometric login for capacitor sqlite",
         biometricSubTitle : "Log in using your biometric"
       },
-      electronWindowsLocation: "Databases",
+      electronWindowsLocation: "C:\\ProgramData\\CapacitorDatabases",
       electronMacLocation: "/Volumes/Development_Lacie/Development/CapacitorDatabases",
       electronLinuxLocation: "Databases"
     }
