@@ -17,7 +17,7 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private sqlite: SQLiteService,
-    private detail: DetailService 
+    private detail: DetailService
   ) {
     this.initializeApp();
   }
@@ -27,30 +27,30 @@ export class AppComponent {
       this.detail.setExistingConnection(false);
       this.detail.setExportJson(false);
       this.platform.backButton.subscribeWithPriority(
-                                      666666, () => {
+        666666, () => {
           App.exitApp();
-      });
+        });
 
       this.sqlite.initializePlugin().then(async (ret) => {
         this.initPlugin = ret;
         const p: string = this.sqlite.platform;
         console.log(`plaform ${p}`);
-        if( p === "web") {
+        if (p === "web") {
           this.isWeb = true;
           await customElements.whenDefined('jeep-sqlite');
           const jeepSqliteEl = document.querySelector('jeep-sqlite');
-          if(jeepSqliteEl != null) {
+          if (jeepSqliteEl != null) {
             await this.sqlite.initWebStore();
 
             console.log(`isStoreOpen ${await jeepSqliteEl.isStoreOpen()}`)
-            console.log(`$$ jeepSqliteEl is defined}`);
+            console.log(`$$ jeepSqliteEl is defined`);
           } else {
             console.log('$$ jeepSqliteEl is null');
           }
         }
         try {
           console.log(`going to create a connection`)
-          const db = await this.sqlite.createConnection("db_issue9",false,"no-encryption", 1);
+          const db = await this.sqlite.createConnection("db_issue9", false, "no-encryption", 1);
           console.log(`db ${JSON.stringify(db)}`)
           await db.open();
           console.log(`after db.open`)
@@ -64,7 +64,7 @@ export class AppComponent {
 
           const res: any = await db.execute(query);
           console.log(`res: ${JSON.stringify(res)}`)
-          await this.sqlite.closeConnection("db_issue9"); 
+          await this.sqlite.closeConnection("db_issue9");
           console.log(`after closeConnection`)
         } catch (err) {
           console.log(`Error: ${err}`);
