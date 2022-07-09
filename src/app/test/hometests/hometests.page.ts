@@ -7,11 +7,11 @@ import {ChangeDetectorRef} from '@angular/core';
 import config from 'capacitor.config';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-hometests',
+  templateUrl: 'hometests.page.html',
+  styleUrls: ['hometests.page.scss'],
 })
-export class HomePage {
+export class HomeTestsPage {
   public exConn: boolean;
   public exJson: boolean;
   public native: boolean = false;

@@ -3,9 +3,9 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () => import('./test/home/home.module')
-      .then(m => m.HomePageModule)
+    path: 'hometests',
+    loadChildren: () => import('./test/hometests/hometests.module')
+      .then(m => m.HomeTestsPageModule)
   },
   {
     path: 'test2dbs',
@@ -128,10 +128,15 @@ const routes: Routes = [
     loadChildren: () => import('./test/testjson237/testjson237.module')
       .then(m => m.Testjson237PageModule)
   },
+  {
+    path: 'json245',
+    loadChildren: () => import('./test/testjson245/testjson245.module')
+                      .then( m => m.Testjson245PageModule)
+  },
 
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'hometests',
     pathMatch: 'full'
   },
 ];
