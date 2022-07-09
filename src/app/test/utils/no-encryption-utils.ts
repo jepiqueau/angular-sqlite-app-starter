@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     company TEXT,
     size REAL,
     age INTEGER,
+    sql_deleted BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1)),
     last_modified INTEGER DEFAULT (strftime('%s', 'now'))
 );
 CREATE TABLE IF NOT EXISTS messages (
@@ -14,6 +15,7 @@ CREATE TABLE IF NOT EXISTS messages (
   userid INTEGER,
   title TEXT NOT NULL,
   body TEXT NOT NULL,
+  sql_deleted BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1)),
   last_modified INTEGER DEFAULT (strftime('%s', 'now')),
   FOREIGN KEY (userid) REFERENCES users(id) ON DELETE SET DEFAULT
 );
@@ -23,6 +25,7 @@ CREATE TABLE IF NOT EXISTS images (
   type TEXT NOT NULL,
   size INTEGER,
   img BLOB,
+  sql_deleted BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1)),
   last_modified INTEGER DEFAULT (strftime('%s', 'now'))
 );
 CREATE TABLE IF NOT EXISTS test56 (
@@ -38,19 +41,19 @@ CREATE INDEX IF NOT EXISTS images_index_name ON images (name);
 CREATE INDEX IF NOT EXISTS images_index_last_modified ON images (last_modified);
 CREATE TRIGGER IF NOT EXISTS users_trigger_last_modified
 AFTER UPDATE ON users
-FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
+FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified
 BEGIN
     UPDATE users SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
 END;
 CREATE TRIGGER IF NOT EXISTS messages_trigger_last_modified
 AFTER UPDATE ON messages
-FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
+FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified
 BEGIN
     UPDATE messages SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
 END;
 CREATE TRIGGER IF NOT EXISTS images_trigger_last_modified
 AFTER UPDATE ON images
-FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
+FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified
 BEGIN
     UPDATE images SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
 END;

@@ -520,11 +520,10 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/jepiqueau"><img src="https://avatars3.githubusercontent.com/u/16580653?v=4" width="100px;" alt=""/><br /><sub><b>Jean Pierre Quéau</b></sub></a><br /><a href="https://github.com/jepiqueau/angular-sqlite-app-starter/commits?author=jepiqueau" title="Code">💻</a></td>
-  </tr>
-</table>
+<p align="center">
+  <a href="https://github.com/jepiqueau"><img src="https://github.com/jepiqueau.png?size=100" width="50" height="50" /></a>
+  <a href="https://github.com/stealthAngel"><img src="https://github.com/stealthAngel.png?size=100" width="50" height="50" /></a>
+</p>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->

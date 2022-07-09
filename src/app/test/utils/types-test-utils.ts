@@ -9,8 +9,9 @@ CREATE TABLE IF NOT EXISTS teachers (
     age INT,
     phone DECIMAL(11,0),
     birth_date DATE,
+    sql_deleted BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1)),
     last_modified INTEGER DEFAULT (strftime('%s', 'now'))
-);
+  );
 CREATE INDEX IF NOT EXISTS teachers_index_email ON teachers (email);
 CREATE INDEX IF NOT EXISTS teachers_index_last_modified ON teachers (last_modified);
 CREATE TRIGGER IF NOT EXISTS teachers_trigger_last_modified
@@ -35,9 +36,9 @@ export const partialImport: any = {
         {
             name: "teachers",
             values: [
-                [3,"stevemclaren.com","MacLaren",null,null,null,44905671234,"1974-07-20",1618634218],
-                [4,"alexanderbannister.com","Bannister","CDK",null,21,44601234567,"2000-07-20",1618644218],
-                [5,"brianjones@example.com","Jones","ZWK",null,42,31671434567,"1979-02-03",1618654218]
+                [3,"stevemclaren.com","MacLaren",null,null,null,44905671234,"1974-07-20",0,1618634218],
+                [4,"alexanderbannister.com","Bannister","CDK",null,21,44601234567,"2000-07-20",0,1618644218],
+                [5,"brianjones@example.com","Jones","ZWK",null,42,31671434567,"1979-02-03",0,1618654218]
             ]
         },
         {
@@ -49,7 +50,8 @@ export const partialImport: any = {
                 {column:"timeStart", value:"FLOAT"},
                 {column:"timeEnd", value:"FLOAT"},
                 {column:"teacherId", value:"INTEGER"},
-                {column:"last_modified", value:"INTEGER"},
+                {column:'sql_deleted', value:'BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1))'},
+                {column:'last_modified', value:'INTEGER DEFAULT (strftime(\'%s\', \'now\'))'},
                 {foreignkey: "teacherId", value:"REFERENCES teachers(id) ON DELETE CASCADE"}
             ],
             indexes: [
@@ -64,9 +66,9 @@ export const partialImport: any = {
                 }
             ],
             values: [
-                [1,1,"Monday",8.30,10.00,1,1618634218],
-                [2,2,"Wednesday",14.00,15.00,2,1618634218],
-                [3,1,"Friday",10.00,12.00,1,1618634218],
+                [1,1,"Monday",8.30,10.00,1,0,1618634218],
+                [2,2,"Wednesday",14.00,15.00,2,0,1618634218],
+                [3,1,"Friday",10.00,12.00,1,0,1618634218],
             ]
         }
     ]

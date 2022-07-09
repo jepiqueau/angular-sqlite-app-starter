@@ -55,7 +55,6 @@ export class Testjson237Page implements AfterViewInit {
       result = await this._sqlite
                           .importFromJson(JSON.stringify(schemaToImport237));    
       if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'full' failed"));
-
       // test Partial contacts Json object validity
       result = await this._sqlite
                             .isJsonValid(JSON.stringify(contactsToImportPartial237));
@@ -82,7 +81,7 @@ export class Testjson237Page implements AfterViewInit {
       const db = await this._sqlite
                         .createConnection("test_issue237", false,
                                           "no-encryption", 1);
-      if(db === null) return Promise.reject(new Error("CreateConnection db-from-json231 failed"));
+      if(db === null) return Promise.reject(new Error("CreateConnection test_issue237 failed"));
 
       // open db test_issue237
       await db.open();
@@ -97,7 +96,6 @@ export class Testjson237Page implements AfterViewInit {
       }
       // select all messages in db
       ret = await db.query("SELECT * FROM messages;");
-      console.log(`>>>> ret: ${JSON.stringify(ret)}`)
       if(ret.values.length !== 2 || ret.values[0]["title"] !== "test post 1" ||
                                     ret.values[1]["title"] !== "test post 2") {
         return Promise.reject(new Error("Query messages failed"));
@@ -129,7 +127,8 @@ export class Testjson237Page implements AfterViewInit {
       }
 */
       // close the connection
-      await this._sqlite.closeConnection("test_issue237");
+      const is237Con = (await this._sqlite.isConnection("test_issue237")).result;
+      if (is237Con) await this._sqlite.closeConnection("test_issue237");
 
       // ************************************************
       // Import Json Object Issue#240
@@ -155,16 +154,21 @@ export class Testjson237Page implements AfterViewInit {
 
       const insertStmt = `INSERT INTO task_list (delivers,reads,status,files,_id,title,du,cid,assignee,oid,type,createAt,updateAt,cInfo,last,category) VALUES ('[]','[]','progress','[]','60857f2bd04e5800ce4720b7','test group updat','2021-04-25T14:39:20.220Z','60616972bf1ab71fef2926eb',9122223,912222208,'task','2021-04-25T14:39:39.779Z','2021-10-19T11:08:50.271Z','{"912228":0,"9192226":9,"912222233":0}','{"sender":91222273,"msg":"here"}','Work') ON CONFLICT (_id) DO UPDATE SET delivers='[]',reads='[]',status='progress',files='[]',_id='60857f2bd04e5800ce4720b7',title='test group updat',du='2021-04-25T14:39:20.220Z',cid='60616972bf1ab71fef2926eb',assignee=912222273,oid=918056598408,type='task',createAt='2021-04-25T14:39:39.779Z',updateAt='2021-10-19T11:08:50.271Z',cInfo='{"912222280":0,"9122222216":9,"918012430333":0}',last='{"sender":912222273,"msg":"here"}',category='Work' `;
       ret = await db1.run(insertStmt);
-      console.log(`issue240 ret insert ${JSON.stringify(ret)}`);
 
       const queryStmt = `SELECT * From task_list WHERE status != 'closed' order by updateAt desc limit 10 offset 0`;
       ret = await db1.query(queryStmt);
-      console.log(`issue240 ret query ${JSON.stringify(ret)}`);
-
+      const is240Con = (await this._sqlite.isConnection("test_issue240")).result;
+      // close the connection
+      await this._sqlite.closeConnection("test_issue240"); 
+ 
       return Promise.resolve();
     } catch (err) {
      // close the connection
-     await this._sqlite.closeConnection("test_issue237"); 
+     const is237Con = (await this._sqlite.isConnection("test_issue237")).result;
+     if(is237Con) await this._sqlite.closeConnection("test_issue237"); 
+     const is240Con = (await this._sqlite.isConnection("test_issue240")).result;
+     if(is240Con) await this._sqlite.closeConnection("test_issue240");
+     console.log(`Error: ${err}`) 
      return Promise.reject(err);
     }
   

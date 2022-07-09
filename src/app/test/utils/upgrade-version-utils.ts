@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
     company TEXT,
     size REAL,
     age INTEGER,
+    sql_deleted BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1)),
     last_modified INTEGER DEFAULT (strftime('%s', 'now'))    
 );
 CREATE INDEX IF NOT EXISTS users_index_name ON users (name);
@@ -31,6 +32,7 @@ CREATE TABLE users (
   company TEXT,
   country TEXT,
   age INTEGER,
+  sql_deleted BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1)),
   last_modified INTEGER DEFAULT (strftime('%s', 'now'))       
 );
 CREATE TABLE messages (
@@ -38,6 +40,7 @@ CREATE TABLE messages (
   userid INTEGER,
   title TEXT NOT NULL,
   body TEXT NOT NULL,
+  sql_deleted BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1)),
   last_modified INTEGER DEFAULT (strftime('%s', 'now')),        
   FOREIGN KEY (userid) REFERENCES users(id) ON DELETE SET DEFAULT
 );

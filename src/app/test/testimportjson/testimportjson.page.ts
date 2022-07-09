@@ -33,8 +33,9 @@ export class TestimportjsonPage implements AfterViewInit {
     } catch (err) {
       document.querySelector('.sql-allfailure').classList
       .remove('display');
-      console.log(`$$$ runTest failed ${err.message}`);
-      await showAlert(err.message);
+      let msg: string = err.message ? err.message : err;
+      await showAlert(msg);
+      console.log(`$$$ runTest failed ${msg}`);
     }
   }
 
@@ -78,6 +79,8 @@ export class TestimportjsonPage implements AfterViewInit {
 
       // select all users in db
       result = await db.query("SELECT * FROM users;");
+      console.log(`&&& Query4: ${result.values.length}`)
+      console.log(`&&& Query4: ${JSON.stringify(result)}`)
       if(result.values.length !== 4 || 
                     result.values[0].name !== "Whiteley" ||
                     result.values[1].name !== "Jones" ||
@@ -92,6 +95,7 @@ export class TestimportjsonPage implements AfterViewInit {
       result = await this._sqlite
                         .importFromJson(JSON.stringify(partialImport1));
       if(result.changes.changes === -1 ) return Promise.reject(new Error("ImportFromJson 'partial' partialImport1 failed"));
+      console.log(`&&& Partial import 1 nb changes: ${result.changes.changes}`);
       // partial import 2
       result = await this._sqlite
                         .importFromJson(JSON.stringify(partialImport2));
@@ -149,7 +153,9 @@ export class TestimportjsonPage implements AfterViewInit {
 
       return Promise.resolve();
     } catch (err) {
-      await this._sqlite.closeConnection("db-from-json"); 
+      if(await this._sqlite.isConnection("db-from-json")) {
+        await this._sqlite.closeConnection("db-from-json"); 
+      }
       this._detailService.setExportJson(false);
       return Promise.reject(err);
     }

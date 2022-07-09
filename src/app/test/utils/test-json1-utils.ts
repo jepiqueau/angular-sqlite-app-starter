@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY NOT NULL,
     name TEXT,
     phone TEXT,
+    sql_deleted BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1)),
     last_modified INTEGER DEFAULT (strftime('%s', 'now'))
 );
 CREATE INDEX IF NOT EXISTS users_index_name ON users (name);
@@ -23,6 +24,7 @@ export const createSchemaArticles: string = `
 CREATE TABLE IF NOT EXISTS articles (
     id INTEGER PRIMARY KEY NOT NULL,
     data TEXT,
+    sql_deleted BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1)),
     last_modified INTEGER DEFAULT (strftime('%s', 'now'))
 );
 CREATE INDEX IF NOT EXISTS articles_index_last_modified ON articles (last_modified);
