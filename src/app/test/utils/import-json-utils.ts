@@ -779,3 +779,34 @@ export const schemaToImport245V2: any = {
   ]
 
 }
+export const testIssue292: any = {
+  database : "db-issue292",
+  version : 1,
+  overwrite: true,
+  encrypted : false,
+  mode : "full",
+  tables :[
+      {
+          name: "inbox",
+          schema: [
+              {column:'id', value: 'INTEGER PRIMARY KEY NOT NULL'},
+              {column:'content', value:'TEXT NOT NULL'},
+              {column:'created', value:'INTEGER DEFAULT (strftime(\'%s\', \'now\'))'},
+              {column:'sql_deleted', value:'BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1))'},
+              {column:'last_modified', value:'INTEGER DEFAULT (strftime(\'%s\', \'now\'))'}
+          ],
+          indexes: [
+              {name: "index_inbox_on_last_modified",value: "last_modified DESC"}
+          ],
+          values: [
+            [1, 'tests', 1656152832, 0, 1656152832],
+            [2, 'sdfsdfds', 1656152834, 0, 1656152834],
+            [3, 'sadasd', 1656152899, 0, 1656152899],
+            [4, 'asdasdasdas', 1656153182, 0, 1656153182]
+          ]
+      },
+    
+
+  ]
+
+}
