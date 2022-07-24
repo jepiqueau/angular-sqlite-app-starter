@@ -33,7 +33,7 @@ export class AppComponent {
 
       this.sqlite.initializePlugin().then(async (ret) => {
         this.initPlugin = ret;
-        const p: string = this.sqlite.platform;
+/*        const p: string = this.sqlite.platform;
         console.log(`plaform ${p}`);
         if (p === "web") {
           this.isWeb = true;
@@ -48,6 +48,7 @@ export class AppComponent {
             console.log('$$ jeepSqliteEl is null');
           }
         }
+*/
         try {
           console.log(`going to create a connection`)
           const db = await this.sqlite.createConnection("db_issue9", false, "no-encryption", 1);
