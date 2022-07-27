@@ -15,7 +15,6 @@ export class InitializeSqliteService {
 
   async initializeApp() {
     await this.platform.ready().then(async () => {
-      console.log('platform is ready boys')
       this.detail.setExistingConnection(false);
       this.detail.setExportJson(false);
       this.platform.backButton.subscribeWithPriority(
