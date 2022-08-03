@@ -37,24 +37,56 @@ git remote rm origin
 
 ```bash
 npm install
+npx cap update
 ```
 
- - then go to the building process
+To run the app for developing, you can do any of these commands:
+```bash
+ionic serve
+npm start
+ionic serve --lab
+```
 
+To run angular test:
+```bash
+ng test
+```
+
+To build the app for testing:
 ```bash
 npm run build
-npx cap sync
-npm run build
 npx cap copy
-npx cap copy web
 ```
 
-the capacitor config parameters are:
+To build the app for production:
+```bash
+npm run build-production
+npx cap copy
+```
+
+To change the app name and app id, go to `capacitor.config.ts` and change:
 
 ```
   "appId": "com.jeep.app.ionic.angular",
   "appName": "angular-sqlite-app-starter",
 ```
+
+### Building Native Project
+
+
+#### Android
+
+```bash
+npx cap open android
+```
+Once Android Studio launches, you can build your app through the standard Android Studio workflow.
+
+### iOS
+
+```bash
+npx cap open ios
+```
+
 
 ### Building Web Code
 🛑 Now available  with `@capacitor-community/sqlite@web` 🛑
@@ -97,22 +129,6 @@ npm run electron:make
 ``` 
 
 
-### Building Native Project
-
-
-#### Android
-
-```bash
-npx cap open android
-```
-Once Android Studio launches, you can build your app through the standard Android Studio workflow.
-
-### iOS
-
-```bash
-npx cap open ios
-```
-
 
 ### Test SQLite access
 
@@ -146,9 +162,11 @@ At the end of the test, seven databases should have been created,
  - dbForCopySQLite.db
  - myDBSQLite.db
 
+
+
 ### Angular Service
 
-A Angular Service has been defined as a wrapper to the ```@capacitor-community/sqlite``` plugin and from release `2.9.0-alpha.5` can be used at a `singleton service` initialized in `app.component.ts` and imported as a provider in `app.module.ts`. In this case the `DBConnection` can be used through Pages (see example in `existingconnection.page.ts` which can be called after the execution of `test2dbs.page.ts`).
+An Angular Service has been defined as a wrapper to the ```@capacitor-community/sqlite``` plugin and from release `2.9.0-alpha.5` can be used at a `singleton service` initialized in `app.component.ts` and imported as a provider in `app.module.ts`. In this case the `DBConnection` can be used through Pages (see example in `existingconnection.page.ts` which can be called after the execution of `test2dbs.page.ts`).
 
 ```tsx
 import { Injectable } from '@angular/core';

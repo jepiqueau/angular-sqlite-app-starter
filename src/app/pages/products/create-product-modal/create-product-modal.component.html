@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="medium" (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>Create Product</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()">Save</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label position="stacked">Name</ion-label>
+    <ion-input type="text" [(ngModel)]="product.name" placeholder="name" required></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Description</ion-label>
+    <ion-input type="text" [(ngModel)]="product.description" placeholder="description"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Price</ion-label>
+    <ion-input type="number" [(ngModel)]="product.price" placeholder="price" required></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Is Available</ion-label>
+    <ion-checkbox [(ngModel)]="product.isAvailable"></ion-checkbox>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Is Popular</ion-label>
+    <ion-checkbox [(ngModel)]="product.isPopular"></ion-checkbox>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Image url</ion-label>
+    <ion-input [(ngModel)]="product.imageUrl" placeholder="http://somwhere.com/something.jpg"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Category name</ion-label>
+    <ion-input [(ngModel)]="product.category" placeholder="category"></ion-input>
+  </ion-item>
+</ion-content>

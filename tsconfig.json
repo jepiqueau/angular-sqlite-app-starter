@@ -13,7 +13,9 @@
     "target": "es2017",
     "lib": [
       "es2018",
-      "dom"
+      "es6",
+      "dom",
+      "dom.iterable"
     ]
   },
   "angularCompilerOptions": {

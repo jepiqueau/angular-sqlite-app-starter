@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HomeTestsPage } from './hometests.page';
-
 import { HomeTestsPageRoutingModule } from './hometests-routing.module';
 
 @NgModule({
@@ -15,4 +14,4 @@ import { HomeTestsPageRoutingModule } from './hometests-routing.module';
   ],
   declarations: [HomeTestsPage],
 })
-export class HomeTestsPageModule {}
+export class HomeTestsPageModule { }

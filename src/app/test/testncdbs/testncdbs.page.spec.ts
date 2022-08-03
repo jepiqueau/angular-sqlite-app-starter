@@ -1,5 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import testbedBase from 'src/testbed-configs';
 
 import { TestNCDbsPage } from './testncdbs.page';
 
@@ -7,11 +7,8 @@ describe('TestNCDbsPage', () => {
   let component: TestNCDbsPage;
   let fixture: ComponentFixture<TestNCDbsPage>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TestNCDbsPage ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule(testbedBase).compileComponents();
 
     fixture = TestBed.createComponent(TestNCDbsPage);
     component = fixture.componentInstance;

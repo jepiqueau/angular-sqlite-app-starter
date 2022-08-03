@@ -41,10 +41,11 @@ export class TestTypesPage implements AfterViewInit {
           position: 'top'
         });
       };
-      this.importListener = this._sqlite.sqlitePlugin.addListener('sqliteImportProgressEvent', (info: any) => {
+      console.log(this._sqlite);
+      this.importListener = await this._sqlite.sqlitePlugin.addListener('sqliteImportProgressEvent', (info: any) => {
         showProgessToast(info.progress)
       });
-      this.exportListener = this._sqlite.sqlitePlugin.addListener('sqliteExportProgressEvent', (info: any) => {
+      this.exportListener = await this._sqlite.sqlitePlugin.addListener('sqliteExportProgressEvent', (info: any) => {
         showProgessToast(info.progress)
       });
     }

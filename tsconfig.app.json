@@ -13,8 +13,9 @@
     "src/**/*.d.ts"
   ],
   "exclude": [
-    "src/environments/environment.ts",
     "src/test.ts",
-    "src/**/*.spec.ts"
+    "src/**/*.spec.ts",
+    "src/testbed-configs.ts",
+    "src/environments/environment.prod.ts"
   ]
 }

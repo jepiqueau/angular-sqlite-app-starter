@@ -1,0 +1,49 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Product list
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openCreateProductModal()">
+        <ion-icon name="add"></ion-icon>
+        <ion-text>add product</ion-text>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div id="container">
+    <div *ngFor="let product of products">
+      <ion-card [disabled]="!product.isAvailable">
+        <ng-container *ngIf="product.isPopular">
+          <ion-icon name="star-sharp" class="favorite-icon"></ion-icon>
+        </ng-container>
+        <div class="center">
+          <ion-card-header>
+            <ion-card-subtitle>{{product.price | currency: "USD"}}</ion-card-subtitle>
+            <ion-card-title>{{product.name}}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div>Description:</div>
+            <div>{{product.description}}</div>
+          </ion-card-content>
+          <div>
+            <ion-img class="image-center" [src]="product.imageUrl" alt="{{product.name}}"></ion-img>
+            <ion-button (click)="openUpdateProductModal(product)" color="primary">
+              <ion-icon name="create"></ion-icon>
+              <ion-text>Edit</ion-text>
+            </ion-button>
+            <ion-button (click)="deleteProduct(product.id)" color="danger">
+              <ion-icon name="trash"></ion-icon>
+              <ion-text>Delete</ion-text>
+            </ion-button>
+          </div>
+        </div>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

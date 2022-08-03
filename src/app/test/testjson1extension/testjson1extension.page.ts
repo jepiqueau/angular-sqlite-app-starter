@@ -35,7 +35,6 @@ export class TestJson1ExtensionPage implements AfterViewInit {
     };
     try {
       const res = await this.loadJSON('assets/jsonFiles/test-json1.json');
-      console.log(`res ${res}`)
       this.dataArticles = JSON.parse(res);
   
       await this.runTest();
