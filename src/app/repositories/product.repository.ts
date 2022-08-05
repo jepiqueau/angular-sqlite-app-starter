@@ -47,7 +47,7 @@ export class ProductRepository {
     return this._databaseService.executeQuery<any>(async (db: SQLiteDBConnection) => {
       let sqlcmd: string = "select * from products where id = ? limit 1";
       let values: Array<any> = [id];
-      let ret: any = await db.run(sqlcmd, values);
+      let ret: any = await db.query(sqlcmd, values);
       if (ret.values.length > 0) {
         return ret.values[0] as Product;
       }
@@ -70,7 +70,7 @@ export class ProductRepository {
     return this._databaseService.executeQuery<any>(async (db: SQLiteDBConnection) => {
       let sqlcmd: string = "select * from products where category = ?";
       let values: Array<any> = [category];
-      let ret: any = await db.run(sqlcmd, values);
+      let ret: any = await db.query(sqlcmd, values);
       if (ret.values.length > 0) {
         return ret.values as Product[];
       }
