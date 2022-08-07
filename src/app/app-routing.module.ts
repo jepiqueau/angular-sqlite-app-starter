@@ -74,6 +74,11 @@ const routes: Routes = [
       .then(m => m.CopyfromassetsPageModule)
   },
   {
+    path: 'downloadtocacheandmove',
+    loadChildren: () => import('./test/downloadtocacheandmove/downloadtocacheandmove.module')
+      .then(m => m.DownloadToCacheAndMoveModule)
+  },
+  {
     path: 'copy',
     loadChildren: () => import('./test/testcopy/testcopy.module')
       .then(m => m.TestCopyPageModule)

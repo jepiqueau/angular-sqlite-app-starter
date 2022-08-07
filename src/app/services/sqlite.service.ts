@@ -454,6 +454,22 @@ export class SQLiteService {
     }
 
     /**
+     * Add "SQLite" suffix to old database's names
+     */    
+    async moveDatabasesAndAddSuffix(folderPath?: string, dbNameList?: string[]): Promise<void>{
+        if(!this.native) {
+            throw new Error(`Not implemented for ${this.platform} platform`);
+        }
+        if(this.sqlite != null) {
+            const path: string = folderPath ? folderPath : "default";
+            const dbList: string[] = dbNameList ? dbNameList : [];
+            return this.sqlite.moveDatabasesAndAddSuffix(path, dbList);
+        } else {
+            throw new Error(`can't move the databases`);
+        }
+    }
+
+    /**
      * Import from a Json Object
      * @param jsonstring 
      */
