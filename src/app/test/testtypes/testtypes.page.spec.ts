@@ -1,24 +1,21 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+// import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+// import testbedBase from 'src/testbed-configs';
 
-import { TestTypesPage } from './testtypes.page';
+// import { TestTypesPage } from './testtypes.page';
 
-describe('TestTypesPage', () => {
-  let component: TestTypesPage;
-  let fixture: ComponentFixture<TestTypesPage>;
+// describe('TestTypesPage', () => {
+//   let component: TestTypesPage;
+//   let fixture: ComponentFixture<TestTypesPage>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ TestTypesPage ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+//   beforeEach(waitForAsync(() => {
+//     TestBed.configureTestingModule(testbedBase).compileComponents();
 
-    fixture = TestBed.createComponent(TestTypesPage);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+//     fixture = TestBed.createComponent(TestTypesPage);
+//     component = fixture.componentInstance;
+//     fixture.detectChanges();
+//   }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+//   it('should create', () => {
+//     expect(component).toBeTruthy();
+//   });
+// });

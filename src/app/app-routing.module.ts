@@ -3,6 +3,11 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    path: 'products',
+    loadChildren: () => import('./pages/products/products.module')
+      .then(m => m.ProductsPageModule)
+  },
+  {
     path: 'hometests',
     loadChildren: () => import('./test/hometests/hometests.module')
       .then(m => m.HomeTestsPageModule)
@@ -131,14 +136,13 @@ const routes: Routes = [
   {
     path: 'json245',
     loadChildren: () => import('./test/testjson245/testjson245.module')
-                      .then( m => m.Testjson245PageModule)
+      .then(m => m.Testjson245PageModule)
   },
   {
     path: 'json292',
     loadChildren: () => import('./test/testjson292/testjson292.module')
-                      .then( m => m.Testjson292PageModule)
+      .then(m => m.Testjson292PageModule)
   },
-
   {
     path: '',
     redirectTo: 'hometests',

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SQLiteService } from '../../services/sqlite.service';
 import { Dialog } from '@capacitor/dialog';
 
@@ -7,7 +7,7 @@ import { Dialog } from '@capacitor/dialog';
   templateUrl: 'copyfromassets.page.html',
   styleUrls: ['copyfromassets.page.scss']
 })
-export class CopyfromassetsPage implements AfterViewInit {
+export class CopyfromassetsPage implements OnInit {
   log: string = "";
   platform: string;
   handlerPermissions: any;
@@ -17,7 +17,7 @@ export class CopyfromassetsPage implements AfterViewInit {
     this.platform = this._sqlite.platform;
   }
 
-  async ngAfterViewInit() {
+  async ngOnInit() {
     const showAlert = async (message: string) => {
       await Dialog.alert({
       title: 'Error Dialog',

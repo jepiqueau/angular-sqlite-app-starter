@@ -10,6 +10,12 @@ import { SQLiteService } from './services/sqlite.service';
 import { DetailService } from './services/detail.service';
 import { InitializeSqliteService } from './services/initialize.sqlite.service';
 
+import { MigrationService } from './services/migrations.service';
+import { ProductRepository } from './repositories/product.repository';
+import { DatabaseService } from './services/database.service';
+import { ProductDefaultQueryRepository } from './repositories/product.default.query.repository';
+
+
 export function initializeFactory(init: InitializeSqliteService) {
   return () => init.initializeApp();
 }
@@ -21,6 +27,9 @@ export function initializeFactory(init: InitializeSqliteService) {
   providers: [
     SQLiteService,
     DetailService,
+
+    DatabaseService,
+
     InitializeSqliteService,
     {
       provide: APP_INITIALIZER,
@@ -28,6 +37,11 @@ export function initializeFactory(init: InitializeSqliteService) {
       deps: [InitializeSqliteService],
       multi: true
     },
+
+    MigrationService,
+    ProductRepository,
+    ProductDefaultQueryRepository,
+
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent],

@@ -13,32 +13,68 @@
     </ion-toolbar>
   </ion-header>
 
-  <div *ngIf="isDisplay" id="container">
-    <ion-button *ngIf="native" routerLink='/setsecuresecret' routerDirection="forward" color='primary' expand="block">Test Set Secure Secret</ion-button> 
-    <ion-button *ngIf="native" routerLink='/changesecuresecret' routerDirection="forward" color='primary' expand="block">Test Change Secure Secret</ion-button> 
-    <ion-button routerLink='/test2dbs' routerDirection="forward" color='primary' expand="block">Test 2 Databases</ion-button> 
-    <ion-button *ngIf="exConn" routerLink='/existingconnection' routerDirection="forward" color='primary' expand="block">Test Existing Connection</ion-button> 
-    <ion-button routerLink='/testIssue230' routerDirection="forward" color='primary' expand="block">Test Issue#230</ion-button> 
-    <ion-button routerLink='/upgradeversion' routerDirection="forward" color='primary' expand="block">Test Upgrade Versions</ion-button> 
-    <ion-button *ngIf="native" routerLink='/encryption' routerDirection="forward" color='primary' expand="block">Test Encryption</ion-button> 
-    <ion-button routerLink='/importjson' routerDirection="forward" color='primary' expand="block">Test Import Json</ion-button> 
-    <ion-button *ngIf="exJson" routerLink='/exportjson' routerDirection="forward" color='primary' expand="block">Test Export Json</ion-button> 
-    <ion-button routerLink='/exportjson59' routerDirection="forward" color='primary' expand="block">Test Export Json #59</ion-button> 
-    <ion-button routerLink='/copyfromassets' routerDirection="forward" color='primary' expand="block">Test Copy From Assets</ion-button> 
-    <ion-button routerLink='/json71' routerDirection="forward" color='primary' expand="block">Test Json #71</ion-button> 
-    <ion-button *ngIf="native" routerLink='/copy' routerDirection="forward" color='primary' expand="block">Test Migrate DB</ion-button> 
-    <ion-button *ngIf="native" routerLink='/ncdatabase' routerDirection="forward" color='primary' expand="block">Test Non Conformed DB</ion-button> 
-    <ion-button routerLink='/json94' routerDirection="forward" color='primary' expand="block">Test Json #94</ion-button> 
-    <ion-button routerLink='/json97' routerDirection="forward" color='primary' expand="block">Test Json #97</ion-button> 
-    <ion-button routerLink='/test111' routerDirection="forward" color='primary' expand="block">Test Issue #111</ion-button> 
-    <ion-button routerLink='/testtypes' routerDirection="forward" color='primary' expand="block">Test Types</ion-button> 
-    <ion-button routerLink='/testjson1' routerDirection="forward" color='primary' expand="block">Test JSON1 Extension</ion-button> 
-    <ion-button routerLink='/json164' routerDirection="forward" color='primary' expand="block">Test Json #164</ion-button> 
-    <ion-button routerLink='/json167' routerDirection="forward" color='primary' expand="block">Test Json #167</ion-button> 
-    <ion-button routerLink='/json192' routerDirection="forward" color='primary' expand="block">Test Json #192</ion-button> 
-    <ion-button routerLink='/json231' routerDirection="forward" color='primary' expand="block">Test Json #231</ion-button> 
-    <ion-button routerLink='/json237' routerDirection="forward" color='primary' expand="block">Test Json #237</ion-button> 
-    <ion-button routerLink='/json245' routerDirection="forward" color='primary' expand="block">Test Json #245</ion-button> 
-    <ion-button routerLink='/json292' routerDirection="forward" color='primary' expand="block">Test Json #292</ion-button> 
+  <div id="container">
+    <ion-button routerLink='/products' routerDirection="forward" color='tertiary' expand="block">
+      Products crud example --- Database name: {{environmentDatabase}}
+    </ion-button>
+    <div *ngIf="isDisplay">
+      <ion-button *ngIf="native" routerLink='/setsecuresecret' routerDirection="forward" color='primary' expand="block">
+        Test Set Secure Secret</ion-button>
+      <ion-button *ngIf="native" routerLink='/changesecuresecret' routerDirection="forward" color='primary'
+        expand="block">Test Change Secure Secret</ion-button>
+      <ion-button routerLink='/test2dbs' routerDirection="forward" color='primary' expand="block">Test 2 Databases
+      </ion-button>
+      <ion-button *ngIf="exConn" routerLink='/existingconnection' routerDirection="forward" color='primary'
+        expand="block">Test Existing Connection</ion-button>
+      <ion-button routerLink='/testIssue230' routerDirection="forward" color='primary' expand="block">Test Issue#230
+      </ion-button>
+      <ion-button routerLink='/upgradeversion' routerDirection="forward" color='primary' expand="block">Test Upgrade
+        Versions</ion-button>
+      <ion-button *ngIf="native" routerLink='/encryption' routerDirection="forward" color='primary' expand="block">Test
+        Encryption</ion-button>
+      <ion-button routerLink='/importjson' routerDirection="forward" color='primary' expand="block">Test Import Json
+      </ion-button>
+      <ion-button *ngIf="exJson" routerLink='/exportjson' routerDirection="forward" color='primary' expand="block">Test
+        Export Json</ion-button>
+      <ion-button routerLink='/exportjson59' routerDirection="forward" color='primary' expand="block">Test Export Json
+        #59
+      </ion-button>
+      <ion-button routerLink='/copyfromassets' routerDirection="forward" color='primary' expand="block">Test Copy From
+        Assets</ion-button>
+      <ion-button routerLink='/json71' routerDirection="forward" color='primary' expand="block">Test Json #71
+      </ion-button>
+      <ion-button *ngIf="native" routerLink='/copy' routerDirection="forward" color='primary' expand="block">Test
+        Migrate
+        DB</ion-button>
+      <ion-button *ngIf="native" routerLink='/ncdatabase' routerDirection="forward" color='primary' expand="block">Test
+        Non Conformed DB</ion-button>
+      <ion-button routerLink='/json94' routerDirection="forward" color='primary' expand="block">Test Json #94
+      </ion-button>
+      <ion-button routerLink='/json97' routerDirection="forward" color='primary' expand="block">Test Json #97
+      </ion-button>
+      <ion-button routerLink='/test111' routerDirection="forward" color='primary' expand="block">Test Issue #111
+      </ion-button>
+      <ion-button routerLink='/testtypes' routerDirection="forward" color='primary' expand="block">Test Types
+      </ion-button>
+      <ion-button routerLink='/testjson1' routerDirection="forward" color='primary' expand="block">Test JSON1 Extension
+      </ion-button>
+      <ion-button routerLink='/json164' routerDirection="forward" color='primary' expand="block">Test Json #164
+      </ion-button>
+      <ion-button routerLink='/json167' routerDirection="forward" color='primary' expand="block">Test Json #167
+      </ion-button>
+      <ion-button routerLink='/json192' routerDirection="forward" color='primary' expand="block">Test Json #192
+      </ion-button>
+      <ion-button routerLink='/json231' routerDirection="forward" color='primary' expand="block">Test Json #231
+      </ion-button>
+      <ion-button routerLink='/json237' routerDirection="forward" color='primary' expand="block">Test Json #237
+      </ion-button>
+      <ion-button routerLink='/json245' routerDirection="forward" color='primary' expand="block">Test Json #245
+      </ion-button>
+      <ion-button routerLink='/json292' routerDirection="forward" color='primary' expand="block">Test Json #292
+      </ion-button>
+      <ion-button routerLink='/products' routerDirection="forward" color='primary' expand="block">Test Json #292
+      </ion-button>
+    </div>
   </div>
+
 </ion-content>

@@ -1,0 +1,22 @@
+.center {
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.image-center {
+  width: 150px;
+  height: 150px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2%;
+}
+
+.favorite-icon {
+  font-size: 32px;
+  color: yellow;
+  background-color: black;
+  --ionicon-stroke-width: 16px;
+}
