@@ -454,8 +454,12 @@ export class SQLiteService {
     }
 
     /**
-     * Add "SQLite" suffix to old database's names
-     */    
+     * Moves database files from a given folder to the database location where
+     * they can be read, it also changes their suffix.
+     * @param folderPath the folder to move from
+     * @param dbNameList the files to move, empty list means all the files
+     * @returns 
+     */
     async moveDatabasesAndAddSuffix(folderPath?: string, dbNameList?: string[]): Promise<void>{
         if(!this.native) {
             throw new Error(`Not implemented for ${this.platform} platform`);
