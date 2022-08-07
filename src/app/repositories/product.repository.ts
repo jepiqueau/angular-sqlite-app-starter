@@ -27,7 +27,7 @@ export class ProductRepository {
       if (ret.changes.lastId > 0) {
         return ret.changes as Product;
       }
-      throw Error(ret);
+      throw Error('create product failed');
     });
   }
 
@@ -39,7 +39,7 @@ export class ProductRepository {
       if (ret.changes.changes > 0) {
         return await this.getProductById(product.id);
       }
-      throw Error(ret);
+      throw Error('update product failed');
     });
   }
 
@@ -51,7 +51,7 @@ export class ProductRepository {
       if (ret.values.length > 0) {
         return ret.values[0] as Product;
       }
-      throw Error(ret);
+      throw Error('get product by id failed');
     });
   }
 
@@ -63,6 +63,7 @@ export class ProductRepository {
       if (ret.changes.lastId > 0) {
         return ret.changes as Product;
       }
+      throw Error('delete product failed');
     });
   }
 
@@ -74,7 +75,7 @@ export class ProductRepository {
       if (ret.values.length > 0) {
         return ret.values as Product[];
       }
-      throw Error(ret);
+      throw Error('get products by category failed');
     });
   }
 
