@@ -1,7 +1,9 @@
 
 import { SQLiteService } from './sqlite.service';
+
 import { Injectable } from '@angular/core';
 import { MigrationService } from './migrations.service';
+
 
 @Injectable()
 export class InitializeSqliteService {
@@ -19,6 +21,7 @@ export class InitializeSqliteService {
       } catch (error) {
         throw Error(`initializeAppError: ${error}`);
       }
+
     });
   }
 

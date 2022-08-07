@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+
 import { StatusBar } from '@awesome-cordova-plugins/status-bar';
 import { App } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
@@ -11,6 +12,7 @@ import { Platform } from '@ionic/angular';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+
   constructor(private platform: Platform) {
     this.platform.ready().then(async () => {
       this.platform.backButton.subscribeWithPriority(
@@ -29,4 +31,5 @@ export class AppComponent {
       StatusBar.overlaysWebView(false);
     }
   }
+
 }
