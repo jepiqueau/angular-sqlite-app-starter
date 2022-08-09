@@ -6,7 +6,7 @@ import { MigrationService } from './migrations.service';
 
 
 @Injectable()
-export class InitializeSqliteService {
+export class InitializeAppService {
 
   constructor(
     private sqliteService: SQLiteService,
