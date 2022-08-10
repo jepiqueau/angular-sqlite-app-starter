@@ -34,7 +34,7 @@ export class ProductsPage implements OnInit {
     const { data: createdProduct, role } = await modal.onWillDismiss<Product>();
 
     if (role === 'confirm') {
-      console.log(`creating product: ${createdProduct}`);
+      console.log(`creating product: ${JSON.stringify(createdProduct)}`);
 
       await this.productRepository.createProduct(createdProduct);
 
@@ -46,7 +46,7 @@ export class ProductsPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: UpdateProductModalComponent,
       componentProps: {
-        product: product
+        product: Object.assign({}, product)
       }
     });
 
@@ -56,11 +56,11 @@ export class ProductsPage implements OnInit {
 
     if (role === 'confirm') {
 
-      console.log(`creating product: ${updatedProduct}`);
+      console.log(`updating product: ${JSON.stringify(updatedProduct)}`);
 
-      await this.productRepository.createProduct(updatedProduct);
+      await this.productRepository.updateProduct(updatedProduct);
 
-      this.products.push(updatedProduct);
+      this.products.splice(this.products.findIndex(p => p.id === updatedProduct.id), 1, updatedProduct);
     }
   }
 

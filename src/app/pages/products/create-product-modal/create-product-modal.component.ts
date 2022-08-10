@@ -15,7 +15,7 @@ export class CreateProductModalComponent implements OnInit {
   ngOnInit(): void {
     this.product = {
       name: '',
-      price: 0,
+      price: null,
       isAvailable: true,
       description: '',
       imageUrl: '',
