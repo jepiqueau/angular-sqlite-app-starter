@@ -41,6 +41,8 @@
       </ion-button>
       <ion-button routerLink='/copyfromassets' routerDirection="forward" color='primary' expand="block">Test Copy From
         Assets</ion-button>
+      <ion-button *ngIf="native" routerLink='/downloadtocacheandmove' routerDirection="forward" color='primary' expand="block">
+        Test Download Cache & Move</ion-button>
       <ion-button routerLink='/json71' routerDirection="forward" color='primary' expand="block">Test Json #71
       </ion-button>
       <ion-button *ngIf="native" routerLink='/copy' routerDirection="forward" color='primary' expand="block">Test
