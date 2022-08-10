@@ -541,6 +541,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <p align="center">
   <a href="https://github.com/jepiqueau"><img src="https://github.com/jepiqueau.png?size=100" width="50" height="50" /></a>
   <a href="https://github.com/stealthAngel"><img src="https://github.com/stealthAngel.png?size=100" width="50" height="50" /></a>
+  <a href="https://github.com/HarelM"><img src="https://github.com/HarelM.png?size=100" width="50" height="50" /></a>
 </p>
 
 <!-- markdownlint-enable -->
