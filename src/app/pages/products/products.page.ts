@@ -20,9 +20,7 @@ export class ProductsPage implements OnInit {
   constructor(private productRepository: ProductRepository, private productDefaultQueryRepository: ProductDefaultQueryRepository, private modalCtrl: ModalController) { }
 
   ngOnInit(): void {
-    this.productRepository.createTestData().then(() => {
-      this.getProducts();
-    });
+    this.getProducts();
   }
 
   async openCreateProductModal() {
@@ -65,6 +63,7 @@ export class ProductsPage implements OnInit {
   }
 
   async getProducts() {
+    await this.productRepository.createTestData();
     this.products = await this.productRepository.getProducts();
     console.log(`databaseService used: products:`);
     console.log(this.products);
@@ -77,7 +76,7 @@ export class ProductsPage implements OnInit {
 
   async deleteProduct(productId: number) {
     await this.productRepository.deleteProductById(productId);
-    this.getProducts();
+    this.products = this.products.filter(p => p.id !== productId);
   }
 
   async editProduct(productId: number) {

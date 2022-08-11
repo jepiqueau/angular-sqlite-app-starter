@@ -55,15 +55,9 @@ export class ProductRepository {
     });
   }
 
-  async deleteProductById(id: number): Promise<Product> {
+  async deleteProductById(id: number): Promise<void> {
     return this._databaseService.executeQuery<any>(async (db: SQLiteDBConnection) => {
-      let sqlcmd: string = "delete from products where id = ?";
-      let values: Array<any> = [id];
-      let ret: any = await db.run(sqlcmd, values);
-      if (ret.changes.lastId > 0) {
-        return ret.changes as Product;
-      }
-      throw Error('delete product failed');
+      await db.query(`delete from products where id = ${id};`);
     });
   }
 
