@@ -71,6 +71,11 @@ To change the app name and app id, go to `capacitor.config.ts` and change:
   "appName": "angular-sqlite-app-starter",
 ```
 
+If you don't see the tests on android you could put the biometrics to false in `capacitor.config.ts`
+
+`androidBiometric.biometricAuth = false;`
+
+
 ### Building Native Project
 
 

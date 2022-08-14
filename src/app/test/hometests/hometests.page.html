@@ -14,10 +14,10 @@
   </ion-header>
 
   <div id="container">
-    <ion-button routerLink='/products' routerDirection="forward" color='tertiary' expand="block">
-      Products crud example --- Database name: {{environmentDatabase}}
-    </ion-button>
     <div *ngIf="isDisplay">
+      <ion-button routerLink='/products' routerDirection="forward" color='tertiary' expand="block">
+        Products crud example --- Database name: {{environmentDatabase}}
+      </ion-button>
       <ion-button *ngIf="native" routerLink='/setsecuresecret' routerDirection="forward" color='primary' expand="block">
         Test Set Secure Secret</ion-button>
       <ion-button *ngIf="native" routerLink='/changesecuresecret' routerDirection="forward" color='primary'
