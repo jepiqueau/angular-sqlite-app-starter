@@ -1,5 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import testbedBase from 'src/testbed-configs';
 
 import { DownloadToCacheAndMove } from './downloadtocacheandmove.page';
 
@@ -7,11 +7,8 @@ describe('ExistingconnectionPage', () => {
   let component: DownloadToCacheAndMove;
   let fixture: ComponentFixture<DownloadToCacheAndMove>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ DownloadToCacheAndMove ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule(testbedBase).compileComponents();
 
     fixture = TestBed.createComponent(DownloadToCacheAndMove);
     component = fixture.componentInstance;
