@@ -17,7 +17,7 @@ const config: CapacitorConfig = {
       },
       androidIsEncryption: true,
       androidBiometric: {
-        biometricAuth : true,
+        biometricAuth : false,
         biometricTitle : "Biometric login for capacitor sqlite",
         biometricSubTitle : "Log in using your biometric"
       },
