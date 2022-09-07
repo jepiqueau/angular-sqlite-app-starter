@@ -1,7 +1,7 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { SQLiteService } from '../../services/sqlite.service';
-import { createSchemaVersion1, twoUsers, createSchemaVersion2,
-          setArrayVersion2, userMessages } from '../utils/upgrade-version-utils';
+import { userMessages } from '../utils/upgrade-version-utils';
+import { versionUpgrades } from '../utils/upgrade-database-version';
 import { deleteDatabase } from '../utils/db-utils';
 import { SQLiteDBConnection } from '@capacitor-community/sqlite';
 import { Dialog } from '@capacitor/dialog';
@@ -45,7 +45,7 @@ export class TestupgradeversionPage implements AfterViewInit {
       let result: any = await this._sqlite.echo("Hello World");
 
       // ************************************************
-      // Create Database Version 1
+      // Delete Database from previous runs
       // ************************************************
 
       // initialize the connection for Database Version 1
@@ -55,26 +55,29 @@ export class TestupgradeversionPage implements AfterViewInit {
       // check if the databases exist 
       // and delete it for multiple successive tests
       await deleteDatabase(db);
+      // close connection to test-updversion
+      await this._sqlite.closeConnection("test-updversion"); 
 
+      // ************************************************
+      // Create Database Version 1
+      // ************************************************
+
+      await this._sqlite.addUpgradeStatement("test-updversion",
+      versionUpgrades[0].toVersion,versionUpgrades[0].statements);
+
+      // initialize the connection for Database Version 1
+      db = await this._sqlite
+                  .createConnection("test-updversion", false,
+                                    "no-encryption", 1);
+      console.log(`>>> after create connection test-updversion version 1`)
       // open db test-updversion
       await db.open();
+      console.log(`>>> after db.open test-updversion version 1`)
+      let isOpen = await db.isDBOpen();
+      console.log(`>>> isOpen version 1: ${JSON.stringify(isOpen)}`)
 
-      // create tables in db
-      let ret: any = await db.execute(createSchemaVersion1);
-      if (ret.changes.changes < 0) {
-        return Promise.reject(new Error("Execute createSchemaVersion1 failed"));
-      }
-      // delete users if any from previous run
-      let delUsers = `DELETE FROM users;`;
-      ret = await db.execute(delUsers, false);
-
-      // add two users in db
-      ret = await db.execute(twoUsers);
-      if (ret.changes.changes !== 2) {
-        return Promise.reject(new Error("Execute twoUsers failed"));
-      }
       // select all users in db
-      ret = await db.query("SELECT * FROM users;");
+      let ret = await db.query("SELECT * FROM users;");
       if(ret.values.length !== 2 || ret.values[0].name !== "Whiteley" ||
                                     ret.values[1].name !== "Jones") {
         return Promise.reject(new Error("Query 2 Users failed"));
@@ -103,7 +106,7 @@ export class TestupgradeversionPage implements AfterViewInit {
       // set the upgrade statement
 
       await this._sqlite.addUpgradeStatement("test-updversion",
-      1, 2, createSchemaVersion2, setArrayVersion2);     
+      versionUpgrades[1].toVersion,versionUpgrades[1].statements);     
 
       // initialize the connection for Database Version 2
       db = await this._sqlite
