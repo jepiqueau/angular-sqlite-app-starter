@@ -89,14 +89,17 @@ export class ExistingconnectionPage implements AfterViewInit {
       // test retrieve all connections
       var retDict: Map<string, any> = await 
                             this._sqlite.retrieveAllConnections();
-      if(!retDict.has("testNew") || retDict.get("testNew") != db) {
+      console.log(`retDict: ${[...retDict.entries()]}`);
+      if(!retDict.has("RW_testNew") || retDict.get("RW_testNew") != db) {
         return Promise.reject(new Error("retrieveAllConnections has TestNew failed"));
       }
-      if(!retDict.has("testSet") || retDict.get("testSet") != db1) {
+      if(!retDict.has("RW_testSet") || retDict.get("RW_testSet") != db1) {
         return Promise.reject(new Error("retrieveAllConnections has TestSet failed"));
       }
 
       await this._sqlite.closeAllConnections();
+      retDict = await this._sqlite.retrieveAllConnections();
+      console.log(`retDict: ${[...retDict.entries()]}`);
 
       this._detailService.setExistingConnection(false);
       return Promise.resolve();

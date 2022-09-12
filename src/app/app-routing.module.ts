@@ -18,6 +18,11 @@ const routes: Routes = [
       .then(m => m.Test2dbsPageModule)
   },
   {
+    path: 'testreadonly',
+    loadChildren: () => import('./test/testreadonly/testreadonly.module')
+      .then(m => m.TestReadonlyPageModule)
+  },
+{
     path: 'testIssue230',
     loadChildren: () => import('./test/testIssue230/testIssue230.module')
       .then(m => m.TestIssue230PageModule)

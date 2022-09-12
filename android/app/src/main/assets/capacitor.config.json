@@ -3,6 +3,7 @@
 	"appName": "angular-sqlite-app-starter",
 	"webDir": "www",
 	"bundledWebRuntime": false,
+	"loggingBehavior": "debug",
 	"plugins": {
 		"CapacitorSQLite": {
 			"iosDatabaseLocation": "Library/CapacitorDatabase",

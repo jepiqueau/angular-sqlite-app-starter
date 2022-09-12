@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'angular-sqlite-app-starter',
   webDir: 'www',
   bundledWebRuntime: false,
-//  hideLogs: true,
+  loggingBehavior: 'debug',
   plugins: {
     CapacitorSQLite: {
       iosDatabaseLocation: 'Library/CapacitorDatabase',

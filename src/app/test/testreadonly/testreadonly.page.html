@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+        <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      TestReadOnly
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">TestReadOnly</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="container">
+    <ion-card class="card-user-length">
+      <ion-card-title>
+        User's number in query 
+      </ion-card-title>
+      <p>{{userNumber}}</p>
+    </ion-card>
+    <ion-card class="card-sqlite">
+      <ion-card-title>
+        Results of refactor sqlite test
+      </ion-card-title>
+      <p class="sql-allsuccess display">
+        The set of tests was successful
+      </p>
+      <p class="sql-allfailure display">
+        The set of tests failed
+      </p>
+    </ion-card>  
+  </div>
+</ion-content>
