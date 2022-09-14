@@ -69,9 +69,9 @@ export class TestReadonlyPage implements AfterViewInit {
       // open db testNew
       let ret: any;
       await db.open();
-      if(this._sqlite.getPlatform() === "ios") {
+      if(this._sqlite.getPlatform() != "android") {
         // set WAL mode 
-        const walStmt = 'PRAGMA journal_mode=WAL2;';
+        const walStmt = /*this._sqlite.getPlatform() === "electron" ? 'PRAGMA journal_mode=WAL;' : */'PRAGMA journal_mode=WAL2;';
         ret = await db.execute(walStmt,false);
       }
       // create tables in db
@@ -105,6 +105,9 @@ export class TestReadonlyPage implements AfterViewInit {
       console.log(`>>> after open testNew readwrite select`)
 
       // open connection read-only mode
+      if(this._sqlite.getPlatform() === "web") {
+        return Promise.reject("Readonly mode not yet implemented on Web");
+      }
       isConn = (await this._sqlite.isConnection("testNew", true)).result
       console.log(`>>> after isConn testNew readonly ${isConn}`)
 
@@ -134,39 +137,44 @@ export class TestReadonlyPage implements AfterViewInit {
 
       for (let i=0; i< 1000; i++) {
         const stmt = `INSERT INTO users (name,email,age) VALUES ("testname${i}","testemail${i}",${Math.random() * 105 +18});`;
-        db.execute(stmt); 
+        await db.execute(stmt, true); 
         if (i % 100 === 0) getUserNumber();
+        if (i === 999) {
+          getUserNumber();
+
+          const retDict: Map<string, any> = await 
+                                this._sqlite.retrieveAllConnections();
+    
+          console.log(`retDict: ${[...retDict.entries()]}`);
+          // create tables in db1 
+          // this should failed
+/*         console.log(">>>>>> Go to execute providing a fail")
+          ret = await db1.execute(createSchemaContacts);
+          console.log(`>>>>>> ret resolve : ${JSON.stringify(ret)}`);
+          await this._sqlite.retrieveAllConnections();
+*/
+          return Promise.resolve();  
+        }
       }
-      getUserNumber();
 
-      const retDict: Map<string, any> = await 
-                            this._sqlite.retrieveAllConnections();
-
-      console.log(`retDict: ${[...retDict.entries()]}`);
-      // close the connection
-      await this._sqlite.closeConnection("testNew",true); 
-      const retDict1: Map<string, any> = await 
-                            this._sqlite.retrieveAllConnections();
-
-      console.log(`retDict1: ${[...retDict1.entries()]}`);
-      await this._sqlite.closeAllConnections(); 
-
-      const retDict2: Map<string, any> = await 
-                            this._sqlite.retrieveAllConnections();
-
-      console.log(`retDict2: ${[...retDict2.entries()]}`);
-
-      // create tables in db1 
-      // this should failed
-      console.log(">>>>>> Go to execute providing a fail")
-      ret = await db1.execute(createSchemaContacts);
-      console.log(`>>>>>> ret resolve : ${JSON.stringify(ret)}`);
-      return Promise.resolve();
     } catch (err) {
       console.log(`>>>>>> ret reject: ${JSON.stringify(err)}`);
-
       return Promise.reject(err);
+    } finally {
+      await this._sqlite.retrieveAllConnections();
+      const retDict: Map<string, any> = await this._sqlite.retrieveAllConnections();
+/*      console.log(`retDict: ${[...retDict.entries()]}`);
+      await this._sqlite.closeConnection("testNew", true);
+      const retDict1: Map<string, any> = await this._sqlite.retrieveAllConnections();
+      console.log(`retDict1: ${[...retDict1.entries()]}`);
+      await this._sqlite.closeConnection("testNew", false);
+*/
+      await this._sqlite.closeAllConnections();
+      const retDict2: Map<string, any> = await this._sqlite.retrieveAllConnections();
+      console.log(`retDict2: ${[...retDict2.entries()]}`);
+
     }
+
   }
 
 }
