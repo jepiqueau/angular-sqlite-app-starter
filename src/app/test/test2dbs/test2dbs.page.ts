@@ -105,7 +105,6 @@ export class Test2dbsPage implements AfterViewInit {
                                     ret.values[1].name !== "Jones") {
         return Promise.reject(new Error("Query 2 users failed"));
       }
-
       // open db testSet
       await db1.open();
 

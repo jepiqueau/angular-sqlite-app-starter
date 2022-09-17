@@ -71,7 +71,7 @@ export class TestReadonlyPage implements AfterViewInit {
       await db.open();
       if(this._sqlite.getPlatform() != "android") {
         // set WAL mode 
-        const walStmt = /*this._sqlite.getPlatform() === "electron" ? 'PRAGMA journal_mode=WAL;' : */'PRAGMA journal_mode=WAL2;';
+        const walStmt = 'PRAGMA journal_mode=WAL2;';
         ret = await db.execute(walStmt,false);
       }
       // create tables in db
@@ -91,13 +91,23 @@ export class TestReadonlyPage implements AfterViewInit {
       let delUsers = `DELETE FROM users;`;
       ret = await db.execute(delUsers, false);
 
+      ret = await db.query("SELECT * FROM users;");
+      console.log(`\n$$$ ret 0 value: ${JSON.stringify(ret)}`)
+      if(ret.values.length !== 0 ) {
+        return Promise.reject(new Error("Query 0 users failed"));
+      }
+
       // add two users in db
       ret = await db.execute(twoUsers);
       if (ret.changes.changes !== 2) {
         return Promise.reject(new Error("Execute 2 users failed"));
       }
+      if(this._sqlite.getPlatform() === "web") {
+        this._sqlite.saveToStore("testNew");
+      }
       // select all users in db
       ret = await db.query("SELECT * FROM users;");
+      console.log(`\n$$$ ret 2 value: ${JSON.stringify(ret)}`)
       if(ret.values.length !== 2 || ret.values[0].name !== "Whiteley" ||
                                     ret.values[1].name !== "Jones") {
         return Promise.reject(new Error("Query 2 users failed"));
@@ -105,9 +115,6 @@ export class TestReadonlyPage implements AfterViewInit {
       console.log(`>>> after open testNew readwrite select`)
 
       // open connection read-only mode
-      if(this._sqlite.getPlatform() === "web") {
-        return Promise.reject("Readonly mode not yet implemented on Web");
-      }
       isConn = (await this._sqlite.isConnection("testNew", true)).result
       console.log(`>>> after isConn testNew readonly ${isConn}`)
 
@@ -121,6 +128,9 @@ export class TestReadonlyPage implements AfterViewInit {
       }
       console.log(`>>> after retrieving testNew readonly`)
       const getUserNumber = async() => {
+        if(this._sqlite.getPlatform() === "web") {
+          this._sqlite.saveToStore("testNew");
+        }
         this.userNumber = (await (db1.query("SELECT * FROM users;"))).values.length ; 
       }
   
@@ -146,32 +156,22 @@ export class TestReadonlyPage implements AfterViewInit {
                                 this._sqlite.retrieveAllConnections();
     
           console.log(`retDict: ${[...retDict.entries()]}`);
-          // create tables in db1 
-          // this should failed
-/*         console.log(">>>>>> Go to execute providing a fail")
-          ret = await db1.execute(createSchemaContacts);
-          console.log(`>>>>>> ret resolve : ${JSON.stringify(ret)}`);
-          await this._sqlite.retrieveAllConnections();
-*/
           return Promise.resolve();  
         }
       }
 
     } catch (err) {
-      console.log(`>>>>>> ret reject: ${JSON.stringify(err)}`);
+      console.log(`>>>>>> ret reject: ${err}`);
       return Promise.reject(err);
     } finally {
       await this._sqlite.retrieveAllConnections();
       const retDict: Map<string, any> = await this._sqlite.retrieveAllConnections();
-/*      console.log(`retDict: ${[...retDict.entries()]}`);
-      await this._sqlite.closeConnection("testNew", true);
-      const retDict1: Map<string, any> = await this._sqlite.retrieveAllConnections();
-      console.log(`retDict1: ${[...retDict1.entries()]}`);
-      await this._sqlite.closeConnection("testNew", false);
-*/
+      console.log(`#### retDict: ${[...retDict.entries()]}`);
+      const retCC1 = (await this._sqlite.checkConnectionsConsistency()).result;
+      console.log(`#### retCC1: ${retCC1}`);
       await this._sqlite.closeAllConnections();
       const retDict2: Map<string, any> = await this._sqlite.retrieveAllConnections();
-      console.log(`retDict2: ${[...retDict2.entries()]}`);
+      console.log(`#### retDict2: ${[...retDict2.entries()]}`);
 
     }
 
