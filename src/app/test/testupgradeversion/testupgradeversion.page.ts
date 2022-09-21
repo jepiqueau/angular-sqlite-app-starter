@@ -41,140 +41,187 @@ export class TestupgradeversionPage implements AfterViewInit {
     try {
       let result: any = await this._sqlite.echo('Hello World');
 
-      // ************************************************
-      // Delete Database from previous runs
-      // ************************************************
+      await this.testDbVersion1();
 
-      // initialize the connection for Database Version 1
-      let db: SQLiteDBConnection = await this._sqlite.createConnection(
-        'test-updversion',
-        false,
-        'no-encryption',
-        1
-      );
-      // check if the databases exist
-      // and delete it for multiple successive tests
-      await deleteDatabase(db);
-      // close connection to test-updversion
-      await this._sqlite.closeConnection('test-updversion');
+      await this.testDbVersion2();
 
-      // ************************************************
-      // Create Database Version 1
-      // ************************************************
-
-      await this._sqlite.addUpgradeStatement(
-        'test-updversion',
-        versionUpgrades[0].toVersion,
-        versionUpgrades[0].statements
-      );
-
-      // initialize the connection for Database Version 1
-      db = await this._sqlite.createConnection(
-        'test-updversion',
-        false,
-        'no-encryption',
-        1
-      );
-      console.log(`>>> after create connection test-updversion version 1`);
-      // open db test-updversion
-      await db.open();
-      console.log(`>>> after db.open test-updversion version 1`);
-      let isOpen = await db.isDBOpen();
-      console.log(`>>> isOpen version 1: ${JSON.stringify(isOpen)}`);
-
-      // select all users in db
-      let ret = await db.query('SELECT * FROM users;');
-      if (
-        ret.values.length !== 2 ||
-        ret.values[0].name !== 'Whiteley' ||
-        ret.values[1].name !== 'Jones'
-      ) {
-        return Promise.reject(new Error('Query 2 Users failed'));
-      }
-      // select users where company is NULL in db
-      ret = await db.query('SELECT * FROM users WHERE company IS NULL;');
-      if (
-        ret.values.length !== 2 ||
-        ret.values[0].name !== 'Whiteley' ||
-        ret.values[1].name !== 'Jones'
-      ) {
-        return Promise.reject(
-          new Error('Query 2 Users where company is null failed')
-        );
-      }
-      // select users where size is NULL in db
-      ret = await db.query('SELECT * FROM users WHERE size IS NULL;');
-      if (
-        ret.values.length !== 2 ||
-        ret.values[0].name !== 'Whiteley' ||
-        ret.values[1].name !== 'Jones'
-      ) {
-        return Promise.reject(
-          new Error('Query 2 Users where size is null failed')
-        );
-      }
-      // close db test-updversion
-      await db.close();
-      // close connection to test-updversion
-      await this._sqlite.closeConnection('test-updversion');
-
-      // ************************************************
-      // Create Database Version 2
-      // ************************************************
-
-      // set the upgrade statement
-
-      await this._sqlite.addUpgradeStatement(
-        'test-updversion',
-        versionUpgrades[1].toVersion,
-        versionUpgrades[1].statements
-      );
-
-      // initialize the connection for Database Version 2
-      db = await this._sqlite.createConnection(
-        'test-updversion',
-        false,
-        'no-encryption',
-        2
-      );
-      // open db test-updversion
-      await db.open();
-      // select all user's country in db
-      ret = await db.query('SELECT country FROM users;');
-      if (
-        ret.values.length !== 2 ||
-        ret.values[0].country !== 'United Kingdom' ||
-        ret.values[1].country !== 'Australia'
-      ) {
-        return Promise.reject(new Error('Query 2 Users Version 2 failed'));
-      }
-      // select all messages for user 1
-      ret = await db.query(userMessages, ['1']);
-      if (
-        ret.values.length !== 2 ||
-        ret.values[0].name !== 'Whiteley' ||
-        ret.values[0].title !== 'test message 1' ||
-        ret.values[1].name !== 'Whiteley' ||
-        ret.values[1].title !== 'test message 3'
-      ) {
-        return Promise.reject(new Error('Query 2 Messages Version 2 failed'));
-      }
-      // select all messages for user 2
-      ret = await db.query(userMessages, ['2']);
-      if (
-        ret.values.length !== 1 ||
-        ret.values[0].name !== 'Jones' ||
-        ret.values[0].title !== 'test message 2'
-      ) {
-        return Promise.reject(
-          new Error('Query 1 Messages for Users 2 Version 2 failed')
-        );
-      }
-      // close connection to test-updversion
-      await this._sqlite.closeConnection('test-updversion');
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);
     }
+  }
+
+  // ************************************************
+  // Create Database Version 1
+  // ************************************************
+  async testDbVersion1() {
+    // ************************************************
+    // Delete Database from previous runs
+    // ************************************************
+
+    // initialize the connection for Database Version 1
+    let db: SQLiteDBConnection = await this._sqlite.createConnection(
+      'test-updversion1',
+      false,
+      'no-encryption',
+      1
+    );
+    // check if the databases exist
+    // and delete it for multiple successive tests
+    await deleteDatabase(db);
+
+    // close connection to test-updversion1
+    await this._sqlite.closeConnection('test-updversion1');
+
+    // Add only first upgrade
+    await this._sqlite.addUpgradeStatement(
+      'test-updversion1',
+      versionUpgrades[0].toVersion,
+      versionUpgrades[0].statements
+    );
+
+    // initialize the connection for Database Version 1
+    db = await this._sqlite.createConnection(
+      'test-updversion1',
+      false,
+      'no-encryption',
+      1
+    );
+    console.log(`>>> after create connection test-updversion version 1`);
+    // open db test-updversion
+    await db.open();
+    console.log(`>>> after db.open test-updversion version 1`);
+    let isOpen = await db.isDBOpen();
+    console.log(`>>> isOpen version 1: ${JSON.stringify(isOpen)}`);
+
+    // select all users in db
+    let ret = await db.query('SELECT * FROM users;');
+    if (
+      ret.values.length !== 2 ||
+      ret.values[0].name !== 'Whiteley' ||
+      ret.values[1].name !== 'Jones'
+    ) {
+      throw new Error('Query 2 Users failed');
+    }
+
+    // select users where company is NULL in db
+    ret = await db.query('SELECT * FROM users WHERE company IS NULL;');
+    if (
+      ret.values.length !== 2 ||
+      ret.values[0].name !== 'Whiteley' ||
+      ret.values[1].name !== 'Jones'
+    ) {
+      throw new Error('Query 2 Users where company is null failed');
+    }
+    // select users where size is NULL in db
+    ret = await db.query('SELECT * FROM users WHERE size IS NULL;');
+    if (
+      ret.values.length !== 2 ||
+      ret.values[0].name !== 'Whiteley' ||
+      ret.values[1].name !== 'Jones'
+    ) {
+      throw new Error('Query 2 Users where size is null failed');
+    }
+
+    // Test if country field exist (must not exists on version1)
+    ret = await db.query(
+      `SELECT name FROM pragma_table_info('users') WHERE name='country';`
+    );
+    if (ret.values.length !== 0) {
+      throw new Error('Query country field failed (must not exists)');
+    }
+
+    // close db test-updversion1
+    await db.close();
+    // close connection to test-updversion
+    await this._sqlite.closeConnection('test-updversion1');
+  }
+
+  // ************************************************
+  // Create Database Version 2
+  // ************************************************
+  async testDbVersion2() {
+    // ************************************************
+    // Delete Database from previous runs
+    // ************************************************
+
+    // initialize the connection for Database Version 2
+    let db: SQLiteDBConnection = await this._sqlite.createConnection(
+      'test-updversion2',
+      false,
+      'no-encryption',
+      2
+    );
+    // check if the databases exist
+    // and delete it for multiple successive tests
+    await deleteDatabase(db);
+
+    // close connection to test-updversion2
+    await this._sqlite.closeConnection('test-updversion2');
+
+    // Add all upgrades (can be a loop)
+    await this._sqlite.addUpgradeStatement(
+      'test-updversion2',
+      versionUpgrades[0].toVersion,
+      versionUpgrades[0].statements
+    );
+
+    await this._sqlite.addUpgradeStatement(
+      'test-updversion2',
+      versionUpgrades[1].toVersion,
+      versionUpgrades[1].statements
+    );
+
+    // initialize the connection for Database Version 2
+    db = await this._sqlite.createConnection(
+      'test-updversion2',
+      false,
+      'no-encryption',
+      2
+    );
+    // open db test-updversion2
+    await db.open();
+
+    // select all users in db
+    let ret = await db.query(
+      `SELECT name FROM sqlite_master WHERE type='table' AND name='users';`
+    );
+    if (ret.values.length !== 1 || ret.values[0].name !== 'users') {
+      throw new Error('Table users exists Version 2 failed');
+    }
+
+    // select all user's country in db
+    ret = await db.query('SELECT country FROM users;');
+    if (
+      ret.values.length !== 2 ||
+      ret.values[0].country !== 'United Kingdom' ||
+      ret.values[1].country !== 'Australia'
+    ) {
+      throw new Error('Query countries Version 2 failed');
+    }
+
+    // select all messages for user 1
+    ret = await db.query(userMessages, ['1']);
+    if (
+      ret.values.length !== 2 ||
+      ret.values[0].name !== 'Whiteley' ||
+      ret.values[0].title !== 'test message 1' ||
+      ret.values[1].name !== 'Whiteley' ||
+      ret.values[1].title !== 'test message 3'
+    ) {
+      throw new Error('Query 2 Messages Version 2 failed');
+    }
+    // select all messages for user 2
+    ret = await db.query(userMessages, ['2']);
+    if (
+      ret.values.length !== 1 ||
+      ret.values[0].name !== 'Jones' ||
+      ret.values[0].title !== 'test message 2'
+    ) {
+      throw new Error('Query 1 Messages for Users 2 Version 2 failed');
+    }
+
+    // close connection to test-updversion2
+    await this._sqlite.closeConnection('test-updversion2');
   }
 }
