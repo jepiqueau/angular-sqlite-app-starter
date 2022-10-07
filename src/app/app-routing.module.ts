@@ -84,6 +84,11 @@ const routes: Routes = [
       .then(m => m.DownloadToCacheAndMoveModule)
   },
   {
+    path: 'downloadfromhttp',
+    loadChildren: () => import('./test/downloadfromhttp/downloadfromhttp.module')
+      .then(m => m.DownloadFromHTTPModule)
+  },
+  {
     path: 'copy',
     loadChildren: () => import('./test/testcopy/testcopy.module')
       .then(m => m.TestCopyPageModule)

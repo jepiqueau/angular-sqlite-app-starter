@@ -1,3 +1,4 @@
+import { DownloadFromHTTP } from './../test/downloadfromhttp/downloadfromhttp.page';
 import { Injectable } from '@angular/core';
 
 import { Capacitor } from '@capacitor/core';
@@ -474,6 +475,18 @@ export class SQLiteService {
             return this.sqlite.moveDatabasesAndAddSuffix(path, dbList);
         } else {
             throw new Error(`can't move the databases`);
+        }
+    }
+
+    async getFromHTTPRequest(url: string, overwrite?: boolean): Promise<void> {
+        const mOverwrite: boolean = overwrite != null ? overwrite : true;
+        if (url.length === 0) {
+            return Promise.reject(new Error(`Must give an url to download`));
+        }
+        if(this.sqlite != null) {
+            return this.sqlite.getFromHTTPRequest(url, mOverwrite);
+        } else {
+            throw new Error(`can't download the database`);
         }
     }
 
