@@ -20,23 +20,23 @@
     "electron:make": "npm run build && electron-builder build -c ./electron-builder.config.json -p always"
   },
   "dependencies": {
-    "@capacitor-community/electron": "^4.1.0",
-    "@capacitor-community/sqlite": "^4.1.1",
-    "chokidar": "~3.5.2",
+    "@capacitor-community/electron": "^4.1.2",
+    "@capacitor-community/sqlite": "^4.6.1",
+    "chokidar": "~3.5.3",
     "electron-is-dev": "~2.0.0",
     "electron-serve": "~1.1.0",
-    "electron-unhandled": "~3.0.2",
-    "electron-updater": "~4.3.9",
+    "electron-unhandled": "~4.0.1",
+    "electron-updater": "~5.0.1",
     "electron-window-state": "~5.0.3",
     "jszip": "^3.10.1",
-    "node-fetch": "^2.6.7",
-    "sqlite3": "^5.1.0"
+    "node-fetch": "2.6.7",
+    "sqlite3": "^5.1.4"
   },
   "devDependencies": {
     "@types/sqlite3": "^3.1.8",
-    "electron": "^15.5.5",
-    "electron-builder": "~22.11.7",
-    "electron-rebuild": "^3.2.3",
+    "electron": "^22.0.0",
+    "electron-builder": "22.10.3",
+    "electron-rebuild": "^3.2.7",
     "typescript": "~4.3.5"
   },
   "keywords": [
