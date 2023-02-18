@@ -384,6 +384,53 @@ export class SQLiteService {
         }
     }
     /**
+     * Check if encryption is in capacitor.config
+     * @returns
+     */
+    async isInConfigEncryption(): Promise<capSQLiteResult> {
+      if(this.sqlite != null) {
+          try {
+              const res = await this.sqlite.isInConfigEncryption();
+              return Promise.resolve(res);
+          } catch (err) {
+              return Promise.reject(new Error(err));
+          }
+      } else {
+          return Promise.reject(new Error(`no connection open`));
+      }
+    }
+    /**
+     * Check if biometric auth is in capacitor.config
+     * @returns
+     */
+    async isInConfigBiometricAuth(): Promise<capSQLiteResult> {
+      if(this.sqlite != null) {
+          try {
+              const res = await this.sqlite.isInConfigBiometricAuth();
+              return Promise.resolve(res);
+          } catch (err) {
+              return Promise.reject(new Error(err));
+          }
+      } else {
+          return Promise.reject(new Error(`no connection open`));
+      }
+    }
+    /**
+     * Check if database is encrypted
+     * @param database
+     */
+    async isDatabaseEncrypted(database: string): Promise<capSQLiteResult> {
+      if(this.sqlite != null) {
+          try {
+              return Promise.resolve(await this.sqlite.isDatabaseEncrypted(database));
+          } catch (err) {
+              return Promise.reject(new Error(err));
+          }
+      } else {
+          return Promise.reject(new Error(`no connection open`));
+      }
+    }
+    /**
      * Check if database exists
      * @param database
      */

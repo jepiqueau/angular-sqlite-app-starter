@@ -64,12 +64,12 @@ export class Test2dbsPage implements AfterViewInit {
       isConn = (await this._sqlite.isConnection("testSet")).result
       if(retCC && isConn) {
         db1 = await this._sqlite.retrieveConnection("testSet");
-      } else {                          
+      } else {
         db1 = await this._sqlite
                   .createConnection("testSet", true, "secret", 1);
       }
 
-      // check if the databases exist 
+      // check if the databases exist
       // and delete it for multiple successive tests
       await deleteDatabase(db);
       await deleteDatabase(db1);
@@ -83,9 +83,9 @@ export class Test2dbsPage implements AfterViewInit {
         return Promise.reject(new Error("Execute createSchema failed"));
       }
 
-      // create synchronization table 
+      // create synchronization table
       ret = await db.createSyncTable();
-      
+
       // set the synchronization date
       const syncDate: string = "2020-11-25T08:30:25.000Z";
       await db.setSyncDate(syncDate);
@@ -105,6 +105,13 @@ export class Test2dbsPage implements AfterViewInit {
                                     ret.values[1].name !== "Jones") {
         return Promise.reject(new Error("Query 2 users failed"));
       }
+      // test issue#378
+      const ret378 = await db.run("UPDATE users SET age = ? WHERE id = ?", [45.3, 1], false);
+      console.log(`&&&& ret378: ${JSON.stringify(ret378)} &&&&`);
+      if (ret378.changes.changes !== 1) {
+        return Promise.reject(new Error("Run issue#378 users failed"));
+      }
+
       // open db testSet
       await db1.open();
 
@@ -129,16 +136,16 @@ export class Test2dbsPage implements AfterViewInit {
                                     ret.values[1].name !== "Jones") {
         return Promise.reject(new Error("Query 2 users where company is null failed"));
       }
-      // add one user with statement and values              
-      let sqlcmd: string = 
+      // add one user with statement and values
+      let sqlcmd: string =
                   "INSERT INTO users (name,email,age,size,company) VALUES (?,?,?,?,?)";
       let values: Array<any>  = ["Simpson","Simpson@example.com",69,1.82,null];
       ret = await db.run(sqlcmd,values);
       if(ret.changes.lastId !== 3) {
         return Promise.reject(new Error("Run 1 users with statement & values failed"));
       }
-      // add one user with statement              
-      sqlcmd = `INSERT INTO users (name,email,age,size,company) VALUES ` + 
+      // add one user with statement
+      sqlcmd = `INSERT INTO users (name,email,age,size,company) VALUES ` +
                                 `("Brown","Brown@example.com",15,1.75,null)`;
       ret = await db.run(sqlcmd);
       if(ret.changes.lastId !== 4) {
@@ -194,13 +201,33 @@ export class Test2dbsPage implements AfterViewInit {
       // update twice updIssues220221 in db1
       ret = await db1.executeSet(updIssues220221);
       console.log(`twice updIssues220221 ret ${JSON.stringify(ret)}`)
-      
+
       // get the database version
       ret = await db.getVersion();
       if (ret.version !== 1) {
         return Promise.reject(new Error("GetVersion: version failed"));
       }
       this._detailService.setExistingConnection(true);
+      if(this.isNative) {
+        ret = (await this._sqlite.isInConfigEncryption()).result;
+        console.log(`isInConfigEncryption ret: ${ret}`);
+        if (!ret) {
+          return Promise.reject(new Error("isInConfigEncryption failed"));
+        }
+        ret = (await this._sqlite.isInConfigBiometricAuth()).result;
+        console.log(`isInConfigEncryption ret: ${ret}`);
+        if (ret) {
+          return Promise.reject(new Error("isInConfigBiometricAuth failed"));
+        }
+        result = (await this._sqlite.getDatabaseList()).values;
+        console.log(`test get Database List: ${JSON.stringify(result)}`)
+        for(const dbName of result)  {
+          const mDbName = dbName.includes("SQLite.db") ? dbName.split("SQLite.db")[0] : dbName;
+          console.log(`@@@@ dbName: ${dbName}`)
+          const isEncrypt = (await this._sqlite.isDatabaseEncrypted(mDbName)).result;
+          console.log(`Database: ${dbName} is encrypted: ${isEncrypt}`)
+        }
+      }
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

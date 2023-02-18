@@ -61,12 +61,12 @@ export class TestencryptionPage implements AfterViewInit {
         return Promise.reject(new Error("Execute createSchema failed"));
       }
 
-      // create synchronization table 
+      // create synchronization table
       ret = await db.createSyncTable();
       if (ret.changes.changes < 0) {
         return Promise.reject(new Error("Execute createSyncTable failed"));
       }
-      
+
       // set the synchronization date
       const syncDate: string = "2020-11-25T08:30:25.000Z";
       await db.setSyncDate(syncDate);
@@ -89,23 +89,23 @@ export class TestencryptionPage implements AfterViewInit {
                                     ret.values[1].name !== "Jones") {
         return Promise.reject(new Error("Query2 Users where Company null failed"));
       }
-      // add one user with statement and values              
-      let sqlcmd: string = 
+      // add one user with statement and values
+      let sqlcmd: string =
                   "INSERT INTO users (name,email,age) VALUES (?,?,?)";
       let values: Array<any>  = ["Simpson","Simpson@example.com",69];
       ret = await db.run(sqlcmd,values);
       if(ret.changes.lastId !== 3) {
         return Promise.reject(new Error("Run1 add 1 User failed"));
       }
-      // add one user with statement              
-      sqlcmd = `INSERT INTO users (name,email,age) VALUES ` + 
+      // add one user with statement
+      sqlcmd = `INSERT INTO users (name,email,age) VALUES ` +
                                 `("Brown","Brown@example.com",15)`;
       ret = await db.run(sqlcmd);
       if(ret.changes.lastId !== 4) {
         return Promise.reject(new Error("Run2 add 1 User failed"));
       }
 
-      await this._sqlite.closeConnection("testEncryption"); 
+      await this._sqlite.closeConnection("testEncryption");
 
       // ************************************************
       // Encrypt the existing database
@@ -119,7 +119,7 @@ export class TestencryptionPage implements AfterViewInit {
       // open db testEncryption
       await db.open();
       // close the connection
-      await this._sqlite.closeConnection("testEncryption"); 
+      await this._sqlite.closeConnection("testEncryption");
       // ************************************************
       // Work with the encrypted  database
       // ************************************************
@@ -131,8 +131,8 @@ export class TestencryptionPage implements AfterViewInit {
       // open db testEncryption
       await db.open();
 
-      // add one user with statement and values              
-      sqlcmd = 
+      // add one user with statement and values
+      sqlcmd =
                   "INSERT INTO users (name,email,age) VALUES (?,?,?)";
       values = ["Jackson","Jackson@example.com",32];
       ret = await db.run(sqlcmd,values);
@@ -151,9 +151,9 @@ export class TestencryptionPage implements AfterViewInit {
       }
 
       // delete it for multiple successive tests
-      await deleteDatabase(db);
-      
-      await this._sqlite.closeConnection("testEncryption"); 
+//      await deleteDatabase(db);
+
+      await this._sqlite.closeConnection("testEncryption");
 
       return Promise.resolve();
 
