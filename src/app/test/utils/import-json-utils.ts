@@ -251,7 +251,7 @@ export const dataToImport71: any = {
       },
     ]
 };
-  
+
 export const dataToImport94: any = {
     database : "db-from-json94",
     version : 1,
@@ -608,7 +608,7 @@ export const dataToImport231: any = {
         ],
       }
   ]
- 
+
 };
 export const dataToImportPartial231: any = {
   database : "db-from-json231",
@@ -675,7 +675,7 @@ export const schemaToImport240: any = {
         { name: "index_last_modified", value: "updateAt DESC" },
         { name: "index_cust", value: "aCustomer,fCustomer" }
       ],
-    },    
+    },
   ]
 }
 export const schemaToImport245V1: any = {
@@ -805,8 +805,50 @@ export const testIssue292: any = {
             [4, 'asdasdasdas', 1656153182, 0, 1656153182]
           ]
       },
-    
+
 
   ]
 
+}
+export const testIssue385: any = {
+  database: "db_issue385",
+  version: 1,
+  encrypted: false,
+  mode: "full",
+  tables: [
+    {
+      name: "departments",
+      schema: [
+        {
+          column: "department_id",
+          value: "INTEGER  NOT NULL PRIMARY KEY",
+        },
+        {
+          column: "department_name",
+          value: "TEXT NOT NULL"
+        },
+      ],
+    },
+    {
+      name: "students",
+      schema: [
+        {
+          column: "student_id",
+          value: "INTEGER PRIMARY KEY NOT NULL",
+        },
+        {
+          column: "student_name",
+          value: "TEXT NULL",
+        },
+        {
+          column: "department_id",
+          value: "INTEGER NOT NULL",
+        },
+        {
+          foreignkey: "department_id",
+          value: "REFERENCES departments (department_id) ON DELETE CASCADE ON UPDATE CASCADE"
+        },
+      ],
+    },
+  ],
 }

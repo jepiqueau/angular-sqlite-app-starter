@@ -21,10 +21,11 @@ window.addEventListener('DOMContentLoaded', async () => {
       console.log('in index.ts')
       const jeepEl = document.createElement("jeep-sqlite");
       document.body.appendChild(jeepEl);
+//      jeepEl.autoSave = true;
       await customElements.whenDefined('jeep-sqlite');
       console.log('in index.ts after customElements')
       await sqlite.initWebStore();
-      console.log('after sqlite.initWebStore()');   
+      console.log('after sqlite.initWebStore()');
     }
     await sqlite.checkConnectionsConsistency();
 
@@ -34,5 +35,5 @@ window.addEventListener('DOMContentLoaded', async () => {
     console.log(`Error: ${err}`);
     throw new Error(`Error: ${err}`)
   }
-  
+
 });

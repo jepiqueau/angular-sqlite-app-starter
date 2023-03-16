@@ -164,6 +164,11 @@ const routes: Routes = [
       .then(m => m.Testjson292PageModule)
   },
   {
+    path: 'json385',
+    loadChildren: () => import('./test/testjson385/testjson385.module')
+      .then(m => m.Testjson385PageModule)
+  },
+  {
     path: '',
     redirectTo: 'hometests',
     pathMatch: 'full'
