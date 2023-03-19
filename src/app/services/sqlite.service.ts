@@ -528,17 +528,22 @@ export class SQLiteService {
      */
     async moveDatabasesAndAddSuffix(folderPath?: string, dbNameList?: string[]): Promise<void>{
         if(!this.native) {
-            throw new Error(`Not implemented for ${this.platform} platform`);
+          return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
         }
         if(this.sqlite != null) {
             const path: string = folderPath ? folderPath : "default";
             const dbList: string[] = dbNameList ? dbNameList : [];
             return this.sqlite.moveDatabasesAndAddSuffix(path, dbList);
         } else {
-            throw new Error(`can't move the databases`);
+          return Promise.reject(new Error(`can't move the databases`));
         }
     }
-
+    /**
+     * Get a database from a given url
+     * @param url
+     * @param overwrite
+     * @returns
+     */
     async getFromHTTPRequest(url: string, overwrite?: boolean): Promise<void> {
         const mOverwrite: boolean = overwrite != null ? overwrite : true;
         if (url.length === 0) {
@@ -547,10 +552,42 @@ export class SQLiteService {
         if(this.sqlite != null) {
             return this.sqlite.getFromHTTPRequest(url, mOverwrite);
         } else {
-            throw new Error(`can't download the database`);
+          return Promise.reject(new Error(`can't download the database`));
         }
     }
-
+    /**
+     * Get a database from local disk and save it to store
+     * @param overwrite
+     * @returns
+     */
+    async getFromLocalDiskToStore(overwrite?: boolean): Promise<void> {
+      const mOverwrite: boolean = overwrite != null ? overwrite : true;
+      if(this.sqlite != null) {
+          return this.sqlite.getFromLocalDiskToStore(mOverwrite);
+      } else {
+        return Promise.reject(new Error(`can't download the database`));
+      }
+    }
+    /**
+     * Save a dtabase to local disk
+     * @param database
+     * @returns
+     */
+    async saveToLocalDisk(database: string):Promise<void> {
+      if(this.platform !== 'web')  {
+        return Promise.reject(new Error(`not implemented for this platform: ${this.platform}`));
+    }
+    if(this.sqlite != null) {
+        try {
+            await this.sqlite.saveToLocalDisk(database);
+            return Promise.resolve();
+        } catch (err) {
+            return Promise.reject(new Error(err));
+        }
+    } else {
+        return Promise.reject(new Error(`no connection open for ${database}`));
+    }
+}
     /**
      * Import from a Json Object
      * @param jsonstring

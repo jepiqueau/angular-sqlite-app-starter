@@ -89,6 +89,11 @@ const routes: Routes = [
       .then(m => m.DownloadFromHTTPModule)
   },
   {
+    path: 'fromlocaldisktostore',
+    loadChildren: () => import('./test/testFromLocalDiskToStore/testFromLocalDiskToStore.module')
+      .then(m => m.TestFromLocalDiskToStoreModule)
+  },
+  {
     path: 'copy',
     loadChildren: () => import('./test/testcopy/testcopy.module')
       .then(m => m.TestCopyPageModule)

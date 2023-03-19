@@ -16,6 +16,7 @@ export class HomeTestsPage {
   public exConn: boolean;
   public exJson: boolean;
   public native: boolean = false;
+  public web: boolean = false;
   public isDisplay: boolean = false;
   public environmentDatabase = environment.databaseName;
   private isBiometric: boolean = false;
@@ -27,7 +28,7 @@ export class HomeTestsPage {
     private _ref: ChangeDetectorRef) {
     this.platform = Capacitor.getPlatform();
     const mConfig = config.plugins && config.plugins.CapacitorSQLite ? config.plugins.CapacitorSQLite : null;
-
+    if(this.platform === "web") this.web = true;
     if (this.platform === "android" && mConfig != null) {
       this.isBiometric = mConfig.androidBiometric && mConfig.androidBiometric.biometricAuth
         ? mConfig.androidBiometric.biometricAuth : false;
