@@ -18,9 +18,9 @@
       <ion-button routerLink='/products' routerDirection="forward" color='tertiary' expand="block">
         Products crud example --- Database name: {{environmentDatabase}}
       </ion-button>
-      <ion-button *ngIf="native" routerLink='/setsecuresecret' routerDirection="forward" color='primary' expand="block">
+      <ion-button *ngIf="allowEncryption" routerLink='/setsecuresecret' routerDirection="forward" color='primary' expand="block">
         Test Set Secure Secret</ion-button>
-      <ion-button *ngIf="native" routerLink='/changesecuresecret' routerDirection="forward" color='primary'
+      <ion-button *ngIf="allowEncryption" routerLink='/changesecuresecret' routerDirection="forward" color='primary'
         expand="block">Test Change Secure Secret</ion-button>
         <ion-button *ngIf="native" routerLink='/checksecuresecret' routerDirection="forward" color='primary'
         expand="block">Test Check Secure Secret</ion-button>
@@ -34,7 +34,7 @@
       </ion-button>
       <ion-button routerLink='/upgradeversion' routerDirection="forward" color='primary' expand="block">Test Upgrade
         Versions</ion-button>
-      <ion-button *ngIf="native" routerLink='/encryption' routerDirection="forward" color='primary' expand="block">Test
+      <ion-button *ngIf="allowEncryption" routerLink='/encryption' routerDirection="forward" color='primary' expand="block">Test
         Encryption</ion-button>
       <ion-button routerLink='/importjson' routerDirection="forward" color='primary' expand="block">Test Import Json
       </ion-button>
