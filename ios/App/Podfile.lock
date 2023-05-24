@@ -1,0 +1,85 @@
+PODS:
+  - Capacitor (5.0.4):
+    - CapacitorCordova
+  - CapacitorApp (5.0.1):
+    - Capacitor
+  - CapacitorCommunitySqlite (5.0.0):
+    - Capacitor
+    - SQLCipher
+    - ZIPFoundation
+  - CapacitorCordova (5.0.4)
+  - CapacitorDialog (5.0.1):
+    - Capacitor
+  - CapacitorFilesystem (5.0.1):
+    - Capacitor
+  - CapacitorHaptics (5.0.1):
+    - Capacitor
+  - CapacitorKeyboard (5.0.1):
+    - Capacitor
+  - CapacitorStatusBar (5.0.1):
+    - Capacitor
+  - CapacitorToast (5.0.1):
+    - Capacitor
+  - SQLCipher (4.5.0):
+    - SQLCipher/standard (= 4.5.0)
+  - SQLCipher/common (4.5.0)
+  - SQLCipher/standard (4.5.0):
+    - SQLCipher/common
+  - ZIPFoundation (0.9.13)
+
+DEPENDENCIES:
+  - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorCommunitySqlite (from `../../node_modules/@capacitor-community/sqlite`)"
+  - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorDialog (from `../../node_modules/@capacitor/dialog`)"
+  - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
+  - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
+  - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
+  - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
+  - "CapacitorToast (from `../../node_modules/@capacitor/toast`)"
+
+SPEC REPOS:
+  trunk:
+    - SQLCipher
+    - ZIPFoundation
+
+EXTERNAL SOURCES:
+  Capacitor:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorApp:
+    :path: "../../node_modules/@capacitor/app"
+  CapacitorCommunitySqlite:
+    :path: "../../node_modules/@capacitor-community/sqlite"
+  CapacitorCordova:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorDialog:
+    :path: "../../node_modules/@capacitor/dialog"
+  CapacitorFilesystem:
+    :path: "../../node_modules/@capacitor/filesystem"
+  CapacitorHaptics:
+    :path: "../../node_modules/@capacitor/haptics"
+  CapacitorKeyboard:
+    :path: "../../node_modules/@capacitor/keyboard"
+  CapacitorStatusBar:
+    :path: "../../node_modules/@capacitor/status-bar"
+  CapacitorToast:
+    :path: "../../node_modules/@capacitor/toast"
+
+SPEC CHECKSUMS:
+  Capacitor: d3d4463573438b9fa65326d1f3549da6f4c21634
+  CapacitorApp: 23d62678d1092403c9c32d8b53c0cdd0da29fb2c
+  CapacitorCommunitySqlite: 8a2b259fe9fdd509e93be6036e1f349493b81aa8
+  CapacitorCordova: b1fe6bf1f36974a8e4a9044b342d22d49c0996d6
+  CapacitorDialog: 878bb254ad725de4b40f5058ef70426c535135d1
+  CapacitorFilesystem: d8ea223e82008ee25dd305cf4d5ca3acba8aa172
+  CapacitorHaptics: 4bdfc3b0137e7d9040892c81332827929b896d3c
+  CapacitorKeyboard: 5e1667b7b70e23b147f9fc91bafa458be41cba77
+  CapacitorStatusBar: 4edd082a8dadcedb5b1fa2b8480d67a220c79849
+  CapacitorToast: 711209f334476bc9f1efeb8ba4a5d432a2ec28d4
+  SQLCipher: 98dc22f27c0b1790d39e710d440f22a466ebdb59
+  ZIPFoundation: ae5b4b813d216d3bf0a148773267fff14bd51d37
+
+PODFILE CHECKSUM: 0d9283fad3281f43a04e4518e9569b0fbd5043c6
+
+COCOAPODS: 1.10.0

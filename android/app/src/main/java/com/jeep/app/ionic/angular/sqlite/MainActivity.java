@@ -1,4 +1,4 @@
-package com.jeep.app.ionic.angular;
+package com.jeep.app.ionic.angular.sqlite;
 
 import com.getcapacitor.BridgeActivity;
 
