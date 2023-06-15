@@ -3,7 +3,7 @@ PODS:
     - CapacitorCordova
   - CapacitorApp (5.0.1):
     - Capacitor
-  - CapacitorCommunitySqlite (5.0.0):
+  - CapacitorCommunitySqlite (5.0.3-1):
     - Capacitor
     - SQLCipher
     - ZIPFoundation
@@ -69,7 +69,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Capacitor: d3d4463573438b9fa65326d1f3549da6f4c21634
   CapacitorApp: 23d62678d1092403c9c32d8b53c0cdd0da29fb2c
-  CapacitorCommunitySqlite: 8a2b259fe9fdd509e93be6036e1f349493b81aa8
+  CapacitorCommunitySqlite: faf11ef166428262e08a90220130928bf9223971
   CapacitorCordova: b1fe6bf1f36974a8e4a9044b342d22d49c0996d6
   CapacitorDialog: 878bb254ad725de4b40f5058ef70426c535135d1
   CapacitorFilesystem: d8ea223e82008ee25dd305cf4d5ca3acba8aa172

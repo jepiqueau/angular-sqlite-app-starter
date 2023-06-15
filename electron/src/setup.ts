@@ -207,6 +207,7 @@ export class ElectronCapacitorApp {
         this.MainWindow.show();
       }
       setTimeout(() => {
+        console.log(`&&&& electronIsDev: ${electronIsDev} &&&&`);
         if (electronIsDev) {
           this.MainWindow.webContents.openDevTools();
         }
@@ -226,7 +227,7 @@ export function setupContentSecurityPolicy(customScheme: string): void {
           electronIsDev
             ? `default-src ${customScheme}://* 'unsafe-inline' devtools://* 'unsafe-eval' data:;
                image-src ${customScheme}: https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg blob: data:;`
-            : `default-src ${customScheme}://* 'unsafe-inline' data:`,
+            : `default-src ${customScheme}://* 'unsafe-inline' data:`
         ],
       },
     });
