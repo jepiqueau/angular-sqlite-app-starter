@@ -122,7 +122,7 @@ export class TestBlobsPage implements AfterViewInit {
       const image2EL: HTMLImageElement = document.querySelector('#image2');
       image2EL.src = imageUrl;
 
-      // test to set a BASE64 image as Blob
+      // test to set a BASE64 image as string in Blob
       values = ["meowth", "base64", Images[0]];
       ret = await db.run(stmt, values);
       console.log(`&&& res: ${JSON.stringify(ret)}`);
@@ -136,6 +136,14 @@ export class TestBlobsPage implements AfterViewInit {
       const image3EL: HTMLImageElement = document.querySelector('#image3');
       image3EL.src = retQuery.values[0].blob;
 
+      // test to set a BASE64 image as Blob
+      imageId = await this.writeImage(db, stmt, Images[1], "feather", "base64");
+      if( imageId !== 5) {
+        return Promise.reject(new Error("Blob Base64Image failed"));
+      }
+      imageUrl = await this.readImage(db, query, imageId);
+      const image4EL: HTMLImageElement = document.querySelector('#image4');
+      image4EL.src = imageUrl;
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);
