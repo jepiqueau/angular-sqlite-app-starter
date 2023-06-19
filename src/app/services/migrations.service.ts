@@ -31,7 +31,7 @@ export class MigrationService {
   }
 
   async migrate(): Promise<any> {
-    await this.createTestTable();
+//    await this.createTestTable();
     await this.createProductsTable();
   }
 
