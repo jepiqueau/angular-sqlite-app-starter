@@ -129,6 +129,11 @@ const routes: Routes = [
       .then(m => m.TestCheckSecureSecretPageModule)
   },
   {
+    path: 'clearsecuresecret',
+    loadChildren: () => import('./test/testclearsecuresecret/testclearsecuresecret.module')
+      .then(m => m.TestClearSecureSecretPageModule)
+  },
+  {
     path: 'testjson1',
     loadChildren: () => import('./test/testjson1extension/testjson1extension.module')
       .then(m => m.TestJson1ExtensionPageModule)

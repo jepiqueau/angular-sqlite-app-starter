@@ -4,18 +4,19 @@ import { SQLiteService } from '../../services/sqlite.service';
 import { Dialog } from '@capacitor/dialog';
 
 @Component({
-  selector: 'app-testchangesecuresecret',
-  templateUrl: 'testchangesecuresecret.page.html',
-  styleUrls: ['testchangesecuresecret.page.scss']
+  selector: 'app-testclearsecuresecret',
+  templateUrl: 'testclearsecuresecret.page.html',
+  styleUrls: ['testclearsecuresecret.page.scss']
 })
-export class TestChangeSecureSecretPage implements AfterViewInit {
+export class TestClearSecureSecretPage implements AfterViewInit {
   detail: boolean = false;
   platform: string;
   handlerPermissions: any;
   initPlugin: boolean = false;
   showAlert: any;
 
-  constructor(private _sqlite: SQLiteService) {}
+  constructor(private _sqlite: SQLiteService) {
+  }
 
   async ngAfterViewInit() {
     this.showAlert = async (message: string) => {
@@ -24,7 +25,7 @@ export class TestChangeSecureSecretPage implements AfterViewInit {
       message: message,
       });
     };
-    console.log("%%%% in TestChangeSecureSecretPage this._sqlite " + this._sqlite)
+    console.log("%%%% in TestClearSecureSecretPage this._sqlite " + this._sqlite)
     try {
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
@@ -41,19 +42,7 @@ export class TestChangeSecureSecretPage implements AfterViewInit {
 
   async runTest(): Promise<void> {
     try {
-
-
-      await this._sqlite.changeEncryptionSecret('how million space by locate',
-                                                'abbey clammy gird night test');
-
-/*
-      await this._sqlite.changeEncryptionSecret('abbey clammy gird night test',
-                                                  'how million space by locate');
-
-*/
-
-
-
+      await this._sqlite.clearEncryptionSecret();
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

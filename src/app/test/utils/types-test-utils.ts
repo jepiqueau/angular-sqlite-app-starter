@@ -15,12 +15,12 @@ CREATE TABLE IF NOT EXISTS teachers (
 CREATE INDEX IF NOT EXISTS teachers_index_email ON teachers (email);
 CREATE INDEX IF NOT EXISTS teachers_index_last_modified ON teachers (last_modified);
 CREATE TRIGGER IF NOT EXISTS teachers_trigger_last_modified
-AFTER UPDATE ON teachers
-FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
-BEGIN
+  AFTER UPDATE ON teachers
+  FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
+  BEGIN
     UPDATE teachers SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
-END;
-`;    
+  END;
+`;
 export const firstTeachers: string = `
 DELETE FROM teachers;
 INSERT INTO teachers (name,email,office,size,age,phone,birth_date) VALUES ("Brown","stevebrown@example.com",null,null,null,33601234567,"1980-03-20");

@@ -127,12 +127,15 @@ export class Test2dbsPage implements AfterViewInit {
 
       // load setContacts in db1
       ret = await db1.executeSet(setContacts);
+      console.log(`ExecuteSet 5: ${JSON.stringify(ret)}`);
       if (ret.changes.changes !== 5) {
         return Promise.reject(new Error("ExecuteSet 5 contacts failed"));
       }
 
       // test issue170
+      console.log(`Start Issue170`)
       ret = await db1.executeSet(setIssue170);
+      console.log(`ExecuteSet 6: ${JSON.stringify(ret)}`);
       if (ret.changes.changes !== 1) {
         return Promise.reject(new Error("ExecuteSet 6 issue170 failed"));
       }
@@ -151,6 +154,7 @@ export class Test2dbsPage implements AfterViewInit {
                   "INSERT INTO users (name,email,age,size,company) VALUES (?,?,?,?,?)";
       let values: Array<any>  = ["Simpson","Simpson@example.com",69,1.82,null];
       ret = await db.run(sqlcmd,values);
+      console.log(`@@@@ Run 1: ${JSON.stringify(ret)}`);
       if(ret.changes.lastId !== 3) {
         return Promise.reject(new Error("Run 1 users with statement & values failed"));
       }
@@ -163,6 +167,7 @@ export class Test2dbsPage implements AfterViewInit {
       }
       let delTest56 = `DELETE FROM test56;`;
       ret = await db.execute(delTest56, false);
+      console.log(`$$$$$$$ after DELETE FROM test56`)
       // add some tests issue#56
       ret = await db.execute(twoTests);
       if (ret.changes.changes !== 2) {

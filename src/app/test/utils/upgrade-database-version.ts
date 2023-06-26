@@ -9,16 +9,16 @@ export const versionUpgrades = [
                 company TEXT,
                 size REAL,
                 age INTEGER,
-                last_modified INTEGER DEFAULT (strftime('%s', 'now'))    
+                last_modified INTEGER DEFAULT (strftime('%s', 'now'))
             );`,
             `CREATE INDEX IF NOT EXISTS users_index_name ON users (name);`,
-            `CREATE INDEX IF NOT EXISTS users_index_last_modified ON users (last_modified);`,            
+            `CREATE INDEX IF NOT EXISTS users_index_last_modified ON users (last_modified);`,
             `CREATE TRIGGER IF NOT EXISTS users_trigger_last_modified
-             AFTER UPDATE ON users
-             FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified
-             BEGIN
+              AFTER UPDATE ON users
+              FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified
+              BEGIN
                 UPDATE users SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
-             END;`,
+              END;`,
             `INSERT INTO users (name,email,age) VALUES ('Whiteley', 'whiteley@local.host', 30);`,
             `INSERT INTO users (name,email,age) VALUES ('Jones', 'jones@local.host', 44);`,
         ]
@@ -34,7 +34,7 @@ export const versionUpgrades = [
                 title TEXT NOT NULL,
                 body TEXT NOT NULL,
                 sql_deleted BOOLEAN DEFAULT 0 CHECK (sql_deleted IN (0, 1)),
-                last_modified INTEGER DEFAULT (strftime('%s', 'now')),        
+                last_modified INTEGER DEFAULT (strftime('%s', 'now')),
                 FOREIGN KEY (userid) REFERENCES users(id) ON DELETE SET DEFAULT
             );`,
             `CREATE INDEX messages_index_title ON messages (title);`,
@@ -45,5 +45,5 @@ export const versionUpgrades = [
             `UPDATE users SET country = 'United Kingdom'  WHERE id = 1;`,
             `UPDATE users SET country = 'Australia'  WHERE id = 2;`,
         ]
-    } 
+    }
 ]

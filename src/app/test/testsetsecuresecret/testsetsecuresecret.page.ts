@@ -46,6 +46,8 @@ export class TestSetSecureSecretPage implements AfterViewInit {
       // by using an input form
       // here i used a constant
         const secretPhrase = 'abbey clammy gird night test';
+        const isEncrypt = (await this._sqlite.isInConfigEncryption()).result;
+        console.log(`in testsetsecuresecret isEncrypt: ${isEncrypt}`)
         const isSet = await this._sqlite.isSecretStored()
         if(!isSet.result) {
             await this._sqlite.setEncryptionSecret(secretPhrase);

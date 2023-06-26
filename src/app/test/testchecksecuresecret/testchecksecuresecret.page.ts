@@ -30,11 +30,12 @@ export class TestCheckSecureSecretPage implements AfterViewInit {
       document.querySelector('.sql-allsuccess').classList
       .remove('display');
       console.log("$$$ runTest was successful");
-    } catch (err) {
+    } catch (err: any) {
+      const msg = err.message ? err.message : err;
       document.querySelector('.sql-allfailure').classList
       .remove('display');
-      console.log(`$$$ runTest failed ${err.message}`);
-      await this.showAlert(err.message);
+      console.log(`$$$ runTest failed ${msg}`);
+      await this.showAlert(msg);
     }
   }
 
@@ -42,10 +43,10 @@ export class TestCheckSecureSecretPage implements AfterViewInit {
   async runTest(): Promise<void> {
     try {
 
-      const ret1 = (await this._sqlite.checkEncryptionSecret('how million space by locate')).result;
+      const ret1 = (await this._sqlite.checkEncryptionSecret('abbey clammy gird night test')).result;
       console.log(`first password: ${ret1}`);
 
-      const ret2 = (await this._sqlite.checkEncryptionSecret('abbey clammy gird night test')).result;
+      const ret2 = (await this._sqlite.checkEncryptionSecret('how million space by locate')).result;
       console.log(`second password: ${ret2}`);
 
       if(ret1 == true || ret2 == false) {

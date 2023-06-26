@@ -65,11 +65,11 @@ CREATE TABLE IF NOT EXISTS issues220221 (
 CREATE INDEX IF NOT EXISTS issues220221_index_title ON issues220221 (title);
 CREATE INDEX IF NOT EXISTS issues220221_index_last_modified ON issues220221 (last_modified);
 CREATE TRIGGER IF NOT EXISTS issues220221_trigger_last_modified
-AFTER UPDATE ON issues220221
-FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified
-BEGIN
+  AFTER UPDATE ON issues220221
+  FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified
+  BEGIN
     UPDATE issues220221 SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
-END;
+  END;
 `
 export const setIssues220221: Array<capSQLiteSet>  = [
   { statement:"INSERT INTO issues220221 (title,body) VALUES (?,?);",

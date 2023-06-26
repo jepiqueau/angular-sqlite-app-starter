@@ -50,7 +50,7 @@ export class SQLiteService {
         }
     }
     async isSecretStored(): Promise<capSQLiteResult> {
-        if(!this.native) {
+        if(this.platform === "web") {
             return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
         }
         if(this.sqlite != null) {
@@ -64,7 +64,7 @@ export class SQLiteService {
         }
     }
     async setEncryptionSecret(passphrase: string): Promise<void> {
-        if(!this.native) {
+        if(this.platform === 'web') {
             return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
         }
         if(this.sqlite != null) {
@@ -80,7 +80,7 @@ export class SQLiteService {
     }
 
     async changeEncryptionSecret(passphrase: string, oldpassphrase: string): Promise<void> {
-        if(!this.native) {
+        if(this.platform === 'web') {
             return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
         }
         if(this.sqlite != null) {
@@ -95,12 +95,27 @@ export class SQLiteService {
 
     }
     async checkEncryptionSecret(passphrase: string): Promise<capSQLiteResult> {
-      if(!this.native) {
+      if(this.platform === 'web') {
           return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
       }
       if(this.sqlite != null) {
           try {
               return Promise.resolve(await this.sqlite.checkEncryptionSecret(passphrase));
+          } catch (err) {
+              return Promise.reject(new Error(err));
+          }
+      } else {
+          return Promise.reject(new Error(`no connection open`));
+      }
+
+    }
+    async clearEncryptionSecret(): Promise<void> {
+      if(this.platform === 'web') {
+          return Promise.reject(new Error(`Not implemented for ${this.platform} platform`));
+      }
+      if(this.sqlite != null) {
+          try {
+              return Promise.resolve(await this.sqlite.clearEncryptionSecret());
           } catch (err) {
               return Promise.reject(new Error(err));
           }
