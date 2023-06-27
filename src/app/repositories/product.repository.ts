@@ -21,8 +21,11 @@ export class ProductRepository {
       if (!product.imageUrl) {
         product.imageUrl = 'https://via.placeholder.com/150';
       }
+      const isAvailable = product.isAvailable ? 1 : 0;
+      const isPopular = product.isPopular ? 1 : 0;
+
       let sqlcmd: string = "insert into products (name, description, price, imageUrl, isAvailable, isPopular, category) values (?, ?, ?, ?, ?, ?, ?)";
-      let values: Array<any> = [product.name, product.description, product.price, product.imageUrl, product.isAvailable, product.isPopular, product.category];
+      let values: Array<any> = [product.name, product.description, product.price, product.imageUrl, isAvailable, isPopular, product.category];
       let ret: any = await db.run(sqlcmd, values);
       if (ret.changes.lastId > 0) {
         return ret.changes as Product;
