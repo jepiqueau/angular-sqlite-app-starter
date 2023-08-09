@@ -118,8 +118,17 @@ export class TestencryptionPage implements AfterViewInit {
 
       // open db testEncryption
       await db.open();
+      // select all users in db
+      ret = await db.query("SELECT * FROM users;");
+      if(ret.values.length !== 4 || ret.values[0].name !== "Whiteley" ||
+                                    ret.values[1].name !== "Jones" ||
+                                    ret.values[2].name !== "Simpson" ||
+                                    ret.values[3].name !== "Brown") {
+        return Promise.reject(new Error("Query2-1  4 Users failed"));
+      }
       // close the connection
       await this._sqlite.closeConnection("testEncryption");
+      console.log(`&&&& Close the connection after Encryption &&&&`)
       // ************************************************
       // Work with the encrypted  database
       // ************************************************
@@ -128,14 +137,17 @@ export class TestencryptionPage implements AfterViewInit {
       db = await this._sqlite
                   .createConnection("testEncryption", true, "secret", 1);
 
+      console.log(`&&&& After creatin the connection to the encrypted database &&&&`)
       // open db testEncryption
       await db.open();
 
       // add one user with statement and values
+      console.log(`&&&& before inserting Jackson user &&&&`)
       sqlcmd =
                   "INSERT INTO users (name,email,age) VALUES (?,?,?)";
       values = ["Jackson","Jackson@example.com",32];
       ret = await db.run(sqlcmd,values);
+      console.log(`&&&& after inserting Jackson user: ${JSON.stringify(ret)} &&&&`)
       if(ret.changes.lastId !== 5) {
         return Promise.reject(new Error("Run3 add 1 User failed"));
       }

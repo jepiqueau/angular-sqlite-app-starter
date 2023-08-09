@@ -65,14 +65,19 @@ export class Test2dbsPage implements AfterViewInit {
       if(retCC && isConn) {
         db1 = await this._sqlite.retrieveConnection("testSet");
       } else {
-        const isInConfigEncryption: boolean = (await this._sqlite.isInConfigEncryption()).result;
-        console.log(`$$$ this._sqlite.isInConfigEncryption ${isInConfigEncryption}`)
-        if(isInConfigEncryption) {
-          db1 = await this._sqlite
-                  .createConnection("testSet", true, "secret", 1);
+        if(this._sqlite.platform !== 'web') {
+          const isInConfigEncryption: boolean = (await this._sqlite.isInConfigEncryption()).result;
+          console.log(`$$$ this._sqlite.isInConfigEncryption ${isInConfigEncryption}`)
+          if(isInConfigEncryption) {
+            db1 = await this._sqlite
+                    .createConnection("testSet", true, "secret", 1);
+          } else {
+            db1 = await this._sqlite
+                  .createConnection("testSet", false, "no-encrytion", 1);
+          }
         } else {
           db1 = await this._sqlite
-                  .createConnection("testSet", false, "no-encrytion", 1);
+          .createConnection("testSet", false, "no-encrytion", 1);
         }
       }
 
@@ -114,7 +119,11 @@ export class Test2dbsPage implements AfterViewInit {
       }
       // test issue#378
       const ret378 = await db.run("UPDATE users SET age = ? WHERE id = ?", [45.3, 1], false);
-      console.log(`&&&& ret378: ${JSON.stringify(ret378)} &&&&`);
+      console.log(`&&&& ret378: ${JSON.stringify(ret378.changes)} &&&&`);
+      console.log(`&&&& ret378.changes.changes: ${ret378.changes.changes} &&&&`);
+      console.log(`&&&& ret378: ${ret378.changes.lastId} &&&&`);
+      console.log(`&&&& ret378: ${ret378.changes.values} &&&&`);
+
       if (ret378.changes.changes !== 1) {
         return Promise.reject(new Error("Run issue#378 users failed"));
       }
@@ -139,10 +148,11 @@ export class Test2dbsPage implements AfterViewInit {
       if (ret.changes.changes !== 1) {
         return Promise.reject(new Error("ExecuteSet 6 issue170 failed"));
       }
-
-      const isDbEncrypt = (await this._sqlite.isDatabaseEncrypted("testNew")).result;
-      const isDb1Encrypt = (await this._sqlite.isDatabaseEncrypted("testSet")).result;
-      console.log(`&&&& isDbEncrypt: ${isDbEncrypt} isDb1Encrypt ${isDb1Encrypt} &&&&`);
+      if(this._sqlite.platform !== 'web') {
+        const isDbEncrypt = (await this._sqlite.isDatabaseEncrypted("testNew")).result;
+        const isDb1Encrypt = (await this._sqlite.isDatabaseEncrypted("testSet")).result;
+        console.log(`&&&& isDbEncrypt: ${isDbEncrypt} isDb1Encrypt ${isDb1Encrypt} &&&&`);
+      }
       // select users where company is NULL in db
       ret = await db.query("SELECT * FROM users WHERE company IS NULL;");
       if(ret.values.length !== 2 || ret.values[0].name !== "Whiteley" ||

@@ -22,10 +22,15 @@ const routes: Routes = [
     loadChildren: () => import('./test/testreadonly/testreadonly.module')
       .then(m => m.TestReadonlyPageModule)
   },
-{
+  {
     path: 'testIssue230',
     loadChildren: () => import('./test/testIssue230/testIssue230.module')
       .then(m => m.TestIssue230PageModule)
+  },
+  {
+    path: 'testIssue445',
+    loadChildren: () => import('./test/testIssue445/testIssue445.module')
+      .then(m => m.TestIssue445PageModule)
   },
   {
     path: 'existingconnection',

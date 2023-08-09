@@ -1,0 +1,102 @@
+*************************************************
+*** Running DELETE FROM table_1 WHERE id = 1; ***
+*************************************************
+
+const retDel1 = await db.execute(deleteFromTable1Issue445);
+
+********************************************
+*** Value inside findReferencesAndUpdate ***
+********************************************
+
+Printing description of tableName:
+"table_1"
+Printing description of whereStmt:
+"WHERE id = 1"
+Printing description of values:
+0 elements
+Printing description of references:
+▿ 1 element
+  - 0 : "(result_id, result_slug) REFERENCES Table_2(id, slug)"
+Printing description of tableNameWithRefs:
+"Table_1"
+Printing description of refTable:
+"Table_2"
+Printing description of withRefsNames:
+▿ 2 elements
+  - 0 : "result_id"
+  - 1 : " result_slug"
+Printing description of colNames:
+▿ 2 elements
+  - 0 : "id"
+  - 1 : " slug"
+Printing description of uWhereStmt:
+"WHERE result_id =  1"
+Printing description of updTableName:
+"Table_1"
+Printing description of updColNames:
+▿ 2 elements
+  - 0 : "id"
+  - 1 : " slug"
+Printing description of selValues:
+([Any]) selValues = 0 values {}
+
+**********************************************************
+*** Everything works find                              ***
+*** looking at the Database with DB Browser for SQLite ***
+*** i got the table_1 as follows                       ***
+**********************************************************
+
+id	result_id	 result_slug	sql_deleted	last_modified
+
+1	834efdb6-6044-4b44-8fcb-560710936f37	slug_1	1	1690379065
+2	e8fa8d54-641a-4d7b-9422-91474d713c62	slug_2	0	1690379065
+3	dff59ac0-4d80-4b96-85c4-14f3a118e7fe	slug_1	0	1690379065
+4	511fea83-9f5f-4606-85ec-3d769da4bf63	slug_3	0	1690379065
+5	3bc82ef7-1138-4f97-945a-08626a42a648	slug_3	0	1690379065
+
+
+**********************************************************
+*** DELETE FROM table_2 WHERE (id,slig) IN             ***
+*** (VALUES                                            ***
+*** ('834efdb6-6044-4b44-8fcb-560710936f37','slug_1'), ***
+*** ('cd13d088-21cf-4286-ae61-0643d321dd9e', 'slug_4') ***
+*** );                                                 ***
+**********************************************************
+
+const retDel1 = await db.execute(deleteFromTable1Issue445);
+
+********************************************
+*** Value inside findReferencesAndUpdate ***
+********************************************
+
+Printing description of tableName:
+"table_2"
+Printing description of whereStmt:
+"WHERE (id,slig) IN (VALUES (\'834efdb6-6044-4b44-8fcb-560710936f37\',\'slug_1\'),(\'cd13d088-21cf-4286-ae61-0643d321dd9e\', \'slug_4\'))"
+Printing description of values:
+0 elements
+Printing description of references:
+▿ 1 element
+  - 0 : "(result_id, result_slug) REFERENCES Table_2(id, slug)"
+Printing description of tableNameWithRefs:
+"Table_1"
+Printing description of refTable:
+"Table_2"
+Printing description of withRefsNames:
+▿ 2 elements
+  - 0 : "result_id"
+  - 1 : " result_slug"
+Printing description of colNames:
+▿ 2 elements
+  - 0 : "id"
+  - 1 : " slug"
+Printing description of uWhereStmt:
+"WHERE "
+Printing description of updTableName:
+"Table_1"
+Printing description of updColNames:
+▿ 2 elements
+  - 0 : "id"
+  - 1 : " slug"
+Printing description of stmt:
+"UPDATE Table_1 SET sql_deleted = 1 WHERE "
