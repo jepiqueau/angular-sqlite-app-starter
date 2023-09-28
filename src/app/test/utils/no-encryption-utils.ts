@@ -41,21 +41,21 @@ CREATE INDEX IF NOT EXISTS images_index_name ON images (name);
 CREATE INDEX IF NOT EXISTS images_index_last_modified ON images (last_modified);
 CREATE TRIGGER IF NOT EXISTS users_trigger_last_modified
   AFTER UPDATE ON users
-  FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified
+  FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
   BEGIN
-    UPDATE users SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+    UPDATE users SET last_modified= (strftime('%s', 'now')) WHERE id=NEW.id;
   END;
 CREATE TRIGGER IF NOT EXISTS messages_trigger_last_modified
   AFTER UPDATE ON messages
-  FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified
+  FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
   BEGIN
-    UPDATE messages SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+    UPDATE messages SET last_modified= (strftime('%s', 'now')) WHERE id=NEW.id;
   END;
 CREATE TRIGGER IF NOT EXISTS images_trigger_last_modified
   AFTER UPDATE ON images
-  FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified
+  FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
   BEGIN
-    UPDATE images SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+    UPDATE images SET last_modified= (strftime('%s', 'now')) WHERE id=NEW.id;
   END;
 PRAGMA user_version = 1;
 `;

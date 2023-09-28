@@ -36,7 +36,7 @@ export class TestJson1ExtensionPage implements AfterViewInit {
     try {
       const res = await this.loadJSON('assets/jsonFiles/test-json1.json');
       this.dataArticles = JSON.parse(res);
-  
+
       await this.runTest();
       document.querySelector('.sql-allsuccess').classList
       .remove('display');
@@ -58,10 +58,10 @@ export class TestJson1ExtensionPage implements AfterViewInit {
       let db: SQLiteDBConnection;
       if((await this._sqlite.isConnection("testJSON1")).result) {
         db = await this._sqlite.retrieveConnection("testJSON1");
-      } else 
+      } else
         db = await this._sqlite
                   .createConnection("testJSON1", false, "no-encryption", 1);
-      // check if the databases exist 
+      // check if the databases exist
       // and delete it for multiple successive tests
       await deleteDatabase(db);
 
@@ -74,15 +74,15 @@ export class TestJson1ExtensionPage implements AfterViewInit {
         return Promise.reject(new Error("Execute createSchema failed"));
       }
 
-      // create synchronization table 
+      // create synchronization table
       ret = await db.createSyncTable();
-      
+
       // set the synchronization date
       const syncDate: string = "2020-11-25T08:30:25.000Z";
       await db.setSyncDate(syncDate);
 
       // add first users in db
-      ret = await db.execute(twoUsers);
+      ret = await db.execute(twoUsers, true, false);
       if (ret.changes.changes !== 2) {
         return Promise.reject(new Error("Execute 2 users failed"));
       }
@@ -93,7 +93,7 @@ export class TestJson1ExtensionPage implements AfterViewInit {
         return Promise.reject(new Error("Query 1 users failed"));
       }
       ret = await db.query("SELECT json_extract(users.phone, '$.cell') FROM users;");
-      if(ret.values.length !== 2 
+      if(ret.values.length !== 2
         || ret.values[0]["json_extract(users.phone, '$.cell')"] !== "+34712345678"
         || ret.values[1]["json_extract(users.phone, '$.cell')"] !== "+33912345678"
       ) {
@@ -108,28 +108,29 @@ export class TestJson1ExtensionPage implements AfterViewInit {
       if(ret.values.length !== 1 || ret.values[0].name !== "Jeep") {
         return Promise.reject(new Error("Query Users where Phone starts with +33 failed"));
       }
-      ret = await db.run(`UPDATE users SET phone = json_replace(users.phone, '$.cell', "+33612567834") WHERE users.name = "Jeep";`,[]);
+      ret = await db.run(`UPDATE users SET phone = json_replace(users.phone, '$.cell', '+33612567834') WHERE users.name = 'Jeep';`,
+                        []);
       /*,
             json_replace(users.phone, '$.cell', "+33612567834");*/
       console.log(`ret ${JSON.stringify(ret)}`);
-      ret = await db.query("SELECT json_extract(users.phone, '$.cell') FROM users WHERE users.name = 'Jeep';");
-      if(ret.values.length !== 1 
+      ret = await db.query(`SELECT json_extract(users.phone, '$.cell') FROM users WHERE users.name = 'Jeep';`, []);
+      if(ret.values.length !== 1
         || ret.values[0]["json_extract(users.phone, '$.cell')"] !== "+33612567834"
       ) {
         return Promise.reject(new Error("Query User's cell phone failed"));
       }
       ret = await db.query("SELECT json_extract(users.phone, '$.cell') FROM users;");
-      if(ret.values.length !== 2 
+      if(ret.values.length !== 2
         || ret.values[0]["json_extract(users.phone, '$.cell')"] !== "+34712345678"
         || ret.values[1]["json_extract(users.phone, '$.cell')"] !== "+33612567834"
       ) {
         return Promise.reject(new Error("Query User's cell phone failed"));
       }
-      
+
       result = await this._sqlite.isConnection("testJSON1");
       if(result.result) {
         // close the connection testJSON1
-        await this._sqlite.closeConnection("testJSON1");      
+        await this._sqlite.closeConnection("testJSON1");
       }
 
       // test Articles
@@ -137,11 +138,11 @@ export class TestJson1ExtensionPage implements AfterViewInit {
       let db1: SQLiteDBConnection;
       if((await this._sqlite.isConnection("Articles")).result) {
         db1 = await this._sqlite.retrieveConnection("Articles");
-      } else 
+      } else
         db1 = await this._sqlite
                   .createConnection("Articles", false, "no-encryption", 1);
         console.log(`after create Connection Articles`)
-      // check if the databases exist 
+      // check if the databases exist
       // and delete it for multiple successive tests
       await deleteDatabase(db1);
 
@@ -155,10 +156,10 @@ export class TestJson1ExtensionPage implements AfterViewInit {
         return Promise.reject(new Error("Execute createSchemaArticles failed"));
       }
 
-      // create synchronization table 
+      // create synchronization table
       ret = await db1.createSyncTable();
       console.log(`createSyncTable JSON.stringify(ret) ${JSON.stringify(ret)}`)
-      
+
       // set the synchronization date
       const syncDate1 = "2021-08-12T08:30:25.000Z";
       await db1.setSyncDate(syncDate1);
@@ -175,7 +176,7 @@ export class TestJson1ExtensionPage implements AfterViewInit {
       let stmt = "SELECT json_extract(articles.data, '$.title') AS title ";
       stmt += "FROM articles ORDER BY json_extract(articles.data, '$.title') LIMIT 5;";
       ret = await db1.query(stmt);
-      if(ret.values.length !== 5 
+      if(ret.values.length !== 5
         || ret.values[0].title.substring(0,17) !== "A Tour of Tagging"
         || ret.values[1].title.substring(0,17) !== "Alternative Redis"
         || ret.values[2].title.substring(0,17) !== "Building the SQLi"
@@ -188,9 +189,9 @@ export class TestJson1ExtensionPage implements AfterViewInit {
       result = await this._sqlite.isConnection("Articles");
       if(result.result) {
         // close the connection tArticles
-        await this._sqlite.closeConnection("Articles");      
+        await this._sqlite.closeConnection("Articles");
       }
-    
+
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

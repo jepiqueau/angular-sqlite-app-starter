@@ -15,9 +15,9 @@ export const versionUpgrades = [
             `CREATE INDEX IF NOT EXISTS users_index_last_modified ON users (last_modified);`,
             `CREATE TRIGGER IF NOT EXISTS users_trigger_last_modified
               AFTER UPDATE ON users
-              FOR EACH ROW WHEN NEW.last_modified < OLD.last_modified
+              FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
               BEGIN
-                UPDATE users SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+                UPDATE users SET last_modified= (strftime('%s', 'now')) WHERE id=NEW.id;
               END;`,
             `INSERT INTO users (name,email,age) VALUES ('Whiteley', 'whiteley@local.host', 30);`,
             `INSERT INTO users (name,email,age) VALUES ('Jones', 'jones@local.host', 44);`,

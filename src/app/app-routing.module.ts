@@ -33,6 +33,11 @@ const routes: Routes = [
       .then(m => m.TestIssue445PageModule)
   },
   {
+    path: 'testIssue470',
+    loadChildren: () => import('./test/testIssue470/testIssue470.module')
+      .then(m => m.TestIssue470PageModule)
+  },
+  {
     path: 'existingconnection',
     loadChildren: () => import('./test/existingconnection/existingconnection.module')
       .then(m => m.ExistingconnectionPageModule)

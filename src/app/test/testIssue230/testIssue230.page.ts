@@ -55,7 +55,7 @@ export class TestIssue230Page implements AfterViewInit {
                   .createConnection("testIssue230", false, "no-encryption", 1);
       }
 
-      // check if the databases exist 
+      // check if the databases exist
       // and delete it for multiple successive tests
       await deleteDatabase(db);
 
@@ -63,16 +63,19 @@ export class TestIssue230Page implements AfterViewInit {
       await db.open();
       const name: string = db.getConnectionDBName();
       console.log(`>>>>>> dbName: ${name}`)
-
       const transaction: any = [
-        {statement : createSchemaIssue230},
-        {statement: "INSERT INTO DemoTable VALUES (?,?)",
+        {statement: "DROP TABLE IF EXISTS DemoTable"},
+        {statement: createSchemaIssue230},
+        {statement: "INSERT INTO DemoTable VALUES (?,?);",
           values: ["Alice",101]},
-        {statement: "INSERT INTO DemoTable VALUES (?,?)",
+        {statement: "INSERT INTO DemoTable VALUES (?,?);",
           values: ["Betty",202]}
       ]
       console.log(`>>>>>> transaction: ${JSON.stringify(transaction)}`)
-      await db.executeTransaction(transaction);
+      const ret = await db.executeTransaction(transaction);
+      console.log(`changes: ${ret.changes.changes}`);
+      const qVal = await db.query('SELECT * FROM DemoTable;')
+      console.log(`>>>> qVal: ${JSON.stringify(qVal)}`)
 /*
         let ret: any = await db.execute("BEGIN TRANSACTION;",false);
         // create table in db
@@ -82,7 +85,7 @@ export class TestIssue230Page implements AfterViewInit {
           return Promise.reject(new Error("Execute createSchema failed"));
         }
         // do some INSERT
-        let sqlcmd: string = 
+        let sqlcmd: string =
         "INSERT INTO DemoTable VALUES (?,?)";
         let values: Array<any>  = ["Alice",101];
         ret = await db.run(sqlcmd,values,false);
@@ -100,7 +103,7 @@ export class TestIssue230Page implements AfterViewInit {
         }
         await db.execute("COMMIT;",false);
 */
-        await this._sqlite.closeConnection("testIssue230"); 
+        await this._sqlite.closeConnection("testIssue230");
         return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

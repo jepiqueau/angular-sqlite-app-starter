@@ -82,10 +82,10 @@ export class TestTypesPage implements AfterViewInit {
       let db: SQLiteDBConnection;
       if((await this._sqlite.isConnection("testTypes.db")).result) {
         db = await this._sqlite.retrieveConnection("testTypes.db");
-      } else 
+      } else
         db = await this._sqlite
                   .createConnection("testTypes.db", false, "no-encryption", 1);
-      // check if the databases exist 
+      // check if the databases exist
       // and delete it for multiple successive tests
       await deleteDatabase(db);
 
@@ -98,15 +98,15 @@ export class TestTypesPage implements AfterViewInit {
         return Promise.reject(new Error("Execute createSchema failed"));
       }
 
-      // create synchronization table 
+      // create synchronization table
       ret = await db.createSyncTable();
-      
+
       // set the synchronization date
       const syncDate: string = "2020-11-25T08:30:25.000Z";
       await db.setSyncDate(syncDate);
 
       // add first teachers in db
-      ret = await db.execute(firstTeachers, false);
+      ret = await db.execute(firstTeachers, false, false);
       if (ret.changes.changes !== 2) {
         return Promise.reject(new Error("Execute 2 teachers failed"));
       }
@@ -116,7 +116,7 @@ export class TestTypesPage implements AfterViewInit {
                                     ret.values[1].name !== "Dupont") {
         return Promise.reject(new Error("Query 1 teachers failed"));
       }
-      // update age with statement and values              
+      // update age with statement and values
       let sqlcmd: string =
                   "UPDATE teachers SET age = ?, office = ? WHERE id = ?;";
       let values: Array<any>  = [41,"ABC",1];
@@ -134,7 +134,7 @@ export class TestTypesPage implements AfterViewInit {
         return Promise.reject(new Error("Query 2 teachers failed"));
       }
       // close the connection
-      await this._sqlite.closeConnection("testTypes.db"); 
+      await this._sqlite.closeConnection("testTypes.db");
 
       // partial import
       result = await this._sqlite
@@ -152,14 +152,14 @@ export class TestTypesPage implements AfterViewInit {
       // select teachers with "office" is null
       sqlcmd = "SELECT * FROM teachers where office IS NULL;";
       result = await db.query(sqlcmd);
-      if(result.values.length !== 1 || 
+      if(result.values.length !== 1 ||
                     result.values[0].name !== "MacLaren") {
         return Promise.reject(new Error("Query 3 Teachers failed"));
       }
 
       // export full json
       let jsonObj: any = await db.exportToJson('full');
-    
+
       // test Json object validity
       result = await this._sqlite
                             .isJsonValid(JSON.stringify(jsonObj.export));
@@ -167,7 +167,7 @@ export class TestTypesPage implements AfterViewInit {
         return Promise.reject(new Error("IsJsonValid export 'full' failed"));
       }
 
-      if( jsonObj.export.database != "testTypes" || jsonObj.export.version != 1 
+      if( jsonObj.export.database != "testTypes" || jsonObj.export.version != 1
           || jsonObj.export.mode != "full" || jsonObj.export.tables.length != 2) {
         return Promise.reject(new Error("Export Json failed"));
       }
@@ -216,15 +216,15 @@ export class TestTypesPage implements AfterViewInit {
       result = await this._sqlite.isConnection("testTypes");
       if(result.result) {
         // close the connection testTypes
-        await this._sqlite.closeConnection("testTypes"); 
-      }    
+        await this._sqlite.closeConnection("testTypes");
+      }
 
       result = await this._sqlite.isConnection("testTypesImported");
       if(result.result) {
         // close the connection testTypesImported
-        await this._sqlite.closeConnection("testTypesImported");      
+        await this._sqlite.closeConnection("testTypesImported");
       }
-    
+
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

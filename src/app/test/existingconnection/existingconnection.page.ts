@@ -43,7 +43,7 @@ export class ExistingconnectionPage implements AfterViewInit {
   async runTest(): Promise<void> {
     try {
       let result: any = await this._sqlite.echo("Hello World");
-      
+
       // retrieve the connections
       const db = await this._sqlite.retrieveConnection("testNew")
       const db1 = await this._sqlite.retrieveConnection("testSet")
@@ -55,17 +55,18 @@ export class ExistingconnectionPage implements AfterViewInit {
       }
       // select all users in db
       ret = await db.query("SELECT * FROM users;");
-      if(ret.values.length !== 7 || ret.values[0].name !== "Whiteley" ||
+      if(ret.values.length !== 8 || ret.values[0].name !== "Whiteley" ||
                                     ret.values[1].name !== "Jones" ||
-                                    ret.values[2].name !== "Simpson" ||
-                                    ret.values[3].name !== "Brown" ||
-                                    ret.values[4].name !== "Jackson" ||
-                                    ret.values[5].name !== "Kennedy" ||
-                                    ret.values[6].name !== "Bush"
+                                    ret.values[2].name !== "Jeepq" ||
+                                    ret.values[3].name !== "Simpson" ||
+                                    ret.values[4].name !== "Brown" ||
+                                    ret.values[5].name !== "Jackson" ||
+                                    ret.values[6].name !== "Kennedy" ||
+                                    ret.values[7].name !== "Bush"
                                     ) {
         return  Promise.reject(new Error("Query 7 Users failed"));
       }
-    
+
       // create table messages in db1
       ret = await db1.execute(createSchemaMessages);
       if (ret.changes.changes < 0) {
@@ -87,7 +88,7 @@ export class ExistingconnectionPage implements AfterViewInit {
       }
 
       // test retrieve all connections
-      var retDict: Map<string, any> = await 
+      var retDict: Map<string, any> = await
                             this._sqlite.retrieveAllConnections();
       console.log(`retDict: ${[...retDict.entries()]}`);
       if(!retDict.has("RW_testNew") || retDict.get("RW_testNew") != db) {

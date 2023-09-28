@@ -852,3 +852,17 @@ export const testIssue385: any = {
     },
   ],
 }
+
+/*
+            triggers: [
+              {
+                name: "users_trigger_last_modified",
+                timeevent: "AFTER UPDATE ON users",
+                logic: `FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
+                  BEGIN
+                    UPDATE users SET last_modified = (strftime('%s', 'now')) WHERE id=NEW.id;
+                  END;
+                `
+              }
+            ],
+*/

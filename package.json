@@ -1,6 +1,6 @@
 {
   "name": "angular-sqlite-app-starter",
-  "version": "5.0.7-1",
+  "version": "5.0.8",
   "description": "Ionic/Angular SQLite Application Starter",
   "author": "Jean Pierre Quéau",
   "license": "MIT",
@@ -33,7 +33,7 @@
     "@awesome-cordova-plugins/splash-screen": "^6.3.0",
     "@awesome-cordova-plugins/status-bar": "^6.3.0",
     "@capacitor-community/electron": "^4.1.2",
-    "@capacitor-community/sqlite": "^5.0.7-1",
+    "@capacitor-community/sqlite": "^5.2.5",
     "@capacitor/android": "^5.0.5",
     "@capacitor/app": "^5.0.1",
     "@capacitor/core": "^5.0.5",

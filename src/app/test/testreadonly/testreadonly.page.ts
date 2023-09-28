@@ -62,7 +62,7 @@ export class TestReadonlyPage implements AfterViewInit {
                   .createConnection("testNew", false, "no-encryption", 1, false);
       }
       console.log(`>>> after open testNew readwrite`)
-      // check if the databases exist 
+      // check if the databases exist
       // and delete it for multiple successive tests
       await deleteDatabase(db);
 
@@ -70,7 +70,7 @@ export class TestReadonlyPage implements AfterViewInit {
       let ret: any;
       await db.open();
       if(this._sqlite.getPlatform() != "android") {
-        // set WAL mode 
+        // set WAL mode
         const walStmt = 'PRAGMA journal_mode=WAL2;';
         ret = await db.execute(walStmt,false);
       }
@@ -80,9 +80,9 @@ export class TestReadonlyPage implements AfterViewInit {
         return Promise.reject(new Error("Execute createSchema failed"));
       }
 
-      // create synchronization table 
+      // create synchronization table
       ret = await db.createSyncTable();
-      
+
       // set the synchronization date
       const syncDate: string = "2020-11-25T08:30:25.000Z";
       await db.setSyncDate(syncDate);
@@ -98,7 +98,7 @@ export class TestReadonlyPage implements AfterViewInit {
       }
 
       // add two users in db
-      ret = await db.execute(twoUsers);
+      ret = await db.execute(twoUsers, true, false);
       if (ret.changes.changes !== 2) {
         return Promise.reject(new Error("Execute 2 users failed"));
       }
@@ -121,7 +121,7 @@ export class TestReadonlyPage implements AfterViewInit {
       if(retCC && isConn) {
         console.log(`>>> before retrieving testNew readonly`)
         db1 = await this._sqlite.retrieveConnection("testNew", true);
-      } else {                          
+      } else {
         console.log(`>>> before creating testNew readonly`)
         db1 = await this._sqlite
                   .createConnection("testNew", false, "no-encryption", 1, true);
@@ -131,9 +131,9 @@ export class TestReadonlyPage implements AfterViewInit {
         if(this._sqlite.getPlatform() === "web") {
           this._sqlite.saveToStore("testNew");
         }
-        this.userNumber = (await (db1.query("SELECT * FROM users;"))).values.length ; 
+        this.userNumber = (await (db1.query("SELECT * FROM users;"))).values.length ;
       }
-  
+
       // open db1 testNew read-only mode
       await db1.open();
       console.log(`>>> after open testNew readonly`)
@@ -147,16 +147,16 @@ export class TestReadonlyPage implements AfterViewInit {
 
       for (let i=0; i< 1000; i++) {
         const stmt = `INSERT INTO users (name,email,age) VALUES ("testname${i}","testemail${i}",${Math.random() * 105 +18});`;
-        await db.execute(stmt, true); 
+        await db.execute(stmt, true, false);
         if (i % 100 === 0) getUserNumber();
         if (i === 999) {
           getUserNumber();
 
-          const retDict: Map<string, any> = await 
+          const retDict: Map<string, any> = await
                                 this._sqlite.retrieveAllConnections();
-    
+
           console.log(`retDict: ${[...retDict.entries()]}`);
-          return Promise.resolve();  
+          return Promise.resolve();
         }
       }
 

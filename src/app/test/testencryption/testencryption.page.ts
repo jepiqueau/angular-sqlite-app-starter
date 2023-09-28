@@ -72,7 +72,8 @@ export class TestencryptionPage implements AfterViewInit {
       await db.setSyncDate(syncDate);
 
       // add two users in db
-      ret = await db.execute(twoUsers);
+      ret = await db.execute(twoUsers, true, false);
+      ;
       if (ret.changes.changes !== 2) {
         return Promise.reject(new Error("Execute twoUsers failed"));
       }
@@ -100,7 +101,7 @@ export class TestencryptionPage implements AfterViewInit {
       // add one user with statement
       sqlcmd = `INSERT INTO users (name,email,age) VALUES ` +
                                 `("Brown","Brown@example.com",15)`;
-      ret = await db.run(sqlcmd);
+      ret = await db.run(sqlcmd, [], true, 'no', false);
       if(ret.changes.lastId !== 4) {
         return Promise.reject(new Error("Run2 add 1 User failed"));
       }

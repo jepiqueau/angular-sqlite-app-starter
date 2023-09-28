@@ -12,7 +12,7 @@ CREATE TRIGGER IF NOT EXISTS users_trigger_last_modified
   AFTER UPDATE ON users
   FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
   BEGIN
-    UPDATE users SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+    UPDATE users SET last_modified= (strftime('%s', 'now')) WHERE id=NEW.id;
   END;
 PRAGMA user_version = 1;
 `;
@@ -32,7 +32,7 @@ CREATE TRIGGER IF NOT EXISTS articles_trigger_last_modified
   AFTER UPDATE ON articles
   FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
   BEGIN
-    UPDATE articles SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+    UPDATE articles SET last_modified= (strftime('%s', 'now')) WHERE id=NEW.id;
   END;
 PRAGMA user_version = 1;
 `;

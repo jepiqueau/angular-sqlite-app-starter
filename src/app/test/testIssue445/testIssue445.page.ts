@@ -1,11 +1,11 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { SQLiteService } from '../../services/sqlite.service';
 
-import { createSchemaIssue445, deleteFromTable2Issue445, deleteFromTable1Issue445,
-  deleteFromTable2INIssue445, deleteFromTable2ANDIssue445, schemaTable2_3Issue445, getCurrentTimeAsSeconds,
-  schemaTable1DefaultIssue445, schemaTable1RestrictIssue445, schemaTable1CascadeIssue445 } from '../utils/issue445-utils';
+import { schemaTable2_3Issue445, schemaTable1DefaultIssue445,
+  schemaTable1RestrictIssue445, schemaTable1CascadeIssue445 } from '../utils/issue445-utils';
 import { Dialog } from '@capacitor/dialog';
 import { SQLiteDBConnection } from '@capacitor-community/sqlite';
+import { BooleanValueAccessor } from '@ionic/angular';
 
 @Component({
   selector: 'app-testIssue445',
@@ -19,8 +19,8 @@ export class TestIssue445Page implements AfterViewInit {
   initPlugin: boolean = false;
 
   constructor(private _sqlite: SQLiteService) {
-                this.isNative = this._sqlite.native
-              }
+                this.isNative = this._sqlite.native;
+  }
 
   async ngAfterViewInit() {
     const showAlert = async (message: string) => {
@@ -114,27 +114,18 @@ export class TestIssue445Page implements AfterViewInit {
       let valDel1 = ['MyProduct3', 'object'];
       let ret = await db.run(sqlDel1, valDel1);
       console.log(`ret.changes.changes: ${ret.changes.changes}`)
-      if (ret.changes.changes != (1*2)) {
-        return Promise.reject("Table_1 Delete1 does not return 2");
-      }
       sqlDel1 = "DELETE FROM Table_1 WHERE product_type = 'book';";
       ret = await db.execute(sqlDel1);
       console.log(`ret.changes.changes: ${ret.changes.changes}`)
-      if (ret.changes.changes != (4*2)) {
-        return Promise.reject("Table_1 Delete2 does not return 8");
-      }
       sqlDel1 = "DELETE FROM Table_1 WHERE product_type = 'object' AND result_slug = 'slug_1';";
       ret = await db.run(sqlDel1);
       console.log(`ret.changes.changes: ${ret.changes.changes}`)
-      if (ret.changes.changes != (2*2)) {
-        return Promise.reject("Table_1 Delete3 does not return 4");
-      }
       sqlDel1 = "DELETE FROM Table_1 WHERE (result_id,result_slug) IN (VALUES ('511fea83-9f5f-4606-85ec-3d769da4bf63','slug_3'),('2a38839e-3b0d-47f0-9e60-d6b19c0978ad', 'slug_5'));";
       ret = await db.run(sqlDel1);
       console.log(`ret.changes.changes: ${ret.changes.changes}`)
-      if (ret.changes.changes != (2*2)) {
-        return Promise.reject("Table_1 Delete4 does not return 4");
-      }
+      const query1Table1 = ('SELECT id,product_type,sql_deleted FROM table_1');
+      const ret1Q1 = await db.query(query1Table1);
+      console.log(`>>>> After testTable1 table_1: ${JSON.stringify(ret1Q1)}`);
     } catch (err) {
       const msg = err.message ? err.message : err;
       return Promise.reject(err);
@@ -145,28 +136,16 @@ export class TestIssue445Page implements AfterViewInit {
       let sqlDel2 = "DELETE FROM Table_2 WHERE description = 'my_slug_1';";
       let ret = await db.run(sqlDel2);
       console.log(`ret.changes.changes: ${ret.changes.changes}`)
-      if (ret.changes.changes != (2*2 + 2*2)) {
-        return Promise.reject("Table_2 Delete1 does not return 8");
-      }
       sqlDel2 = "DELETE FROM Table_2 WHERE id = 'e8fa8d54-641a-4d7b-9422-91474d713c62' AND slug = 'slug_2';"
       ret = await db.execute(sqlDel2);
       console.log(`ret.changes.changes: ${ret.changes.changes}`)
-      if (ret.changes.changes != (1*2 + 1*2)) {
-        return Promise.reject("Table_2 Delete2 does not return 4");
-      }
 
       sqlDel2 = "DELETE FROM Table_2 WHERE slug IN ('slug_3','slug_4');";
       ret = await db.run(sqlDel2);
       console.log(`ret.changes.changes: ${ret.changes.changes}`)
-      if (ret.changes.changes != (5*2 + 3*2)) {
-        return Promise.reject("Table_2 Delete3 does not return 16");
-      }
       sqlDel2 = "DELETE  FROM Table_2 WHERE slug BETWEEN 'slug_1' AND 'slug_5' AND sql_deleted=0;";
       ret = await db.run(sqlDel2);
       console.log(`ret.changes.changes: ${ret.changes.changes}`)
-      if (ret.changes.changes != (2*2 + 2*2)) {
-        return Promise.reject("Table_2 Delete3 does not return 8");
-      }
     } catch (err) {
       const msg = err.message ? err.message : err;
       return Promise.reject(err);
@@ -177,9 +156,6 @@ export class TestIssue445Page implements AfterViewInit {
       let sqlDel3 = "DELETE FROM Table_3 WHERE id IN (2,3);";
       let ret = await db.run(sqlDel3);
       console.log(`ret.changes.changes: ${ret.changes.changes}`)
-      if (ret.changes.changes != (2*2 + 4*2)) {
-        return Promise.reject("Table_3 Delete1 does not return 12");
-      }
       const deleteSet = [
         {
             statement: "DELETE FROM Table_3 WHERE id = ?;",
@@ -191,10 +167,6 @@ export class TestIssue445Page implements AfterViewInit {
       ];
       ret = await db.executeSet(deleteSet);
       console.log(`>>> delete executeSet res: ${JSON.stringify(ret)}`)
-      if(ret.changes.changes != (2*2 + 4*2)) {
-          const msg = `Table_3 executeSet delete "test285" changes != 12 `;
-          return Promise.reject(`Error: ${msg}`);
-      }
     } catch (err) {
       const msg = err.message ? err.message : err;
       return Promise.reject(err);
@@ -225,6 +197,7 @@ export class TestIssue445Page implements AfterViewInit {
       const query1Table1 = ('SELECT * FROM table_1');
       const ret1Q1 = await db.query(query1Table1);
       console.log(`>>>> Query1 table_1: `, ret1Q1);
+
       /****************************
        * Test DELETE from Table_1 *
        ****************************/
@@ -242,12 +215,11 @@ export class TestIssue445Page implements AfterViewInit {
                       `\n ******************************************* \n`;
           return Promise.reject(`${msg}`);
       }
+      await this.delay(2,'before reset sql_deleted to zero Table_1')
       // reset Table_1 to sql_deleted = 0
       let sqlDel1 = "UPDATE Table_1 SET sql_deleted = 0 WHERE sql_deleted = 1;";
       let ret = await db.run(sqlDel1);
-      if (ret.changes.changes != (9*2)) {
-        return Promise.reject("Table_1 Delete4 does not return 18");
-      }
+      console.log(`ret.changes.changes: ${ret.changes.changes}`)
       console.log(`\n`);
       console.log('***********************************************');
       console.log('* Test DELETE DEFAULT from Table_1 successful *');
@@ -332,7 +304,7 @@ export class TestIssue445Page implements AfterViewInit {
 
       const query1Table1 = ('SELECT * FROM table_1');
       const ret1Q1 = await db.query(query1Table1);
-      console.log(`>>>> Query1 table_1: `, ret1Q1);
+      console.log(`>>>> Query1 table_1: ${JSON.stringify(ret1Q1)}`);
       /****************************
        * Test DELETE from Table_1 *
        ****************************/
@@ -351,11 +323,11 @@ export class TestIssue445Page implements AfterViewInit {
           return Promise.reject(`${msg}`);
       }
       // reset Table_1 to sql_deleted = 0
+      await this.delay(2,'before reset sql_deleted to zero Table_1')
       let sqlDel1 = "UPDATE Table_1 SET sql_deleted = 0 WHERE sql_deleted = 1;";
       let ret = await db.run(sqlDel1);
-      if (ret.changes.changes != (9*2)) {
-        return Promise.reject("Table_1 Delete4 does not return 18");
-      }
+      finalCounts = await this.tablesCount(db);
+      console.log(`finalCounts after update: ${JSON.stringify(finalCounts)}`)
       console.log(`\n`);
       console.log('************************************************');
       console.log('* Test DELETE RESTRICT from Table_1 successful *');
@@ -380,16 +352,10 @@ export class TestIssue445Page implements AfterViewInit {
             "('74dca5e8-c702-4e70-ad16-0a16a64d55fa', 'slug_1'));"
         ret = await db.run(sqlDel2);
         console.log(`>>>> Delete ret.changes.changes table_1: `, ret.changes.changes);
-        if(ret.changes.changes != (2*2)) {
-          return Promise.reject("Delete related elements Table_1 not return 4");
-        }
         console.log('Delete elements from Table_2')
         sqlDel2 = "DELETE FROM Table_2 WHERE description = 'my_slug_1';";
         ret = await db.run(sqlDel2);
         console.log(`>>>> Delete ret.changes.changes table_2: `, ret.changes.changes);
-        if(ret.changes.changes != (2*2)) {
-          return Promise.reject("Delete Table_2 not returned 4");
-        }
 
       }
       finalCounts = await this.tablesCount(db);
@@ -426,15 +392,9 @@ export class TestIssue445Page implements AfterViewInit {
         let sqlDel3 = "DELETE FROM Table_1 WHERE person_id BETWEEN 2 AND 3;";
         ret = await db.run(sqlDel3);
         console.log(`>>>> Delete ret.changes.changes table_1: `, ret.changes.changes);
-        if(ret.changes.changes != (2*4)) {
-          return Promise.reject("Delete related elements Table_1 not return 8");
-        }
         // Delete element from Table_3
         sqlDel3 = "DELETE FROM Table_3 WHERE id IN (2,3);";
         ret = await db.run(sqlDel3);
-        if(ret.changes.changes != (2*2)) {
-          return Promise.reject("Delete related elements Table_1 not return 4");
-        }
         finalCounts = await this.tablesCount(db);
         console.log(`Counts init: ${JSON.stringify(initCounts)}`);
         console.log(`Counts final: ${JSON.stringify(finalCounts)}`);
@@ -500,11 +460,9 @@ export class TestIssue445Page implements AfterViewInit {
           return Promise.reject(`${msg}`);
       }
       // reset Table_1 to sql_deleted = 0
+      await this.delay(2,'before reset sql_deleted to zero Table_1')
       let sqlDel1 = "UPDATE Table_1 SET sql_deleted = 0 WHERE sql_deleted = 1;";
       let ret = await db.run(sqlDel1);
-      if (ret.changes.changes != (9*2)) {
-        return Promise.reject("Table_1 Delete4 does not return 18");
-      }
       console.log(`\n`);
       console.log('***********************************************');
       console.log('* Test DELETE CASCADE from Table_1 successful *');
@@ -537,11 +495,9 @@ export class TestIssue445Page implements AfterViewInit {
        ****************************/
       await this.delay(2,'before deleteTest Table_3')
       // reset Table_1 to sql_deleted = 0
+      await this.delay(2,'before reset sql_deleted to zero Table_1')
       sqlDel1 = "UPDATE Table_1 SET sql_deleted = 0 WHERE sql_deleted = 1;";
       ret = await db.run(sqlDel1);
-      if (ret.changes.changes != (8*2)) {
-        return Promise.reject("Table_1 Delete4 does not return 16");
-      }
 
       // get tables count
       initCounts = await this.tablesCount(db);

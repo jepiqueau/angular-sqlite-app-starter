@@ -18,7 +18,7 @@ CREATE TRIGGER IF NOT EXISTS teachers_trigger_last_modified
   AFTER UPDATE ON teachers
   FOR EACH ROW WHEN NEW.last_modified <= OLD.last_modified
   BEGIN
-    UPDATE teachers SET last_modified= (strftime('%s', 'now')) WHERE id=OLD.id;
+    UPDATE teachers SET last_modified= (strftime('%s', 'now')) WHERE id=NEW.id;
   END;
 `;
 export const firstTeachers: string = `

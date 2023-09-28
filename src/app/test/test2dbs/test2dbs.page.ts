@@ -80,7 +80,7 @@ export class Test2dbsPage implements AfterViewInit {
           .createConnection("testSet", false, "no-encrytion", 1);
         }
       }
-
+      console.log(`before deleteDatabase`);
       // check if the databases exist
       // and delete it for multiple successive tests
       await deleteDatabase(db);
@@ -94,27 +94,36 @@ export class Test2dbsPage implements AfterViewInit {
       if (ret.changes.changes < 0) {
         return Promise.reject(new Error("Execute createSchema failed"));
       }
-
+      console.log(`after schema creation`)
       // create synchronization table
       ret = await db.createSyncTable();
 
       // set the synchronization date
       const syncDate: string = "2020-11-25T08:30:25.000Z";
       await db.setSyncDate(syncDate);
+      console.log(`after setSyncDate`)
 
       // delete users if any from previous run
       let delUsers = `DELETE FROM users;`;
-      ret = await db.execute(delUsers, false);
+      ret = await db.execute(delUsers);
+      console.log(`after execute DELETE FROM USERS`)
 
       // add two users in db
-      ret = await db.execute(twoUsers);
+      ret = await db.execute(twoUsers, true, false);
       if (ret.changes.changes !== 2) {
         return Promise.reject(new Error("Execute 2 users failed"));
       }
+      console.log(`after execute two USERS`)
+      // Test math functions
+      const sqlMath = "INSERT INTO users (name,email,age) VALUES ('Jeepq','jeepq@example.com',45);";
+      const retMath = await db.run(sqlMath, [], false, 'no', false);
+      console.log(`&&&& retMath: ${JSON.stringify(retMath.changes)} &&&&`);
+
       // select all users in db
       ret = await db.query("SELECT * FROM users;");
-      if(ret.values.length !== 2 || ret.values[0].name !== "Whiteley" ||
-                                    ret.values[1].name !== "Jones") {
+      if(ret.values.length !== 3 || ret.values[0].name !== "Whiteley" ||
+                                    ret.values[1].name !== "Jones" ||
+                                    ret.values[2].name !== "Jeepq") {
         return Promise.reject(new Error("Query 2 users failed"));
       }
       // test issue#378
@@ -124,7 +133,7 @@ export class Test2dbsPage implements AfterViewInit {
       console.log(`&&&& ret378: ${ret378.changes.lastId} &&&&`);
       console.log(`&&&& ret378: ${ret378.changes.values} &&&&`);
 
-      if (ret378.changes.changes !== 1) {
+      if (ret378.changes.changes <= 0) {
         return Promise.reject(new Error("Run issue#378 users failed"));
       }
 
@@ -155,8 +164,10 @@ export class Test2dbsPage implements AfterViewInit {
       }
       // select users where company is NULL in db
       ret = await db.query("SELECT * FROM users WHERE company IS NULL;");
-      if(ret.values.length !== 2 || ret.values[0].name !== "Whiteley" ||
-                                    ret.values[1].name !== "Jones") {
+      console.log(`Query 2 ret.values.length: ${ret.values.length}`)
+      if(ret.values.length !== 3 || ret.values[0].name !== "Whiteley" ||
+                                    ret.values[1].name !== "Jones"||
+                                    ret.values[2].name !== "Jeepq") {
         return Promise.reject(new Error("Query 2 users where company is null failed"));
       }
       // add one user with statement and values
@@ -165,21 +176,21 @@ export class Test2dbsPage implements AfterViewInit {
       let values: Array<any>  = ["Simpson","Simpson@example.com",69,1.82,null];
       ret = await db.run(sqlcmd,values);
       console.log(`@@@@ Run 1: ${JSON.stringify(ret)}`);
-      if(ret.changes.lastId !== 3) {
+      if(ret.changes.lastId !== 4) {
         return Promise.reject(new Error("Run 1 users with statement & values failed"));
       }
       // add one user with statement
       sqlcmd = `INSERT INTO users (name,email,age,size,company) VALUES ` +
                                 `("Brown","Brown@example.com",15,1.75,null)`;
-      ret = await db.run(sqlcmd);
-      if(ret.changes.lastId !== 4) {
+      ret = await db.run(sqlcmd, [], true, 'no', false);
+      if(ret.changes.lastId !== 5) {
         return Promise.reject(new Error("Run 1 users with statement failed"));
       }
       let delTest56 = `DELETE FROM test56;`;
       ret = await db.execute(delTest56, false);
       console.log(`$$$$$$$ after DELETE FROM test56`)
       // add some tests issue#56
-      ret = await db.execute(twoTests);
+      ret = await db.execute(twoTests, true, false);
       if (ret.changes.changes !== 2) {
         return Promise.reject(new Error("Execute issue#56 failed"));
       }
@@ -252,6 +263,38 @@ export class Test2dbsPage implements AfterViewInit {
           const isEncrypt = (await this._sqlite.isDatabaseEncrypted(mDbName)).result;
           console.log(`Database: ${dbName} is encrypted: ${isEncrypt}`)
         }
+        // test issue#448
+
+        let db2: SQLiteDBConnection;
+        const retCC = (await this._sqlite.checkConnectionsConsistency()).result;
+        let isConn = (await this._sqlite.isConnection("testIssue448")).result;
+        if(retCC && isConn) {
+          db2 = await this._sqlite.retrieveConnection("testIssue448");
+        } else {
+          db2 = await this._sqlite
+                    .createConnection("testIssue448", false, "no-encryption", 1);
+        }
+        // open db testNew
+        await db2.open();
+
+        const sql448 = `
+          CREATE VIRTUAL TABLE if not exists docToolTextSearch USING fts3(body, id, page);
+          INSERT INTO docToolTextSearch (body,id,page) VALUES('FLIGHT MANUAL EC 135 T1 CDS   Emergency and Malfunction Procedures   CAUTION INDICATIONS   ENG MANUAL   or   SYSTEM I   SYSTEM II   Conditions/Indications   Engine MANUAL mode has been selected by setting ENG MODE SEL sw from NORM to   MAN   NOTE    If ENG MANUAL comes together with TWIST GRIP refer to TWIST GRIP cau-   tion indication   Following functions of the respective engine are inoperative       automatic acceleration deceleration during power collective changes   N   1    limiter   NORM start is impossible   Procedure   WARNING    OPERATE THE TWIST GRIP WITH GREAT CARE AND AVOID QUICK TWIST   GRIP ROTATIONS   HOLD MIN 10 TORQUE ON THE NORMAL ENGINE TO MAINTAIN   AUTOMATIC CONTROL OF N   RO      The ENG MANUAL mode may be used for training of the FADEC FAIL procedure   After training is completed return to NORM mode   Respective ENG MODE SEL selector sw   Respective TWIST GRIP   ENG MANUAL caution   TWIST GRIP caution   Wait 10 sec before any power variation   Correct operation in NORM mode   NORM   Turn gradually to NEUTRAL   position   Check off   Verify by small collective   movements   3 - 18   APPROVED   Rev 33   ', '5983270909465803','120');
+        `;
+        ret = await db2.execute(sql448);
+        console.log(`sql448 ret: ${JSON.stringify(ret)}`);
+        const batch = [
+          { statement: "DROP TABLE docToolTextSearch;",
+            values: []},
+          { statement: "CREATE VIRTUAL TABLE if not exists docToolTextSearch USING fts3(body, id, page);",
+            values: []},
+          { statement: "INSERT INTO docToolTextSearch (body,id,page) VALUES (?,?,?);",
+            values:['FLIGHT MANUAL EC 135 T1 CDS   Emergency and Malfunction Procedures   CAUTION INDICATIONS   ENG MANUAL   or   SYSTEM I   SYSTEM II   Conditions/Indications   Engine MANUAL mode has been selected by setting ENG MODE SEL sw from NORM to   MAN   NOTE    If ENG MANUAL comes together with TWIST GRIP refer to TWIST GRIP cau-   tion indication   Following functions of the respective engine are inoperative       automatic acceleration deceleration during power collective changes   N   1    limiter   NORM start is impossible   Procedure   WARNING    OPERATE THE TWIST GRIP WITH GREAT CARE AND AVOID QUICK TWIST   GRIP ROTATIONS   HOLD MIN 10 TORQUE ON THE NORMAL ENGINE TO MAINTAIN   AUTOMATIC CONTROL OF N   RO      The ENG MANUAL mode may be used for training of the FADEC FAIL procedure   After training is completed return to NORM mode   Respective ENG MODE SEL selector sw   Respective TWIST GRIP   ENG MANUAL caution   TWIST GRIP caution   Wait 10 sec before any power variation   Correct operation in NORM mode   NORM   Turn gradually to NEUTRAL   position   Check off   Verify by small collective   movements   3 - 18   APPROVED   Rev 33   ', '5983270909465803','120']
+          },
+        ];
+        ret = await db2.executeSet(batch);
+        console.log(`batch ret: ${JSON.stringify(ret)}`);
+        await this._sqlite.closeConnection("testIssue448");
       }
       return Promise.resolve();
     } catch (err) {

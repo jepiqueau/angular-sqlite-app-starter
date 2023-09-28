@@ -1,8 +1,10 @@
+
 export const getCurrentTimeAsSeconds = () => {
   const curtime = Math.floor(Date.now() / 1000);
   console.log(`##### curtime: ${curtime} #####`);
   return curtime
 }
+/*
 export const createSchemaIssue445: string = `
 DROP TABLE IF EXISTS table_1;
 DROP TABLE IF EXISTS table_2;
@@ -72,7 +74,7 @@ DELETE FROM table_2 WHERE (id,slug) = ('9aec3d5a-a339-4f24-b5a3-8419ac8542f2', '
 export const deleteFromTable1Issue445: string = `
 DELETE FROM table_1 WHERE id = 1;
 `;
-
+*/
 export const schemaTable1DefaultIssue445: string = `
 DROP TABLE IF EXISTS Table_1;
 DROP TABLE IF EXISTS Table_3;

@@ -52,7 +52,7 @@ export class TestIssue111Page implements AfterViewInit {
 /*      if(retDict.size > 0) {
         for (var conn in retDict) {
           console.log(`connection: ${conn}`)
-        }  
+        }
       }
 */
       // initialize the connection
@@ -60,16 +60,16 @@ export class TestIssue111Page implements AfterViewInit {
       let isConn: any = await this._sqlite.isConnection("testIssue111.db");
       if(isConn.result) {
         db = await this._sqlite.retrieveConnection("testIssue111.db");
-      } else 
+      } else
         db = await this._sqlite
                   .createConnection("testIssue111.db", false, "no-encryption", 1);
       let db1: SQLiteDBConnection;
       if((await this._sqlite.isConnection("testSetIssue111.db")).result) {
         db1 = await this._sqlite.retrieveConnection("testSetIssue111.db");
-      } else 
+      } else
         db1 = await this._sqlite
                   .createConnection("testSetIssue111.db", true, "secret", 1);
-      // check if the databases exist 
+      // check if the databases exist
       // and delete it for multiple successive tests
       await deleteDatabase(db);
       await deleteDatabase(db1);
@@ -83,15 +83,15 @@ export class TestIssue111Page implements AfterViewInit {
         return Promise.reject(new Error("Execute createSchema failed"));
       }
 
-      // create synchronization table 
+      // create synchronization table
       ret = await db.createSyncTable();
-      
+
       // set the synchronization date
       const syncDate: string = "2020-11-25T08:30:25.000Z";
       await db.setSyncDate(syncDate);
 
       // add two users in db
-      ret = await db.execute(twoUsers, false);
+      ret = await db.execute(twoUsers, false, false);
       if (ret.changes.changes !== 2) {
         return Promise.reject(new Error("Execute 2 users failed"));
       }
@@ -120,23 +120,23 @@ export class TestIssue111Page implements AfterViewInit {
                                     ret.values[1].name !== "Jones") {
         return Promise.reject(new Error("Query 2 users where company is null failed"));
       }
-      // add one user with statement and values              
-      let sqlcmd: string = 
+      // add one user with statement and values
+      let sqlcmd: string =
                   "INSERT INTO users (name,email,age) VALUES (?,?,?)";
       let values: Array<any>  = ["Simpson","Simpson@example.com",69];
       ret = await db.run(sqlcmd, values, false);
       if(ret.changes.lastId !== 3) {
         return Promise.reject(new Error("Run 1 users with statement & values failed"));
       }
-      // add one user with statement              
-      sqlcmd = `INSERT INTO users (name,email,age) VALUES ` + 
+      // add one user with statement
+      sqlcmd = `INSERT INTO users (name,email,age) VALUES ` +
                                 `("Brown","Brown@example.com",15)`;
-      ret = await db.run(sqlcmd, [], false);
+      ret = await db.run(sqlcmd, [], false, 'no', false);
       if(ret.changes.lastId !== 4) {
         return Promise.reject(new Error("Run 1 users with statement failed"));
       }
       // add some tests issue#56
-      ret = await db.execute(twoTests, false);
+      ret = await db.execute(twoTests, false,false);
       if (ret.changes.changes !== 2) {
         return Promise.reject(new Error("Execute issue#56 failed"));
       }

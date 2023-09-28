@@ -52,6 +52,10 @@ export class DownloadFromHTTP implements OnInit {
       await db.open();
       this.log += "  > open 'dbForCopy' successful\n";
       let res = await db.query("SELECT * FROM areas");
+      console.log(`>>> res.values.length: ${res.values.length}`)
+      console.log(`>>> res.values[0].name: ${res.values[0].name}`)
+      console.log(`>>> res.values[1].name: ${res.values[1].name}`)
+      console.log(`>>> res.values[2].name: ${res.values[2].name}`)
       if (res.values.length !== 3 ||
         res.values[0].name !== "Access road" ||
         res.values[1].name !== "Accessway" ||
@@ -67,7 +71,7 @@ export class DownloadFromHTTP implements OnInit {
       const db1 = await this._sqlite.createConnection("dbZip1", false, "no-encryption", 1);
       if (db1 == null) throw new Error("createConnection dbZip1 failed");
       await db1.open();
-      this.log += "  > open 'dbZip1' successful\n"; 
+      this.log += "  > open 'dbZip1' successful\n";
       const retTables = await db1.getTableList();
       console.log(`>>> retTables: ${JSON.stringify(retTables)}`);
       if(retTables.values.length !== 3 ||
