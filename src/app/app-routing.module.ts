@@ -18,6 +18,11 @@ const routes: Routes = [
       .then(m => m.Test2dbsPageModule)
   },
   {
+    path: 'testslowinserts',
+    loadChildren: () => import('./test/testslowinserts/testslowinserts.module')
+      .then(m => m.TestSlowInsertsPageModule)
+  },
+  {
     path: 'testreadonly',
     loadChildren: () => import('./test/testreadonly/testreadonly.module')
       .then(m => m.TestReadonlyPageModule)
@@ -52,6 +57,16 @@ const routes: Routes = [
     loadChildren: () =>
       import('./test/testupgradeversion/testupgradeversion.module')
         .then(m => m.TestupgradeversionPageModule)
+  },
+  {
+    path: 'testjsonoptimize',
+    loadChildren: () => import('./test/testjsonoptimize/testjsonoptimize.module')
+      .then(m => m.TestjsonoptimizePageModule)
+  },
+  {
+    path: 'testjsonimportdelete',
+    loadChildren: () => import('./test/testjsonimportdelete/testjsonimportdelete.module')
+      .then(m => m.TestjsonimportdeletePageModule)
   },
   {
     path: 'importjson',

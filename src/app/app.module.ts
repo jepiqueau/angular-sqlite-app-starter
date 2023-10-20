@@ -22,7 +22,6 @@ export function initializeFactory(init: InitializeAppService) {
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
   providers: [
     SQLiteService,

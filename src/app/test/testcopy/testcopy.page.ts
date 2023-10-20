@@ -54,7 +54,7 @@ export class TestCopyPage implements AfterViewInit {
       result = await this._sqlite.isConnection("testcopy");
       if(result.result) {
         return Promise.reject(new Error("Connection 'testcopy' already exists"));
-      }    
+      }
       // test get the Database List
       result = await this._sqlite.getDatabaseList();
       console.log(`test get Database List: ${JSON.stringify(result)}`)
@@ -62,24 +62,24 @@ export class TestCopyPage implements AfterViewInit {
       result = await this._sqlite.isConnection("testfromfile");
       if(result.result) {
         return Promise.reject(new Error("Connection 'testfromfile' already exists"));
-      }    
+      }
       result = await this._sqlite.isConnection("keep1");
       if(result.result) {
         return Promise.reject(new Error("Connection 'keep1' already exists"));
-      }    
+      }
       // test if the cordova databases where not at the "default" directory
       // here we assume that they were stored at "Files/Databases"
       let directory: string =  "Files/Databases";
       let dbList: string[] = ["testcopy.db","testfromfile.db","keep1"];
       if(this.platform === "ios") directory = "Applications/Files/Databases"
-      if(this.platform === "android" ) directory = "files/databases";  
+      if(this.platform === "android" ) directory = "files/databases";
       if(this.platform === 'ios' || this.platform === 'android') {
         const dbMigratableList = await this._sqlite.getMigratableDbList(directory);
         console.log(`dbMigratableList ${JSON.stringify(dbMigratableList)}`)
-        if(dbMigratableList.values.length != 4) {
+        if(dbMigratableList.values.length != 3) {
           return Promise.reject(new Error("GetMigratableDbList failed"));
         }
-        await this._sqlite.addSQLiteSuffix(directory, dbList);
+        await this._sqlite.addSQLiteSuffix(directory, dbMigratableList.values);
       }
 
       // check if database "testcopy" exists
@@ -110,7 +110,7 @@ export class TestCopyPage implements AfterViewInit {
 
       // open db testcopy
       await db.open();
-      // 
+      //
       // select all users in db
       result  = await db.query("SELECT * FROM users;");
       if(result .values.length !== 7 || result .values[0].name !== "Whiteley"
@@ -180,7 +180,7 @@ export class TestCopyPage implements AfterViewInit {
 
       // open db testcopy
       await db2.open();
-      // 
+      //
       // select all users in db2
       result  = await db2.query("SELECT * FROM users;");
       if(result .values.length !== 7 || result .values[0].name !== "Whiteley"
@@ -215,20 +215,20 @@ export class TestCopyPage implements AfterViewInit {
       }
       // select all users in db
       result = await db3.query("SELECT * FROM drawings WHERE congregationId = '494f7713-4dfe-4a92-b1a9-75aadcd71022';");
-      if(result.values.length !== 0) {     
+      if(result.values.length !== 0) {
         return Promise.reject(new Error("Query in db2 failed"));
       }
 
       // close the connection "testcopy"
-      await this._sqlite.closeConnection("testcopy"); 
+      await this._sqlite.closeConnection("testcopy");
       this._detailService.setExportJson(false);
       // close the connection "testfromfile"
-      await this._sqlite.closeConnection("testfromfile"); 
+      await this._sqlite.closeConnection("testfromfile");
       // close the connection "keep1"
-      await this._sqlite.closeConnection("keep1"); 
+      await this._sqlite.closeConnection("keep1");
 
       // close the connection "test-issue82"
-      await this._sqlite.closeConnection("test-issue82"); 
+      await this._sqlite.closeConnection("test-issue82");
       return Promise.resolve();
     } catch (err) {
       return Promise.reject(err);

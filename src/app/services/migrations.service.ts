@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS test;
 CREATE TABLE IF NOT EXISTS test (
   id INTEGER PRIMARY KEY NOT NULL,
   name TEXT NOT NULL,
-  email TEXT NOT NULL
+  email TEXT
 );
 `;
 
@@ -74,14 +74,14 @@ export class MigrationService {
         values:[
         ]
       },
-      { statement:"INSERT INTO test (name,email) VALUES ('Dowson','dowson@example.com'), ('Castel', 'castel@example.com') RETURNING name;",
+      { statement:"INSERT INTO test (name,email) VALUES ('Dowson','dowson@example.com'), ('Castel', null) RETURNING name;",
         values:[
         ]
       },
       { statement:"INSERT INTO test (name,email) VALUES (?,?) RETURNING *;",
         values:[
           ['Jackson','jackson@example.com'],
-          ['Kennedy','kennedy@example.com']
+          ['Kennedy',null]
         ]
       },
       { statement:"UPDATE test SET email = 'jackson@company.com' WHERE name = 'Jackson' RETURNING *;",

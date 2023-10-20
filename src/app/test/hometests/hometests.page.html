@@ -32,12 +32,18 @@
         expand="block">Test Existing Connection</ion-button>
         <ion-button routerLink='/testreadonly' routerDirection="forward" color='primary' expand="block">Test Read-Only
         </ion-button>
+      <ion-button routerLink='/testslowinserts' routerDirection="forward" color='primary' expand="block">Test Slow Inserts
+      </ion-button>
       <ion-button routerLink='/testIssue230' routerDirection="forward" color='primary' expand="block">Test Issue#230
       </ion-button>
       <ion-button routerLink='/upgradeversion' routerDirection="forward" color='primary' expand="block">Test Upgrade
         Versions</ion-button>
       <ion-button *ngIf="allowEncryption" routerLink='/encryption' routerDirection="forward" color='primary' expand="block">Test
         Encryption</ion-button>
+      <ion-button routerLink='/testjsonoptimize' routerDirection="forward" color='primary' expand="block">Test Import Json Optimize
+      </ion-button>
+      <ion-button routerLink='/testjsonimportdelete' routerDirection="forward" color='primary' expand="block">Test
+        Export/Import Delete Json</ion-button>
       <ion-button routerLink='/importjson' routerDirection="forward" color='primary' expand="block">Test Import Json
       </ion-button>
       <ion-button *ngIf="exJson" routerLink='/exportjson' routerDirection="forward" color='primary' expand="block">Test
